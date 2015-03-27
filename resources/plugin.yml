@@ -1,0 +1,11 @@
+name: CopsAndCrims
+version: 1.0
+author: MoKunz
+main: com.talesdev.copsandcrims.CopsAndCrims
+depend: [TalesCore]
+commands:
+    cvc:
+      description: "§eMain command of this plugin"
+      usage: "§e/cvc help"
+      permission: cvc.command.cvc;
+      permission-message: "§cYou don't have permission"

@@ -1,0 +1,4 @@
+name: TalesCore
+version: 1.0
+author: MoKunz
+main: com.talesdev.core.TalesCore
