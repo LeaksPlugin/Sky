@@ -9,7 +9,6 @@ public enum WeaponType {
     PISTOL,
     SHOT_GUN,
     SUB_MACHINE_GUN,
-    ASSAULT_RIFLE,
-    SNIPER_RIFLE,
+    RIFLE,
     MACHINE_GUN
 }
