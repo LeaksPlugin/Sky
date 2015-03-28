@@ -1,4 +1,4 @@
-package com.talesdev.copsandcrims.weapon;
+package com.talesdev.copsandcrims.weapon.module;
 
 import org.bukkit.inventory.ItemStack;
 
@@ -14,4 +14,12 @@ public interface WeaponItem {
      * @return A weapon item
      */
     public ItemStack createItemStack();
+
+    /**
+     * Check if given item is a weapon
+     *
+     * @param itemStack An item stack
+     * @return true if given item is a weapon
+     */
+    public boolean isWeapon(ItemStack itemStack);
 }

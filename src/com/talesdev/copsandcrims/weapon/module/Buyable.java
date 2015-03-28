@@ -1,4 +1,4 @@
-package com.talesdev.copsandcrims.weapon;
+package com.talesdev.copsandcrims.weapon.module;
 
 /**
  * Interface for buyable weapons
