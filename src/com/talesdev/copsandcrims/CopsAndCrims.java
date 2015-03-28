@@ -1,6 +1,8 @@
 package com.talesdev.copsandcrims;
 
 import com.talesdev.copsandcrims.arena.DefaultArena;
+import com.talesdev.copsandcrims.guns.DesertEagle;
+import com.talesdev.copsandcrims.weapon.WeaponFactory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -9,8 +11,11 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class CopsAndCrims extends JavaPlugin {
     private boolean debug = true;
+    private WeaponFactory weaponFactory;
     @Override
     public void onEnable() {
+        weaponFactory = new WeaponFactory(this);
+        // arena
         System.out.println(DefaultArena.getInstance().getArenaName() + " starting...");
         // save config
         saveDefaultConfig();
@@ -18,6 +23,8 @@ public class CopsAndCrims extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CopsAndCrimsListener(), this);
         // command
         getCommand("cvc").setExecutor(new CopsAndCrimsCommand());
+        // item
+        getWeaponFactory().addWeapon(new DesertEagle());
     }
 
     @Override
@@ -26,5 +33,9 @@ public class CopsAndCrims extends JavaPlugin {
     }
     public static CopsAndCrims getPlugin(){
         return CopsAndCrims.getPlugin(CopsAndCrims.class);
+    }
+
+    public WeaponFactory getWeaponFactory() {
+        return weaponFactory;
     }
 }

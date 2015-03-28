@@ -14,16 +14,19 @@ import java.util.List;
  * @author MoKunz
  */
 public abstract class Weapon implements WeaponItem {
-    protected String name;
+    protected final String name;
     protected String displayName;
+    protected final WeaponType weaponType;
     protected List<String> lore;
 
     private List<WeaponModule> modules;
 
-    public Weapon(String name, String displayName, List<String> lore) {
+    public Weapon(String name, String displayName, List<String> lore, WeaponType type) {
         this.name = name;
         this.displayName = displayName;
         this.lore = lore;
+        this.weaponType = type;
+        this.modules = new ArrayList<>();
     }
 
     public String getName() {
@@ -38,11 +41,16 @@ public abstract class Weapon implements WeaponItem {
         return new ArrayList<>();
     }
 
+    public WeaponType getWeaponType() {
+        return weaponType;
+    }
     public void addModule(WeaponModule weaponModule) {
-        for (WeaponModule module : modules) {
-            // don't allow duplicate module
-            if (weaponModule.getClass().getName().equals(module.getClass().getName())) {
-                return;
+        if (modules.size() > 0) {
+            for (WeaponModule module : modules) {
+                // don't allow duplicate module
+                if (weaponModule.getClass().getName().equals(module.getClass().getName())) {
+                    return;
+                }
             }
         }
         weaponModule.linkWeapon(this);
