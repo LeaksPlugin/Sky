@@ -5,10 +5,9 @@ import java.util.List;
 
 /**
  * Class represent a weapon
- *
  * @author MoKunz
  */
-public abstract class Weapon {
+public class Weapon {
     protected String name;
     protected String displayName;
     protected List<String> lore;
