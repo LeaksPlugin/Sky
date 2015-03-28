@@ -326,6 +326,9 @@ public enum SoundEffect {
             isBaby = ((Zombie) entity).isBaby();
         }
         switch (type) {
+            case PLAYER:
+                soundEffect = SoundEffect.GAME_PLAYER_HURT;
+                break;
             case BAT:
                 soundEffect = SoundEffect.MOB_BAT_HURT;
                 break;

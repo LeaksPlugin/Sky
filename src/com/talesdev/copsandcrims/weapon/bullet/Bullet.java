@@ -76,10 +76,11 @@ public class Bullet {
             // bullet fire
             if(action != null){
                 action.bulletFire(this,i,distance);
-                if(action instanceof BulletParticle) ((BulletParticle)action).createParticle(this,currentLocation,i,distance);
+                if (action instanceof BulletParticle && (i % 50 == 0))
+                    ((BulletParticle) action).createParticle(this, currentLocation, i, distance);
             }
             else{
-                if(i > 40) createBulletParticle(currentLocation);
+                if (i > 40 && (i % 50 == 0)) createBulletParticle(currentLocation);
             }
             // check if hit box
             if (currentLocation.getBlock().getType().isSolid()) {
@@ -140,6 +141,6 @@ public class Bullet {
         rayTrace.reset();
     }
     private void createBulletParticle(Location location){
-        ParticleEffect.SMOKE_NORMAL.display(0.05F, 0.05F, 0.05F, 0.001F, 1, location, 50);
+        ParticleEffect.FLAME.display(0.01F, 0.01F, 0.01F, 0.001F, 1, location, 128);
     }
 }

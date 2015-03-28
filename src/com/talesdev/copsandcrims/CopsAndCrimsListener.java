@@ -2,7 +2,6 @@ package com.talesdev.copsandcrims;
 
 import com.talesdev.copsandcrims.weapon.bullet.Bullet;
 import com.talesdev.copsandcrims.weapon.bullet.BulletTask;
-import com.talesdev.copsandcrims.weapon.DefaultBulletListener;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,7 +18,7 @@ public class CopsAndCrimsListener implements Listener {
         if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (event.getItem() != null) {
                 if (event.getItem().getType().equals(Material.BLAZE_ROD)) {
-                    Bullet bullet = new Bullet(event.getPlayer(), new DefaultBulletListener(), 4);
+                    Bullet bullet = new Bullet(event.getPlayer(), null, 4);
                     bullet.setRayParameter(2000, 0.05, 4);
                     (new BulletTask(bullet, 3)).runTaskTimer(CopsAndCrims.getPlugin(), 0, 1);
                 }

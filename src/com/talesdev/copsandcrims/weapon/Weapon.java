@@ -11,20 +11,20 @@ import java.util.List;
 public abstract class Weapon {
     protected String name;
     protected String displayName;
-    protected List<String> lores;
+    protected List<String> lore;
 
-    public Weapon(String name, String displayName, List<String> lores) {
+    public Weapon(String name, String displayName, List<String> lore) {
         this.name = name;
         this.displayName = displayName;
-        this.lores = lores;
+        this.lore = lore;
     }
 
     public String getName() {
         return name;
     }
 
-    public List<String> getLores() {
-        return lores;
+    public List<String> getLore() {
+        return lore;
     }
 
     protected List<String> blankAliases() {
@@ -38,9 +38,11 @@ public abstract class Weapon {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Weapon)) {
-            return false;
+        if (obj instanceof Weapon) {
+            if (((Weapon) obj).getName().equals(this.getName())) {
+                return true;
+            }
         }
-        return ((Weapon) obj).getName().equals(this.getName());
+        return false;
     }
 }
