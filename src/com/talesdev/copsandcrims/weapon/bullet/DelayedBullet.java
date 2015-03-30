@@ -31,7 +31,7 @@ public class DelayedBullet extends Bullet {
         for (int i = 0; i < getMaxIteration(); i++) {
             // shoot
             delayedVector = rayTrace.iterate(distance);
-            delayedLocation = delayedVector.toLocaton(getWorld());
+            delayedLocation = delayedVector.toLocation(getWorld());
             // bullet fire
             if (!iterateBullet(i, delayedLocation)) break;
             // check if hit box
