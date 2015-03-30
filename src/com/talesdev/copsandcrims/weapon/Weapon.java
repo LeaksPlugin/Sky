@@ -68,6 +68,14 @@ public abstract class Weapon implements WeaponItem {
         return null;
     }
 
+    public <T extends WeaponModule> boolean containsModule(Class<T> tClass) {
+        for (WeaponModule module : modules) {
+            if (module.getClass().getName().equals(tClass.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
     @Override
     public boolean isWeapon(ItemStack itemStack) {
         if (itemStack != null) {

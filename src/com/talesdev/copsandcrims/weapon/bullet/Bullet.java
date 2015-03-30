@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -23,14 +24,14 @@ import java.lang.reflect.InvocationTargetException;
  * @author MoKunz
  */
 public class Bullet {
-    private RayTrace rayTrace;
+    protected RayTrace rayTrace;
     private World world;
     private Player player;
-    private BulletListener action;
+    protected BulletListener action;
     private int maxIteration = 2000;
-    private double distance = 0.05;
-    private double bias = 3;
-    private double damage = 4;
+    protected double distance = 0.05;
+    protected double bias = 3;
+    protected double damage = 4;
     private boolean cancel = false;
     public Bullet(Player player,BulletListener action,double damage){
         this.player = player;
@@ -39,6 +40,18 @@ public class Bullet {
         this.world = this.player.getWorld();
         this.damage = damage;
         if(action != null) this.action.bulletCreated(this);
+    }
+
+    public int getMaxIteration() {
+        return maxIteration;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public World getWorld() {
+        return world;
     }
     public void setDamage(double damage){
         this.damage = damage;
@@ -74,64 +87,17 @@ public class Bullet {
             currentVector = rayTrace.iterate(distance);
             currentLocation = currentVector.toLocation(world);
             // bullet fire
-            if(action != null){
-                action.bulletFire(this,i,distance);
-                if (action instanceof BulletParticle && (i % 50 == 0))
-                    ((BulletParticle) action).createParticle(this, currentLocation, i, distance);
-            }
-            else{
-                if (i > 40 && (i % 50 == 0)) createBulletParticle(currentLocation);
-            }
+            if (!iterateBullet(i, currentLocation)) break;
             // check if hit box
             if (currentLocation.getBlock().getType().isSolid()) {
-                BulletHitResult result = new BulletHitResult(this,currentLocation,currentLocation.getBlock());
-                if(action != null){
-                    action.bulletHitObject(result);
-                    if(action instanceof BulletParticle) ((BulletParticle)action).createHitParticle(result);
-                }
-                else{
-                    world.playEffect(currentLocation.getBlock().getLocation(), Effect.STEP_SOUND, currentLocation.getBlock().getType());
-                }
-                //p.sendMessage(ChatColor.GREEN + "Ray distance : " + i*0.1);
-                cancel = true;
-                break;
+                if (!foundBlock(currentLocation)) break;
             }
             // set location of scanner
             nearbyEntity.setLocation(currentLocation);
             // find
             LivingEntity entity = nearbyEntity.findNearestInRadius(bias, true);
             if(entity != null){
-                if (entity.getName().equals(player.getName())) continue;
-                BoundingBox box = new BoundingBox(entity);
-                if (box.isInside(currentVector)) {
-                    // bullet particle
-                    BulletHitResult result = new BulletHitResult(this,currentLocation,entity);
-                    if(action != null){
-                        action.bulletHitObject(result);
-                        if(action instanceof BulletParticle) ((BulletParticle)action).createHitParticle(result);
-                    }
-                    // damage entity
-                    if(entity.getHealth() - damage > 0){
-                        // damage packet
-                        PacketContainer entityStatus = new PacketContainer(PacketType.Play.Server.ENTITY_STATUS);
-                        entityStatus.getIntegers().write(0, entity.getEntityId());
-                        entityStatus.getBytes().write(0, (byte) 2);
-                        try {
-                            for(Player p : Bukkit.getServer().getOnlinePlayers()){
-                                ProtocolLibrary.getProtocolManager().sendServerPacket(p, entityStatus);
-                            }
-                        } catch (InvocationTargetException e) {
-                            e.printStackTrace();
-                        }
-                        entity.setHealth(entity.getHealth() - damage);
-                        SoundEffect.getMobHurtSound(entity).playSound(currentLocation);
-                    }
-                    else{
-                        entity.damage(damage + 1);
-                        cancel = true;
-                    }
-                    break;
-                }
+                if (!foundEntity(currentLocation, currentVector, entity)) break;
             }
             if(action != null) action.afterBulletFire(this,i,distance);
         }
@@ -139,6 +105,65 @@ public class Bullet {
         if(action != null) action.finishFiring(this);
         // clean up
         rayTrace.reset();
+    }
+
+    protected boolean iterateBullet(int i, Location location) {
+        if (action != null) {
+            action.bulletFire(this, i, distance);
+            if (action instanceof BulletParticle && (i % 50 == 0))
+                ((BulletParticle) action).createParticle(this, location, i, distance);
+        } else {
+            if (i > 40 && (i % 50 == 0)) createBulletParticle(location);
+        }
+        return true;
+    }
+
+    protected boolean foundBlock(Location location) {
+        BulletHitResult result = new BulletHitResult(this, location, location.getBlock());
+        if (action != null) {
+            action.bulletHitObject(result);
+            if (action instanceof BulletParticle) ((BulletParticle) action).createHitParticle(result);
+        } else {
+            world.playEffect(location.getBlock().getLocation(), Effect.STEP_SOUND, location.getBlock().getType());
+        }
+        cancel();
+        return false;
+    }
+
+    protected boolean foundEntity(Location currentLocation, Vector currentVector, Entity entity) {
+        if (entity.getName().equals(player.getName())) return true;
+        BoundingBox box = new BoundingBox(entity);
+        if (box.isInside(currentVector)) {
+            // bullet particle
+            BulletHitResult result = new BulletHitResult(this, currentLocation, entity);
+            if (action != null) {
+                action.bulletHitObject(result);
+                if (action instanceof BulletParticle) ((BulletParticle) action).createHitParticle(result);
+            }
+            // damage entity
+            if (entity instanceof LivingEntity) {
+                if (((LivingEntity) entity).getHealth() - damage > 0) {
+                    // damage packet
+                    PacketContainer entityStatus = new PacketContainer(PacketType.Play.Server.ENTITY_STATUS);
+                    entityStatus.getIntegers().write(0, entity.getEntityId());
+                    entityStatus.getBytes().write(0, (byte) 2);
+                    try {
+                        for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+                            ProtocolLibrary.getProtocolManager().sendServerPacket(p, entityStatus);
+                        }
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+                    ((LivingEntity) entity).setHealth(((LivingEntity) entity).getHealth() - damage);
+                    SoundEffect.getMobHurtSound(entity).playSound(currentLocation);
+                } else {
+                    ((LivingEntity) entity).damage(damage + 1);
+                    cancel();
+                }
+                return false;
+            }
+        }
+        return true;
     }
     private void createBulletParticle(Location location){
         ParticleEffect.FLAME.display(0.01F, 0.01F, 0.01F, 0.001F, 1, location, 128);
