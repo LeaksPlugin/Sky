@@ -4,6 +4,8 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.talesdev.core.entity.BoundingBox;
+import com.talesdev.core.math.PolarVector;
+import com.talesdev.core.world.NMSRayTrace;
 import com.talesdev.core.world.NearbyEntity;
 import com.talesdev.core.world.RayTrace;
 import com.talesdev.core.world.SoundEffect;
@@ -21,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 
 /**
  * Class represent a bullet
+ *
  * @author MoKunz
  */
 public class Bullet {
@@ -28,18 +31,30 @@ public class Bullet {
     private World world;
     private Player player;
     protected BulletListener action;
+    protected Vector normalizedDirection;
+    protected Vector origin;
+    protected Vector direction;
+    protected double pSpread = 0.0;
+    protected double ySpread = 0.0;
     private int maxIteration = 2000;
     protected double distance = 0.05;
     protected double bias = 3;
     protected double damage = 4;
     private boolean cancel = false;
-    public Bullet(Player player,BulletListener action,double damage){
+
+    public Bullet(Player player, BulletListener action, double damage) {
         this.player = player;
-        if(action != null) this.action = action;
-        this.rayTrace = new RayTrace(this.player.getEyeLocation());
+        if (action != null) this.action = action;
         this.world = this.player.getWorld();
         this.damage = damage;
-        if(action != null) this.action.bulletCreated(this);
+        this.origin = this.player.getEyeLocation().toVector();
+        this.direction = this.player.getEyeLocation().getDirection();
+        PolarVector vector = new PolarVector(origin, origin.clone().add(direction));
+        // bullet spread
+        this.normalizedDirection = this.direction.clone().normalize();
+        // create raytrace engine
+        this.rayTrace = new RayTrace(world, origin, direction);
+        if (action != null) this.action.bulletCreated(this);
     }
 
     public int getMaxIteration() {
@@ -53,34 +68,41 @@ public class Bullet {
     public World getWorld() {
         return world;
     }
-    public void setDamage(double damage){
+
+    public void setDamage(double damage) {
         this.damage = damage;
     }
-    public double getDamage(){
+
+    public double getDamage() {
         return damage;
     }
-    public void setRayParameter(int maxIteration,double distancePerIteration,double rayBias){
+
+    public void setRayParameter(int maxIteration, double distancePerIteration, double rayBias) {
         this.maxIteration = maxIteration;
         this.distance = distancePerIteration;
         this.bias = rayBias;
     }
-    public boolean isCancel(){
+
+    public boolean isCancel() {
         return cancel;
     }
-    public void cancel(){
+
+    public void cancel() {
         this.cancel = true;
     }
-    public BulletListener getListener(){
+
+    public BulletListener getListener() {
         return action;
     }
-    public void fire(){
+
+    public void fire() {
         // ray tracing engine
         Location currentLocation;
         Vector currentVector;
         // entity scanner
         NearbyEntity<LivingEntity> nearbyEntity = new NearbyEntity<>(player.getEyeLocation(), LivingEntity.class);
         // action
-        if(action != null) action.prepareFiring(this);
+        if (action != null) action.prepareFiring(this);
         // start shooting ray
         for (int i = 0; i < maxIteration; i++) {
             // shoot
@@ -96,29 +118,43 @@ public class Bullet {
             nearbyEntity.setLocation(currentLocation);
             // find
             LivingEntity entity = nearbyEntity.findNearestInRadius(bias, true);
-            if(entity != null){
+            if (entity != null) {
                 if (!foundEntity(currentLocation, currentVector, entity)) break;
             }
-            if(action != null) action.afterBulletFire(this,i,distance);
+            if (action != null) action.afterBulletFire(this, i, distance);
         }
         // finish
-        if(action != null) action.finishFiring(this);
+        if (action != null) action.finishFiring(this);
         // clean up
         rayTrace.reset();
     }
 
+    /**
+     * @param i        iteration round
+     * @param location Current bullet location
+     * @return true if you want to continue continue or false if you want to break
+     */
     protected boolean iterateBullet(int i, Location location) {
         if (action != null) {
             action.bulletFire(this, i, distance);
             if (action instanceof BulletParticle && (i % 50 == 0))
                 ((BulletParticle) action).createParticle(this, location, i, distance);
         } else {
-            if (i > 40 && (i % 50 == 0)) createBulletParticle(location);
+            if (i > 40 && (i % 10 == 0)) {
+                createBulletParticle(location);
+            }
         }
         return true;
     }
 
     protected boolean foundBlock(Location location) {
+        // check if block is passable
+        NMSRayTrace nmsRayTrace = NMSRayTrace.rayTrace(getWorld(), location.toVector(), normalizedDirection);
+        if (nmsRayTrace.getBlockVector() != null) {
+            if (!location.getBlock().getLocation().equals(nmsRayTrace.getBlock().getLocation())) {
+                return true;
+            }
+        }
         BulletHitResult result = new BulletHitResult(this, location, location.getBlock());
         if (action != null) {
             action.bulletHitObject(result);
@@ -165,7 +201,9 @@ public class Bullet {
         }
         return true;
     }
-    private void createBulletParticle(Location location){
+
+    private void createBulletParticle(Location location) {
+        System.out.println("Location : " + location.getX() + "," + location.getY() + "," + location.getZ());
         ParticleEffect.FLAME.display(0.01F, 0.01F, 0.01F, 0.001F, 1, location, 128);
     }
 }

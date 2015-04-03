@@ -6,7 +6,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 * Created by MoKunz on 3/26/2015.
 */
 public class BulletTask extends BukkitRunnable {
-    private int tickCounter = 0;
+    private int tickCounter = 1;
     private Bullet bullet;
     private int count = 3;
     public BulletTask(Bullet bullet, int count){
@@ -15,9 +15,11 @@ public class BulletTask extends BukkitRunnable {
     }
     @Override
     public void run() {
-        tickCounter++;
-        if(tickCounter > count) this.cancel();
+        if (tickCounter > count) {
+            this.cancel();
+            return;
+        }
         bullet.fire();
-        if(bullet.isCancel()) this.cancel();
+        tickCounter++;
     }
 }

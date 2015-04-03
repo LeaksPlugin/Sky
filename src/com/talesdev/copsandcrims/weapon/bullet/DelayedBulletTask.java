@@ -8,8 +8,18 @@ import org.bukkit.scheduler.BukkitRunnable;
  * @author MoKunz
  */
 public class DelayedBulletTask extends BukkitRunnable {
+    private DelayedBullet bullet;
+
+    public DelayedBulletTask(DelayedBullet bullet) {
+        this.bullet = bullet;
+        this.bullet.startProcessing();
+    }
     @Override
     public void run() {
-        this.cancel();
+        if (bullet.isCancel()) {
+            bullet.finished();
+            this.cancel();
+        }
+        bullet.process();
     }
 }

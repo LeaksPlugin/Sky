@@ -1,5 +1,6 @@
 package com.talesdev.copsandcrims.weapon.bullet;
 
+import com.talesdev.copsandcrims.CopsAndCrims;
 import com.talesdev.core.world.NearbyEntity;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
@@ -23,34 +24,14 @@ public class DelayedBullet extends Bullet {
         super(player, action, damage);
     }
 
+    public DelayedBullet(DelayedBullet bullet) {
+        super(bullet.getPlayer(), bullet.getListener(), bullet.getDamage());
+    }
+
     @Override
     public void fire() {
-        // action
-        if (action != null) action.prepareFiring(this);
-        // start shooting ray
-        for (int i = 0; i < getMaxIteration(); i++) {
-            // shoot
-            delayedVector = rayTrace.iterate(distance);
-            delayedLocation = delayedVector.toLocation(getWorld());
-            // bullet fire
-            if (!iterateBullet(i, delayedLocation)) break;
-            // check if hit box
-            if (delayedLocation.getBlock().getType().isSolid()) {
-                if (!foundBlock(delayedLocation)) break;
-            }
-            // set location of scanner
-            nearbyEntity.setLocation(delayedLocation);
-            // find
-            LivingEntity entity = nearbyEntity.findNearestInRadius(bias, true);
-            if (entity != null) {
-                if (!foundEntity(delayedLocation, delayedVector, entity)) break;
-            }
-            if (action != null) action.afterBulletFire(this, i, distance);
-        }
-        // finish
-        if (action != null) action.finishFiring(this);
-        // clean up
-        rayTrace.reset();
+        DelayedBulletTask task = new DelayedBulletTask(new DelayedBullet(this));
+        task.runTaskTimer(CopsAndCrims.getPlugin(), 0, 1);
     }
 
     private void oneTickPassed() {
@@ -61,21 +42,73 @@ public class DelayedBullet extends Bullet {
         processedIteration += total;
     }
 
+    private int getProcessed() {
+        return processedIteration;
+    }
     private boolean processingFinished() {
         return processedIteration >= getMaxIteration();
     }
 
     public void startProcessing() {
-
+        // action hook
+        if (action != null) action.prepareFiring(this);
     }
 
-    public void process() {
 
+    public void process() {
+        // this do trick!
+        if (isCancel()) return;
+        // do some works
+        if (processingFinished()) {
+            cancel();
+            return;
+        }
+        for (int i = getProcessed(); i < getProcessed() + iterationPerTick; i++) {
+            // shoot
+            delayedVector = rayTrace.iterate(distance);
+            delayedLocation = delayedVector.toLocation(getWorld());
+            // bullet fire
+            if (!iterateBullet(getProcessed() + i, delayedLocation)) {
+                iterationProcessed(getProcessed() + i);
+                cancel();
+                return;
+            }
+            // check if hit box
+            if (delayedLocation.getBlock().getType().isSolid()) {
+                if (!foundBlock(delayedLocation)) {
+                    iterationProcessed(getProcessed() + i);
+                    cancel();
+                    return;
+                }
+            }
+            // set location of scanner
+            nearbyEntity.setLocation(delayedLocation);
+            // find
+            LivingEntity entity = nearbyEntity.findNearestInRadius(bias, true);
+            if (entity != null) {
+                if (!foundEntity(delayedLocation, delayedVector, entity)) {
+                    iterationProcessed(getProcessed() + i);
+                    cancel();
+                    return;
+                }
+            }
+            if (action != null) action.afterBulletFire(this, i, distance);
+        }
+        // processed
+        iterationProcessed(iterationPerTick);
+        // check if processing should stop and send signal to worker
+        if (processingFinished()) {
+            cancel();
+            return;
+        }
         // finish processing in each tick
         oneTickPassed();
     }
 
     public void finished() {
-
+        // finish
+        if (action != null) action.finishFiring(this);
+        // clean up
+        rayTrace.reset();
     }
 }

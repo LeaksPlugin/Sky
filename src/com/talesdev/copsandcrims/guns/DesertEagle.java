@@ -19,6 +19,6 @@ public class DesertEagle extends Weapon {
 
     @Override
     public ItemStack createItemStack() {
-        return new ItemStack(Material.BLAZE_ROD);
+        return new ItemStack(Material.GOLD_HOE);
     }
 }

@@ -1,6 +1,7 @@
 package com.talesdev.core.world;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.util.Vector;
 
 /**
@@ -13,6 +14,12 @@ public class RayTrace {
         this.location = origin;
         this.currentPos = new Vector(location.getX(), location.getY(), location.getZ());
         this.direction = RayTrace.toVector(location.getYaw(), location.getPitch());
+    }
+
+    public RayTrace(World world, Vector origin, Vector direction) {
+        this.location = origin.toLocation(world);
+        this.currentPos = origin;
+        this.direction = direction;
     }
 
     public Vector iterate(double distance) {
