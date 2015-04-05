@@ -1,5 +1,7 @@
 package com.talesdev.copsandcrims;
 
+import org.bukkit.entity.Player;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +21,19 @@ public class ServerCvCPlayer {
         }
     }
 
+    public boolean contains(Player player) {
+        return getPlayer(player) != null;
+    }
+
+    public CvCPlayer getPlayer(Player player) {
+        for (CvCPlayer cvCPlayer : getPlayerList()) {
+            if (cvCPlayer.getPlayerName().equalsIgnoreCase(player.getName())) {
+                return cvCPlayer;
+            }
+        }
+        return null;
+    }
+
     private List<CvCPlayer> getPlayerList() {
         return playerList;
     }
@@ -27,7 +42,7 @@ public class ServerCvCPlayer {
         return new HashSet<>(getPlayerList());
     }
 
-    public CvCPlayer createPlayer() {
-
+    public CvCPlayer createPlayer(Player player) {
+        return new CvCPlayer(player);
     }
 }

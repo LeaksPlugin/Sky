@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Weapon factory
@@ -46,6 +47,18 @@ public class WeaponFactory {
         return null;
     }
 
+    public List<Weapon> getAllWeapon() {
+        return weapons;
+    }
+
+    public List<String> getAllWeaponName() {
+        List<String> weaponsList = new ArrayList<>();
+        if (weapons.size() > 0) {
+            weaponsList.addAll(weapons.stream().map(Weapon::getName).collect(Collectors.toList()));
+        }
+        return weaponsList;
+    }
+
     public <T extends Weapon> ItemStack createWeaponItem(Class<T> weaponClass) {
         T weapon = getWeapon(weaponClass);
         if (weapon != null) {
@@ -53,5 +66,12 @@ public class WeaponFactory {
         } else {
             return new ItemStack(Material.AIR);
         }
+    }
+
+    public ItemStack createWeaponItem(String weaponName) {
+        if (getWeapon(weaponName) != null) {
+            return getWeapon(weaponName).createItemStack();
+        }
+        return new ItemStack(Material.AIR);
     }
 }

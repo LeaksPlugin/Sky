@@ -22,7 +22,7 @@ public class CopsAndCrims extends JavaPlugin {
         // save config
         saveDefaultConfig();
         // listener
-        getServer().getPluginManager().registerEvents(new CopsAndCrimsListener(), this);
+        getServer().getPluginManager().registerEvents(new CopsAndCrimsListener(this), this);
         // command
         getCommand("cvc").setExecutor(new CopsAndCrimsCommand());
         // item
