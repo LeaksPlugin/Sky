@@ -18,12 +18,37 @@ public class PlayerRecoil {
     public PlayerRecoil(Player player) {
         this.player = player;
         this.recoilMap = new HashMap<>();
-        initRecoil();
+        init();
     }
 
-    private void initRecoil() {
+    private void init() {
         for (String weaponName : CopsAndCrims.getPlugin().getWeaponFactory().getAllWeaponName()) {
             getRecoilMap().put(weaponName, new WeaponRecoil(getPlayer(), weaponName));
+        }
+    }
+
+    public void clearRecoil() {
+        getRecoilMap().clear();
+        init();
+    }
+
+
+    public void resetRecoil(String weaponName) {
+        if (getWeaponRecoil(weaponName) != null) {
+            getWeaponRecoil(weaponName).setRecoil(0.0);
+        }
+    }
+
+    public void resetRecoil() {
+        for (String weapon : getRecoilMap().keySet()) {
+            resetRecoil(weapon);
+        }
+    }
+
+
+    public void resetRecoil(Weapon weapon) {
+        if (getWeaponRecoil(weapon) != null) {
+            getWeaponRecoil(weapon).setRecoil(0.0);
         }
     }
 
