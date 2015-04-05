@@ -1,7 +1,7 @@
 package com.talesdev.core.player;
 
-import com.talesdev.core.MetaData;
 import com.talesdev.core.TalesCore;
+import com.talesdev.core.entity.MetaData;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 

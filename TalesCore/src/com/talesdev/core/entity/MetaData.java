@@ -1,4 +1,4 @@
-package com.talesdev.core;
+package com.talesdev.core.entity;
 
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;

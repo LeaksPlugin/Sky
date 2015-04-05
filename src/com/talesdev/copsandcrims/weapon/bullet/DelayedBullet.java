@@ -28,6 +28,9 @@ public class DelayedBullet extends Bullet {
         super(bullet.getPlayer(), bullet.getListener(), bullet.getDamage());
     }
 
+    public void setSpeed(int speed) {
+        this.iterationPerTick = speed;
+    }
     @Override
     public void fire() {
         DelayedBulletTask task = new DelayedBulletTask(new DelayedBullet(this));

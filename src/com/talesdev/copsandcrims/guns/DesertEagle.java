@@ -21,4 +21,12 @@ public class DesertEagle extends Weapon {
     public ItemStack createItemStack() {
         return new ItemStack(Material.GOLD_HOE);
     }
+
+    @Override
+    public boolean isWeapon(ItemStack itemStack) {
+        if (itemStack.getType().equals(Material.GOLD_HOE)) {
+            return true;
+        }
+        return super.isWeapon(itemStack);
+    }
 }

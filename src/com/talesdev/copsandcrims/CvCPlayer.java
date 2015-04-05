@@ -1,7 +1,11 @@
 package com.talesdev.copsandcrims;
 
+import com.talesdev.copsandcrims.weapon.WeaponRecoil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * CvC Player
@@ -9,9 +13,13 @@ import org.bukkit.entity.Player;
  */
 public class CvCPlayer {
     private double armorPoint;
+    private List<WeaponRecoil> recoils;
     private String playerName;
-    public CvCPlayer(String playerName){
-        this.playerName = playerName;
+    private Player player;
+
+    public CvCPlayer(Player player) {
+        this.player = player;
+        this.recoils = new ArrayList<>();
     }
 
     public void setArmorPoint(double armorPoint) {
@@ -23,10 +31,17 @@ public class CvCPlayer {
     public double getArmorPoint() {
         return armorPoint;
     }
+
     public Player getPlayer(){
         return Bukkit.getPlayer(playerName);
     }
+
     public String getPlayerName(){
         return playerName;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof CvCPlayer && getPlayerName().equalsIgnoreCase(((CvCPlayer) obj).getPlayerName());
     }
 }
