@@ -29,6 +29,7 @@ public class Bullet {
     private World world;
     private Player player;
     protected BulletListener action;
+    protected BulletAccuracy bulletAccuracy;
     protected Vector normalizedDirection;
     protected Vector origin;
     protected Vector direction;
@@ -40,19 +41,47 @@ public class Bullet {
     protected double damage = 4;
     private boolean cancel = false;
 
-    public Bullet(Player player, BulletListener action, double damage) {
+    public Bullet(Player player, BulletListener action, double damage, BulletAccuracy accuracy) {
         this.player = player;
         if (action != null) this.action = action;
         this.world = this.player.getWorld();
         this.damage = damage;
         this.origin = this.player.getEyeLocation().toVector();
         this.direction = this.player.getEyeLocation().getDirection();
+        // recoil comes first
+        if (accuracy != null) {
+            this.bulletAccuracy = accuracy;
+            this.direction.add(new Vector(0, getBulletAccuracy().getRecoil() / 100D, 0));
+        } else {
+            this.bulletAccuracy = null;
+            this.direction.add(new Vector(0, 0, 0));
+        }
         // bullet spread
-        this.direction = this.direction.add(new Vector(MathRandom.randomRange(-1, 1) / 100D, MathRandom.randomRange(-1, 1) / 100D, MathRandom.randomRange(-1, 1) / 100D));
+        this.direction = calculateSpreadDirection();
         this.normalizedDirection = this.direction.clone().normalize();
         // create raytrace engine
         this.rayTrace = new RayTrace(world, origin, direction);
         if (action != null) this.action.bulletCreated(this);
+    }
+
+    private Vector calculateSpreadDirection() {
+        BulletAccuracy accuracy = getBulletAccuracy();
+        if (accuracy != null) {
+            return this.direction.add(new Vector(
+                    MathRandom.randomRange(accuracy.getXSpread().getStart(), accuracy.getXSpread().getEnd()) / 100D,
+                    MathRandom.randomRange(accuracy.getYSpread().getStart(), accuracy.getYSpread().getEnd()) / 100D,
+                    MathRandom.randomRange(accuracy.getZSpread().getStart(), accuracy.getZSpread().getEnd()) / 100D
+            ));
+        }
+        return this.direction.add(new Vector(
+                MathRandom.randomRange(-1, 1) / 100D,
+                MathRandom.randomRange(-1, 1) / 100D,
+                MathRandom.randomRange(-1, 1) / 100D
+        ));
+    }
+
+    public BulletAccuracy getBulletAccuracy() {
+        return bulletAccuracy;
     }
 
     public int getMaxIteration() {
@@ -167,6 +196,7 @@ public class Bullet {
                 block.getType().equals(Material.STAINED_GLASS) ||
                 block.getType().equals(Material.STAINED_GLASS_PANE)) {
             getWorld().getBlockAt(location).setType(Material.AIR);
+            return true;
         }
         cancel();
         return false;

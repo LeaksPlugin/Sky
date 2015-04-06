@@ -1,6 +1,8 @@
-package com.talesdev.copsandcrims.weapon;
+package com.talesdev.copsandcrims.player;
 
 import com.talesdev.copsandcrims.CopsAndCrims;
+import com.talesdev.copsandcrims.weapon.Weapon;
+import com.talesdev.copsandcrims.weapon.WeaponRecoil;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -61,6 +63,9 @@ public class PlayerRecoil {
     }
 
     public WeaponRecoil getWeaponRecoil(String weaponName) {
+        if (!getRecoilMap().containsKey(weaponName)) {
+            setRecoil(weaponName, 0.0D);
+        }
         return getRecoilMap().get(weaponName);
     }
 

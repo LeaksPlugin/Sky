@@ -2,8 +2,8 @@ package com.talesdev.copsandcrims;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
  * Cops And Crimes Listener
@@ -17,12 +17,16 @@ public class CopsAndCrimsListener implements Listener {
     }
 
     @EventHandler
-    public void onClick(PlayerInteractEvent event) {
-
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        plugin.getServerCvCPlayer().addNewPlayer(plugin.getServerCvCPlayer().createPlayer(event.getPlayer()));
+        // DEBUG
+        System.out.println(plugin.getServerCvCPlayer().getAllPlayers());
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        plugin.getServerCvCPlayer().addNewPlayer(plugin.getServerCvCPlayer().createPlayer(event.getPlayer()));
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        plugin.getServerCvCPlayer().removePlayer(plugin.getServerCvCPlayer().getPlayer(event.getPlayer()));
+        // DEBUG
+        System.out.println(plugin.getServerCvCPlayer().getAllPlayers());
     }
 }

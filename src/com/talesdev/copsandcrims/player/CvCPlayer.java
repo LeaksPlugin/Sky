@@ -1,6 +1,5 @@
-package com.talesdev.copsandcrims;
+package com.talesdev.copsandcrims.player;
 
-import com.talesdev.copsandcrims.weapon.PlayerRecoil;
 import org.bukkit.entity.Player;
 
 /**
@@ -11,6 +10,7 @@ public class CvCPlayer {
     private double armorPoint;
     private Player player;
     private PlayerRecoil playerRecoil;
+    private CvCPlayerData playerData;
 
     public CvCPlayer(Player player) {
         this.player = player;
@@ -30,6 +30,7 @@ public class CvCPlayer {
     public PlayerRecoil getPlayerRecoil() {
         return playerRecoil;
     }
+
     public Player getPlayer(){
         return player;
     }
@@ -41,5 +42,10 @@ public class CvCPlayer {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof CvCPlayer && getPlayerName().equalsIgnoreCase(((CvCPlayer) obj).getPlayerName());
+    }
+
+    @Override
+    public String toString() {
+        return "CvCPlayer[" + getPlayerName() + "]";
     }
 }

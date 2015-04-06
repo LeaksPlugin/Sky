@@ -1,6 +1,6 @@
 package com.talesdev.copsandcrims.arena;
 
-import com.talesdev.copsandcrims.CvCPlayer;
+import com.talesdev.copsandcrims.player.CvCPlayer;
 
 import java.util.List;
 

@@ -1,12 +1,16 @@
 package com.talesdev.copsandcrims.weapon.module;
 
 import com.talesdev.copsandcrims.CopsAndCrims;
+import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.copsandcrims.weapon.WeaponCooldownTag;
+import com.talesdev.copsandcrims.weapon.bullet.BulletAccuracy;
 import com.talesdev.copsandcrims.weapon.bullet.BulletTask;
 import com.talesdev.copsandcrims.weapon.bullet.DelayedBullet;
+import com.talesdev.core.math.Range;
 import com.talesdev.core.player.ClickingAction;
 import com.talesdev.core.world.Sound;
 import com.talesdev.core.world.SoundEffect;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -25,13 +29,28 @@ public class DummyModule extends WeaponModule {
                 ClickingAction.isRightClick(event.getAction())) {
             WeaponCooldownTag tag = new WeaponCooldownTag(3, event.getPlayer());
             if (!tag.isCooldown()) {
-                DelayedBullet bullet = new DelayedBullet(event.getPlayer(), null, 4);
+                CvCPlayer player = CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(event.getPlayer());
+                double recoil = 0.0;
+                if (player != null) recoil = player.getPlayerRecoil().getRecoil(getWeapon());
+                DelayedBullet bullet = new DelayedBullet(
+                        event.getPlayer(), null, 4,
+                        new BulletAccuracy(
+                                new Range(-1, 1),
+                                new Range(-1, 1),
+                                new Range(-1, 1),
+                                recoil
+                        )
+                );
                 bullet.setRayParameter(2000, 0.05, 4);
-                bullet.setSpeed(10);
+                bullet.setSpeed(500);
                 (new BulletTask(bullet, 1)).runTaskTimer(CopsAndCrims.getPlugin(), 0, 1);
-                (new Sound(SoundEffect.MOB_SKELETON_DEATH, 1, 1)).playSound(event.getPlayer(), event.getPlayer().getLocation());
+                float volume = 1.0F;
+                if (event.getPlayer().getEyeLocation().getBlock().isLiquid()) volume = 0.8F;
+                (new Sound(SoundEffect.MOB_SKELETON_DEATH, volume, 1)).playSound(event.getPlayer(), event.getPlayer().getLocation());
+                if (player != null) player.getPlayerRecoil().addRecoil(getWeapon(), 5.0D);
                 tag.attach();
             }
+            event.setUseItemInHand(Event.Result.DENY);
         }
     }
 }

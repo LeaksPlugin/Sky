@@ -10,6 +10,16 @@ import org.bukkit.entity.Player;
  * @author MoKunz
  */
 public class WeaponRecoil {
+    private double regen = 1.0D;
+
+    public double getRegen() {
+        return regen;
+    }
+
+    public void setRegen(double regen) {
+        this.regen = regen;
+    }
+
     private Player player;
     private MetaData metaData;
     private final String KEY;
@@ -32,7 +42,11 @@ public class WeaponRecoil {
     }
 
     public void setRecoil(double recoilValue) {
-        getMetaData().setMetadata(KEY, recoilValue);
+        if (recoilValue > 0) {
+            getMetaData().setMetadata(KEY, recoilValue);
+        } else {
+            getMetaData().setMetadata(KEY, 0.0);
+        }
     }
 
     public void addRecoil(double recoilAmount) {

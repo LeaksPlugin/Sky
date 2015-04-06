@@ -1,4 +1,4 @@
-package com.talesdev.copsandcrims;
+package com.talesdev.copsandcrims.player;
 
 /**
  * Interface for hooking with player in arena

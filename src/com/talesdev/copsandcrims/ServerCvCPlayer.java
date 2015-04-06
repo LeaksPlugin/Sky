@@ -1,5 +1,6 @@
 package com.talesdev.copsandcrims;
 
+import com.talesdev.copsandcrims.player.CvCPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -19,6 +20,10 @@ public class ServerCvCPlayer {
         if (!getPlayerList().contains(cvcPlayer)) {
             getPlayerList().add(cvcPlayer);
         }
+    }
+
+    public void removePlayer(CvCPlayer player) {
+        getPlayerList().remove(player);
     }
 
     public boolean contains(Player player) {
