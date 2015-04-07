@@ -7,8 +7,8 @@ package com.talesdev.copsandcrims.weapon;
 public enum WeaponType {
     MELEE,
     PISTOL,
-    SHOT_GUN,
+    SHOTGUN,
     SUB_MACHINE_GUN,
-    RIFLE,
-    MACHINE_GUN
+    ASSAULT_RIFLE,
+    SNIPER_RIFLE
 }
