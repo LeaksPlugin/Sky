@@ -48,22 +48,24 @@ public class ShootingModule extends WeaponModule {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
-        // is weapon
-        if (getWeapon().isWeapon(event.getItem())) {
-            if (event.getClickedBlock() != null) {
-                MaterialComparator comparator = new MaterialComparator(new RightClickable());
-                if (comparator.containThisMaterial(event.getClickedBlock().getType())) {
-                    event.setUseItemInHand(Event.Result.DENY);
-                    return;
+        if (event.getItem() != null) {
+            // is weapon
+            if (getWeapon().isWeapon(event.getItem())) {
+                if (event.getClickedBlock() != null) {
+                    MaterialComparator comparator = new MaterialComparator(new RightClickable());
+                    if (comparator.containThisMaterial(event.getClickedBlock().getType())) {
+                        event.setUseItemInHand(Event.Result.DENY);
+                        return;
+                    }
                 }
+                if (ClickingAction.isRightClick(event.getAction())) {
+                    shootBullet(event);
+                } else if (ClickingAction.isLeftClick(event.getAction())) {
+                    // TODO : Attachment
+                }
+                event.setUseInteractedBlock(Event.Result.DENY);
+                event.setUseItemInHand(Event.Result.DENY);
             }
-            if (ClickingAction.isRightClick(event.getAction())) {
-                shootBullet(event);
-            } else if (ClickingAction.isLeftClick(event.getAction())) {
-                // TODO : Attachment
-            }
-            event.setUseInteractedBlock(Event.Result.DENY);
-            event.setUseItemInHand(Event.Result.DENY);
         }
     }
 
