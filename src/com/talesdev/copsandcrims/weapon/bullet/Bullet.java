@@ -3,8 +3,8 @@ package com.talesdev.copsandcrims.weapon.bullet;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
+import com.talesdev.copsandcrims.CopsAndCrims;
 import com.talesdev.core.entity.BoundingBox;
-import com.talesdev.core.math.MathRandom;
 import com.talesdev.core.world.NMSRayTrace;
 import com.talesdev.core.world.NearbyEntity;
 import com.talesdev.core.world.RayTrace;
@@ -33,12 +33,11 @@ public class Bullet {
     protected Vector normalizedDirection;
     protected Vector origin;
     protected Vector direction;
-    protected double pSpread = 0.0;
-    protected double ySpread = 0.0;
     private int maxIteration = 2000;
     protected double distance = 0.05;
     protected double bias = 3;
     protected double damage = 4;
+    protected double headShotDamage = damage * 2;
     private boolean cancel = false;
 
     public Bullet(Player player, BulletListener action, double damage, BulletAccuracy accuracy) {
@@ -52,9 +51,6 @@ public class Bullet {
         if (accuracy != null) {
             this.bulletAccuracy = accuracy;
             this.direction.add(new Vector(0, getBulletAccuracy().getRecoil() / 100D, 0));
-        } else {
-            this.bulletAccuracy = null;
-            this.direction.add(new Vector(0, 0, 0));
         }
         // bullet spread
         this.direction = calculateSpreadDirection();
@@ -67,17 +63,20 @@ public class Bullet {
     private Vector calculateSpreadDirection() {
         BulletAccuracy accuracy = getBulletAccuracy();
         if (accuracy != null) {
-            return this.direction.add(new Vector(
-                    MathRandom.randomRange(accuracy.getXSpread().getStart(), accuracy.getXSpread().getEnd()) / 100D,
-                    MathRandom.randomRange(accuracy.getYSpread().getStart(), accuracy.getYSpread().getEnd()) / 100D,
-                    MathRandom.randomRange(accuracy.getZSpread().getStart(), accuracy.getZSpread().getEnd()) / 100D
-            ));
+            if (player.isSneaking()) {
+                System.out.println(accuracy.getSneakingAccuracy().toVector());
+                return this.direction.add(accuracy.getSneakingAccuracy().toVector());
+            }
+            if (CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(player).isWalking()) {
+                return this.direction.add(accuracy.getWalkingAccuracy().toVector());
+            }
+            if (player.isSprinting()) {
+                return this.direction.add(accuracy.getSprintingAccuracy().toVector());
+            }
+            // normal bullet spread
+            return this.direction.add(accuracy.getDefaultAccuracy().toVector());
         }
-        return this.direction.add(new Vector(
-                MathRandom.randomRange(-1, 1) / 100D,
-                MathRandom.randomRange(-1, 1) / 100D,
-                MathRandom.randomRange(-1, 1) / 100D
-        ));
+        return this.direction;
     }
 
     public BulletAccuracy getBulletAccuracy() {
@@ -98,6 +97,14 @@ public class Bullet {
 
     public void setDamage(double damage) {
         this.damage = damage;
+    }
+
+    public double getHeadShotDamage() {
+        return headShotDamage;
+    }
+
+    public void setHeadShotDamage(double headShotDamage) {
+        this.headShotDamage = headShotDamage;
     }
 
     public double getDamage() {
@@ -218,7 +225,7 @@ public class Bullet {
                 if ((Math.abs(((LivingEntity) entity).getEyeLocation().getY() - currentLocation.getY()) <= 0.5) &&
                         (((LivingEntity) entity).getEyeLocation().distanceSquared(currentLocation) <= 0.5)
                         ) {
-                    damage *= 2;
+                    damage = headShotDamage;
                 }
                 if (((LivingEntity) entity).getHealth() - damage > 0) {
                     // damage packet

@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
  * @author MoKunz
  */
 public class CvCPlayer {
+    private boolean isWalking = false;
+    private long lastWalkingTime;
     private double armorPoint;
     private Player player;
     private PlayerRecoil playerRecoil;
@@ -15,8 +17,25 @@ public class CvCPlayer {
     public CvCPlayer(Player player) {
         this.player = player;
         this.playerRecoil = new PlayerRecoil(getPlayer());
+        this.isWalking = false;
+        this.lastWalkingTime = System.currentTimeMillis();
     }
 
+    public void updateLastWalkingTime() {
+        this.lastWalkingTime = System.currentTimeMillis();
+    }
+
+    public long getLastWalkingTime() {
+        return lastWalkingTime;
+    }
+
+    public void setWalking(boolean walking) {
+        this.isWalking = walking;
+    }
+
+    public boolean isWalking() {
+        return isWalking;
+    }
     public void setArmorPoint(double armorPoint) {
         if (armorPoint > 0) {
             this.armorPoint = armorPoint;

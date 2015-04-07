@@ -9,14 +9,65 @@ import com.talesdev.core.math.Range;
  */
 public class BulletAccuracy {
     private double recoil;
-    private Range xSpread, ySpread, zSpread;
+    private Accuracy defaultAccuracy;
+    private Accuracy sneakingAccuracy;
+    private Accuracy walkingAccuracy;
+    private Accuracy sprintingAccuracy;
+    private Accuracy jumpingAccuracy;
 
     public BulletAccuracy(Range xSpread, Range ySpread, Range zSpread, double recoil) {
-        this.xSpread = xSpread;
-        this.ySpread = ySpread;
-        this.zSpread = zSpread;
-        this.recoil = recoil;
+        this(new Accuracy(xSpread, ySpread, zSpread), recoil);
     }
+
+    public BulletAccuracy(Accuracy defaultAccuracy, double recoil) {
+        this(defaultAccuracy, defaultAccuracy, defaultAccuracy, defaultAccuracy, defaultAccuracy, recoil);
+    }
+
+    public BulletAccuracy(Accuracy defaultAccuracy, Accuracy sneakingAccuracy, Accuracy walkingAccuracy, Accuracy sprintingAccuracy, Accuracy jumpingAccuracy, double recoil) {
+        this.defaultAccuracy = defaultAccuracy;
+        this.sneakingAccuracy = sneakingAccuracy;
+        this.walkingAccuracy = walkingAccuracy;
+        this.sprintingAccuracy = sprintingAccuracy;
+        this.jumpingAccuracy = jumpingAccuracy;
+        setRecoil(recoil);
+    }
+
+    public Accuracy getDefaultAccuracy() {
+        return defaultAccuracy;
+    }
+
+    public Accuracy getSneakingAccuracy() {
+        return sneakingAccuracy;
+    }
+
+    public void setSneakingAccuracy(Accuracy sneakingAccuracy) {
+        this.sneakingAccuracy = sneakingAccuracy;
+    }
+
+    public Accuracy getSprintingAccuracy() {
+        return sprintingAccuracy;
+    }
+
+    public void setSprintingAccuracy(Accuracy sprintingAccuracy) {
+        this.sprintingAccuracy = sprintingAccuracy;
+    }
+
+    public Accuracy getWalkingAccuracy() {
+        return walkingAccuracy;
+    }
+
+    public void setWalkingAccuracy(Accuracy walkingAccuracy) {
+        this.walkingAccuracy = walkingAccuracy;
+    }
+
+    public Accuracy getJumpingAccuracy() {
+        return jumpingAccuracy;
+    }
+
+    public void setJumpingAccuracy(Accuracy jumpingAccuracy) {
+        this.jumpingAccuracy = jumpingAccuracy;
+    }
+
 
     public double getRecoil() {
         return recoil;
@@ -27,26 +78,26 @@ public class BulletAccuracy {
     }
 
     public Range getXSpread() {
-        return xSpread;
+        return defaultAccuracy.getXSpread();
     }
 
     public void setXSpread(Range xSpread) {
-        this.xSpread = xSpread;
+        defaultAccuracy.setXSpread(xSpread);
     }
 
     public Range getYSpread() {
-        return ySpread;
+        return defaultAccuracy.getYSpread();
     }
 
     public void setYSpread(Range ySpread) {
-        this.ySpread = ySpread;
+        defaultAccuracy.setYSpread(ySpread);
     }
 
     public Range getZSpread() {
-        return zSpread;
+        return defaultAccuracy.getZSpread();
     }
 
     public void setZSpread(Range zSpread) {
-        this.zSpread = zSpread;
+        defaultAccuracy.setZSpread(zSpread);
     }
 }

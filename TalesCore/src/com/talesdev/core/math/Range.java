@@ -9,14 +9,21 @@ import java.util.List;
  * @author MoKunz
  */
 public class Range {
-    private int start;
-    private int end;
+    private int start = 0;
+    private int end = 0;
+    private double startDouble = 0.0;
+    private double endDouble = 0.0;
     private List<Integer> filteredNumber;
 
     public Range(int start, int end) {
         this.start = start;
         this.end = end;
         this.filteredNumber = new ArrayList<>();
+    }
+
+    public Range(double start, double end) {
+        this.startDouble = start;
+        this.endDouble = end;
     }
 
     public Range filter(Integer... filteredNumber) {
@@ -32,6 +39,15 @@ public class Range {
 
     public int getEnd() {
         return end;
+    }
+
+    public double getEndDouble() {
+        return endDouble;
+    }
+
+    public double getStartDouble() {
+        return startDouble;
+
     }
 
     public int[] asArray() {

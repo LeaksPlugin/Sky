@@ -6,10 +6,10 @@ import com.talesdev.copsandcrims.ServerCvCPlayer;
 /**
  * Player recoil processing task
  */
-public class PlayerRecoilTask implements Runnable {
+public class PlayerBulletTask implements Runnable {
     private CopsAndCrims plugin;
 
-    public PlayerRecoilTask(CopsAndCrims plugin) {
+    public PlayerBulletTask(CopsAndCrims plugin) {
         this.plugin = plugin;
     }
 
@@ -25,6 +25,14 @@ public class PlayerRecoilTask implements Runnable {
                     }
                 });
             }
+            plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    if (System.currentTimeMillis() - player.getLastWalkingTime() > 50) {
+                        player.setWalking(false);
+                    }
+                }
+            });
         }
     }
 }

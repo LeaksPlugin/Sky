@@ -20,6 +20,15 @@ public class MathRandom {
         return range.getStart() + random.nextInt((range.getEnd() - range.getStart()) + 1);
     }
 
+    public static double randomDoubleRange(double start, double end) {
+        Random random = new Random();
+        return start + (end - start) * random.nextDouble();
+    }
+
+    public static double randomDoubleRange(Range range) {
+        return randomDoubleRange(range.getStartDouble(), range.getEndDouble());
+    }
+
     public static int randomRange(int start, int end) {
         return randomRange(new Range(start, end));
     }

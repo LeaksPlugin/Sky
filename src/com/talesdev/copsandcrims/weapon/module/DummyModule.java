@@ -3,6 +3,7 @@ package com.talesdev.copsandcrims.weapon.module;
 import com.talesdev.copsandcrims.CopsAndCrims;
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.copsandcrims.weapon.WeaponCooldownTag;
+import com.talesdev.copsandcrims.weapon.bullet.Accuracy;
 import com.talesdev.copsandcrims.weapon.bullet.BulletAccuracy;
 import com.talesdev.copsandcrims.weapon.bullet.BulletTask;
 import com.talesdev.copsandcrims.weapon.bullet.DelayedBullet;
@@ -32,12 +33,15 @@ public class DummyModule extends WeaponModule {
                 CvCPlayer player = CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(event.getPlayer());
                 double recoil = 0.0;
                 if (player != null) recoil = player.getPlayerRecoil().getRecoil(getWeapon());
+                Accuracy accuracy = new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1));
                 DelayedBullet bullet = new DelayedBullet(
                         event.getPlayer(), null, 4,
                         new BulletAccuracy(
-                                new Range(-1, 1),
-                                new Range(-1, 1),
-                                new Range(-1, 1),
+                                accuracy,
+                                new Accuracy(new Range(0, 0), new Range(0, 0), new Range(0, 0)),
+                                accuracy,
+                                accuracy,
+                                accuracy,
                                 recoil
                         )
                 );

@@ -1,8 +1,10 @@
 package com.talesdev.copsandcrims;
 
+import com.talesdev.copsandcrims.player.CvCPlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
@@ -28,5 +30,14 @@ public class CopsAndCrimsListener implements Listener {
         plugin.getServerCvCPlayer().removePlayer(plugin.getServerCvCPlayer().getPlayer(event.getPlayer()));
         // DEBUG
         System.out.println(plugin.getServerCvCPlayer().getAllPlayers());
+    }
+
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        CvCPlayer player = plugin.getServerCvCPlayer().getPlayer(event.getPlayer());
+        if (player != null) {
+            player.setWalking(true);
+            player.updateLastWalkingTime();
+        }
     }
 }

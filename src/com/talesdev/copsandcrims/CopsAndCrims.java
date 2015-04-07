@@ -3,7 +3,7 @@ package com.talesdev.copsandcrims;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.talesdev.copsandcrims.arena.DefaultArena;
 import com.talesdev.copsandcrims.guns.DesertEagle;
-import com.talesdev.copsandcrims.player.PlayerRecoilTask;
+import com.talesdev.copsandcrims.player.PlayerBulletTask;
 import com.talesdev.copsandcrims.weapon.WeaponFactory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -34,7 +34,7 @@ public class CopsAndCrims extends JavaPlugin {
         // protocol
         ProtocolLibrary.getProtocolManager().addPacketListener(new MyPacketAdapter(this));
         // task
-        recoilTask = getServer().getScheduler().runTaskTimerAsynchronously(this, new PlayerRecoilTask(this), 0, 1);
+        recoilTask = getServer().getScheduler().runTaskTimerAsynchronously(this, new PlayerBulletTask(this), 0, 1);
     }
 
     @Override
