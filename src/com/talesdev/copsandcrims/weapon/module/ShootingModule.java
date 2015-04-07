@@ -37,11 +37,11 @@ public class ShootingModule extends WeaponModule {
         super("Shooting");
         setSoundEffect(SoundEffect.MOB_SKELETON_DEATH);
         setAccuracy(new BulletAccuracy(
-                new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)),
-                new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)),
-                new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)),
-                new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)),
-                new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1))
+                new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)), // default
+                new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)), // sneaking
+                new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)), // walking
+                new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)), // sprinting
+                new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)) // jumping
         ));
         setFiringMode(FiringMode.SEMI_AUTO);
     }
@@ -76,9 +76,8 @@ public class ShootingModule extends WeaponModule {
             if (player != null) recoil = player.getPlayerRecoil().getRecoil(getWeapon());
             // construct
             DelayedBullet bullet = new DelayedBullet(
-                    event.getPlayer(), getListener(), getDamage(), getAccuracy()
+                    event.getPlayer(), getListener(), getDamage(), getAccuracy(), recoil
             );
-            bullet.setRecoil(recoil);
             bullet.setHeadShotDamage(getHeadShotDamage());
             bullet.setRayParameter(2000, 0.05, 4);
             bullet.setSpeed(getSpeed());

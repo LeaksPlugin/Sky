@@ -42,7 +42,8 @@ public class DummyModule extends WeaponModule {
                                 accuracy,
                                 accuracy,
                                 accuracy
-                        )
+                        ),
+                        5.0D
                 );
                 bullet.setRecoil(recoil);
                 bullet.setRayParameter(2000, 0.05, 4);

@@ -41,13 +41,14 @@ public class Bullet {
     protected double headShotDamage = damage * 2;
     private boolean cancel = false;
 
-    public Bullet(Player player, BulletListener action, double damage, BulletAccuracy accuracy) {
+    public Bullet(Player player, BulletListener action, double damage, BulletAccuracy accuracy, double recoil) {
         this.player = player;
         if (action != null) this.action = action;
         this.world = this.player.getWorld();
         this.damage = damage;
         this.origin = this.player.getEyeLocation().toVector();
         this.direction = this.player.getEyeLocation().getDirection();
+        setRecoil(recoil);
         if (accuracy != null) {
             this.bulletAccuracy = accuracy;
         }

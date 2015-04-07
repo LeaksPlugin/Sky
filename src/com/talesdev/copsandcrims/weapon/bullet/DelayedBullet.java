@@ -20,17 +20,17 @@ public class DelayedBullet extends Bullet {
     private int processedIteration = 0;
     private int iterationPerTick = 100;
 
-    public DelayedBullet(Player player, BulletListener action, double damage, BulletAccuracy accuracy, int speed) {
-        super(player, action, damage, accuracy);
+    public DelayedBullet(Player player, BulletListener action, double damage, BulletAccuracy accuracy, int speed, double recoil) {
+        super(player, action, damage, accuracy, recoil);
         setSpeed(speed);
     }
 
-    public DelayedBullet(Player player, BulletListener action, double damage, BulletAccuracy accuracy) {
-        super(player, action, damage, accuracy);
+    public DelayedBullet(Player player, BulletListener action, double damage, BulletAccuracy accuracy, double recoil) {
+        super(player, action, damage, accuracy, recoil);
     }
 
     public DelayedBullet(DelayedBullet bullet) {
-        this(bullet.getPlayer(), bullet.getListener(), bullet.getDamage(), bullet.getBulletAccuracy(), bullet.getSpeed());
+        this(bullet.getPlayer(), bullet.getListener(), bullet.getDamage(), bullet.getBulletAccuracy(), bullet.getSpeed(), bullet.getRecoil());
     }
 
     public void setSpeed(int speed) {
