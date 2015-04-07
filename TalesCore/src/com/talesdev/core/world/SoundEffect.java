@@ -7,7 +7,7 @@ import org.bukkit.entity.*;
  *
  * @author MoKunz
  */
-public enum SoundEffect {
+public enum SoundEffect implements SoundEffectInterface {
     AMBIENT_CAVE_CAVE,
     AMBIENT_WEATHER_RAIN,
     AMBIENT_WEATHER_THUNDER,

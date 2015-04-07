@@ -15,21 +15,20 @@ public class BulletAccuracy {
     private Accuracy sprintingAccuracy;
     private Accuracy jumpingAccuracy;
 
-    public BulletAccuracy(Range xSpread, Range ySpread, Range zSpread, double recoil) {
-        this(new Accuracy(xSpread, ySpread, zSpread), recoil);
+    public BulletAccuracy(Range xSpread, Range ySpread, Range zSpread) {
+        this(new Accuracy(xSpread, ySpread, zSpread));
     }
 
-    public BulletAccuracy(Accuracy defaultAccuracy, double recoil) {
-        this(defaultAccuracy, defaultAccuracy, defaultAccuracy, defaultAccuracy, defaultAccuracy, recoil);
+    public BulletAccuracy(Accuracy defaultAccuracy) {
+        this(defaultAccuracy, defaultAccuracy, defaultAccuracy, defaultAccuracy, defaultAccuracy);
     }
 
-    public BulletAccuracy(Accuracy defaultAccuracy, Accuracy sneakingAccuracy, Accuracy walkingAccuracy, Accuracy sprintingAccuracy, Accuracy jumpingAccuracy, double recoil) {
+    public BulletAccuracy(Accuracy defaultAccuracy, Accuracy sneakingAccuracy, Accuracy walkingAccuracy, Accuracy sprintingAccuracy, Accuracy jumpingAccuracy) {
         this.defaultAccuracy = defaultAccuracy;
         this.sneakingAccuracy = sneakingAccuracy;
         this.walkingAccuracy = walkingAccuracy;
         this.sprintingAccuracy = sprintingAccuracy;
         this.jumpingAccuracy = jumpingAccuracy;
-        setRecoil(recoil);
     }
 
     public Accuracy getDefaultAccuracy() {

@@ -2,7 +2,7 @@ package com.talesdev.copsandcrims.guns;
 
 import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.WeaponType;
-import com.talesdev.copsandcrims.weapon.module.DummyModule;
+import com.talesdev.copsandcrims.weapon.module.ShootingModule;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -14,7 +14,7 @@ public class DesertEagle extends Weapon {
 
     public DesertEagle() {
         super("DesertEagle", "Desert Eagle", blankAliases(), WeaponType.PISTOL);
-        addModule(new DummyModule());
+        addModule(new ShootingModule());
     }
 
     @Override

@@ -41,10 +41,10 @@ public class DummyModule extends WeaponModule {
                                 new Accuracy(new Range(0, 0), new Range(0, 0), new Range(0, 0)),
                                 accuracy,
                                 accuracy,
-                                accuracy,
-                                recoil
+                                accuracy
                         )
                 );
+                bullet.setRecoil(recoil);
                 bullet.setRayParameter(2000, 0.05, 4);
                 bullet.setSpeed(500);
                 (new BulletTask(bullet, 1)).runTaskTimer(CopsAndCrims.getPlugin(), 0, 1);

@@ -3,7 +3,6 @@ package com.talesdev.copsandcrims.weapon.bullet;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
-import com.talesdev.copsandcrims.CopsAndCrims;
 import com.talesdev.core.entity.BoundingBox;
 import com.talesdev.core.world.NMSRayTrace;
 import com.talesdev.core.world.NearbyEntity;
@@ -12,6 +11,7 @@ import com.talesdev.core.world.SoundEffect;
 import com.talesdev.core.world.particle.ParticleEffect;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -30,6 +30,7 @@ public class Bullet {
     private Player player;
     protected BulletListener action;
     protected BulletAccuracy bulletAccuracy;
+    protected double recoil = 0.0;
     protected Vector normalizedDirection;
     protected Vector origin;
     protected Vector direction;
@@ -47,11 +48,11 @@ public class Bullet {
         this.damage = damage;
         this.origin = this.player.getEyeLocation().toVector();
         this.direction = this.player.getEyeLocation().getDirection();
-        // recoil comes first
         if (accuracy != null) {
             this.bulletAccuracy = accuracy;
-            this.direction.add(new Vector(0, getBulletAccuracy().getRecoil() / 100D, 0));
         }
+        // recoil comes first
+        this.direction.add(new Vector(0, getRecoil() / 100D, 0));
         // bullet spread
         this.direction = calculateSpreadDirection();
         this.normalizedDirection = this.direction.clone().normalize();
@@ -64,19 +65,38 @@ public class Bullet {
         BulletAccuracy accuracy = getBulletAccuracy();
         if (accuracy != null) {
             if (player.isSneaking()) {
-                System.out.println(accuracy.getSneakingAccuracy().toVector());
                 return this.direction.add(accuracy.getSneakingAccuracy().toVector());
             }
+            /**
+             * Buggy code
+             * TODO : Fixed the buggy bullet spreading
+             */
+/*            // jumping?
+            if (isJumping()) {
+                vector.add(accuracy.getJumpingAccuracy().toVector());
+            }
             if (CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(player).isWalking()) {
-                return this.direction.add(accuracy.getWalkingAccuracy().toVector());
+                vector.add(accuracy.getWalkingAccuracy().toVector());
             }
             if (player.isSprinting()) {
-                return this.direction.add(accuracy.getSprintingAccuracy().toVector());
-            }
+                vector.add(accuracy.getSprintingAccuracy().toVector());
+            }*/
             // normal bullet spread
             return this.direction.add(accuracy.getDefaultAccuracy().toVector());
         }
         return this.direction;
+    }
+
+    private boolean isJumping() {
+        return player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isSolid();
+    }
+
+    public double getRecoil() {
+        return recoil;
+    }
+
+    public void setRecoil(double recoil) {
+        this.recoil = recoil;
     }
 
     public BulletAccuracy getBulletAccuracy() {

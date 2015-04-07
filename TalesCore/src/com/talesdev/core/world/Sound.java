@@ -15,16 +15,17 @@ import java.lang.reflect.InvocationTargetException;
  * @author MoKunz
  */
 public class Sound {
-    private SoundEffect effect;
+    private SoundEffectInterface effect;
     private float volume;
     private float pitch;
-    public Sound(SoundEffect soundEffect,float volume,float pitch){
+
+    public Sound(SoundEffectInterface soundEffect, float volume, float pitch) {
         this.effect = soundEffect;
         this.volume = volume;
         this.pitch = pitch;
     }
 
-    public SoundEffect getSoundEffect() {
+    public SoundEffectInterface getSoundEffect() {
         return effect;
     }
 
@@ -60,7 +61,7 @@ public class Sound {
         PacketConstructor soundPacket;
         // This allows us to call one of the constructors of Packet62NamedSoundEffect
         soundPacket = manager.createPacketConstructor(
-                PacketType.Play.Server.NAMED_SOUND_EFFECT, toString(), x, y, z, volume, pitch);
+                PacketType.Play.Server.NAMED_SOUND_EFFECT, effect.toString(), x, y, z, volume, pitch);
 
         try {
             manager.sendServerPacket(target, soundPacket.createPacket(effect.toString(), x, y, z, volume, pitch));
