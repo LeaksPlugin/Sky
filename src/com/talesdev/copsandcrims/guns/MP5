@@ -1,0 +1,7 @@
+/**
+ * MP5
+ * @author MoKunz and AstaLotte
+ */
+ public class MP5 extends Weapon {
+     
+ }
