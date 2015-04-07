@@ -32,6 +32,7 @@ public class ShootingModule extends WeaponModule {
     private BulletListener listener = null;
     private BulletAccuracy accuracy = null;
     private SoundEffectInterface soundEffect = null;
+    private int maxBullet = 10;
 
     public ShootingModule() {
         super("Shooting");
@@ -180,5 +181,13 @@ public class ShootingModule extends WeaponModule {
 
     public void setBulletDelay(int bulletDelay) {
         this.bulletDelay = bulletDelay;
+    }
+
+    public int getMaxBullet() {
+        return maxBullet;
+    }
+
+    public void setMaxBullet(int maxBullet) {
+        this.maxBullet = maxBullet;
     }
 }
