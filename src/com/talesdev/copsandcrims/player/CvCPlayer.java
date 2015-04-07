@@ -12,11 +12,13 @@ public class CvCPlayer {
     private double armorPoint;
     private Player player;
     private PlayerRecoil playerRecoil;
+    private PlayerBullet playerBullet;
     private CvCPlayerData playerData;
 
     public CvCPlayer(Player player) {
         this.player = player;
-        this.playerRecoil = new PlayerRecoil(getPlayer());
+        this.playerBullet = new PlayerBullet(this);
+        this.playerRecoil = new PlayerRecoil(this);
         this.isWalking = false;
         this.lastWalkingTime = System.currentTimeMillis();
     }
@@ -66,5 +68,9 @@ public class CvCPlayer {
     @Override
     public String toString() {
         return "CvCPlayer[" + getPlayerName() + "]";
+    }
+
+    public PlayerBullet getPlayerBullet() {
+        return playerBullet;
     }
 }

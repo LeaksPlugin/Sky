@@ -15,10 +15,12 @@ import java.util.Map;
  */
 public class PlayerRecoil {
     private Player player;
+    private CvCPlayer cvCPlayer;
     private Map<String, WeaponRecoil> recoilMap;
 
-    public PlayerRecoil(Player player) {
-        this.player = player;
+    public PlayerRecoil(CvCPlayer player) {
+        this.cvCPlayer = player;
+        this.player = cvCPlayer.getPlayer();
         this.recoilMap = new HashMap<>();
         init();
     }

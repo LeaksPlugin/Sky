@@ -34,15 +34,15 @@ public class WeaponBullet {
     }
 
     public void setBulletCount(int bulletCount) {
-        this.bulletCount = bulletCount;
+        if (this.bulletCount - bulletCount > 0) {
+            this.bulletCount = bulletCount;
+        } else {
+            this.bulletCount = 0;
+        }
     }
 
     public int getMaxBullet() {
         return maxBullet;
-    }
-
-    public void setMaxBullet(int maxBullet) {
-        this.maxBullet = maxBullet;
     }
 
     public boolean isReloading() {
@@ -55,5 +55,9 @@ public class WeaponBullet {
 
     public void finishedReloading() {
         this.reloading = false;
+    }
+
+    public void usedBullet(int amount) {
+        setBulletCount(getBulletCount() - amount);
     }
 }
