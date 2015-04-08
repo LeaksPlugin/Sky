@@ -17,11 +17,13 @@ public class BulletReloadTask extends BukkitRunnable {
     private CvCPlayer player;
     private Weapon weapon;
     private ItemStack itemStack;
+    private int reloadTime;
 
-    public BulletReloadTask(CvCPlayer player, Weapon weapon, ItemStack itemStack) {
+    public BulletReloadTask(CvCPlayer player, Weapon weapon, ItemStack itemStack, int reloadTime) {
         this.player = player;
         this.weapon = weapon;
         this.itemStack = itemStack;
+        this.reloadTime = reloadTime;
         player.getPlayer().sendMessage(ChatColor.GREEN + "Reloading...");
         player.getPlayerBullet().getBullet(weapon.getName()).reload();
     }
@@ -43,12 +45,12 @@ public class BulletReloadTask extends BukkitRunnable {
             cancel();
             return;
         }
-        if (getTickCounter() > 80) {
+        if (getTickCounter() > reloadTime) {
             WeaponBullet weaponBullet = player.getPlayerBullet().getBullet(weapon.getName());
             weaponBullet.setBulletCount(weaponBullet.getMaxBullet());
             weaponBullet.finishedReloading();
             player.getPlayer().sendMessage(ChatColor.GREEN + "Reload completed");
-            player.getWeapon(weapon.getClass()).setAmount(30);
+            player.getWeapon(weapon.getClass()).setAmount(weaponBullet.getMaxBullet());
             cancel();
             return;
         }

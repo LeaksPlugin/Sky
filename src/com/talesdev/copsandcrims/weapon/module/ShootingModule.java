@@ -34,6 +34,7 @@ public class ShootingModule extends WeaponModule {
     private BulletAccuracy accuracy = null;
     private SoundEffectInterface soundEffect = null;
     private int maxBullet = 10;
+    private int reloadTime = 60;
 
     public ShootingModule() {
         super("Shooting");
@@ -66,7 +67,7 @@ public class ShootingModule extends WeaponModule {
                     CvCPlayer cvCPlayer = getPlugin().getServerCvCPlayer().getPlayer(event.getPlayer());
                     WeaponBullet weaponBullet = cvCPlayer.getPlayerBullet().getBullet(getWeapon().getName());
                     if ((!weaponBullet.isReloading()) && weaponBullet.getBulletCount() < weaponBullet.getMaxBullet()) {
-                        (new BulletReloadTask(cvCPlayer, getWeapon(), event.getItem())).runTaskTimer(getPlugin(), 0, 1);
+                        (new BulletReloadTask(cvCPlayer, getWeapon(), event.getItem(), getReloadTime())).runTaskTimer(getPlugin(), 0, 1);
                     }
                 }
                 event.setUseInteractedBlock(Event.Result.DENY);
@@ -88,7 +89,7 @@ public class ShootingModule extends WeaponModule {
             }
             // force reload if player has no bullet
             if (player.getPlayerBullet().getBullet(getWeapon().getName()).getBulletCount() <= 0) {
-                (new BulletReloadTask(player, getWeapon(), event.getItem())).runTaskTimer(getPlugin(), 0, 1);
+                (new BulletReloadTask(player, getWeapon(), event.getItem(), getReloadTime())).runTaskTimer(getPlugin(), 0, 1);
                 return;
             }
             // get last recoil
@@ -109,10 +110,10 @@ public class ShootingModule extends WeaponModule {
             // add recoil
             player.getPlayerRecoil().addRecoil(getWeapon(), getRecoil());
             // used bullet
-            player.getPlayerBullet().getBullet(getWeapon().getName()).usedBullet(1);
+            player.getPlayerBullet().getBullet(getWeapon().getName()).usedBullet(getBulletCount());
             updateBulletCount(player);
             if (player.getPlayerBullet().getBullet(getWeapon().getName()).getBulletCount() <= 0) {
-                (new BulletReloadTask(player, getWeapon(), event.getItem())).runTaskTimer(getPlugin(), 0, 1);
+                (new BulletReloadTask(player, getWeapon(), event.getItem(), getReloadTime())).runTaskTimer(getPlugin(), 0, 1);
             }
             // add cooldown
             tag.attach();
@@ -216,6 +217,16 @@ public class ShootingModule extends WeaponModule {
     }
 
     public void setMaxBullet(int maxBullet) {
+        if (maxBullet < 0) return;
         this.maxBullet = maxBullet;
+    }
+
+    public int getReloadTime() {
+        return reloadTime;
+    }
+
+    public void setReloadTime(int reloadTime) {
+        if (reloadTime < 0) return;
+        this.reloadTime = reloadTime;
     }
 }
