@@ -71,12 +71,18 @@ public class ShootingModule extends WeaponModule {
     }
 
     private void shootBullet(PlayerInteractEvent event) {
+        CvCPlayer player = CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(event.getPlayer());
+        // prevent invalid state
+        updateBulletCount(player);
         WeaponCooldownTag tag = new WeaponCooldownTag(getCooldownTime(), event.getPlayer());
         if (!tag.isCooldown()) {
             // start shooting (no cooldown now!)
-            CvCPlayer player = CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(event.getPlayer());
+            if (player.getPlayerBullet().getBullet(getWeapon().getName()).isReloading()) {
+                return;
+            }
+            // get last recoil
             double recoil = 0.0;
-            if (player != null) recoil = player.getPlayerRecoil().getRecoil(getWeapon());
+            recoil = player.getPlayerRecoil().getRecoil(getWeapon());
             // construct
             DelayedBullet bullet = new DelayedBullet(
                     event.getPlayer(), getListener(), getDamage(), getAccuracy(), recoil
@@ -88,11 +94,22 @@ public class ShootingModule extends WeaponModule {
             (new BulletTask(bullet, getBulletCount())).runTaskTimer(CopsAndCrims.getPlugin(), 0, getBulletDelay());
             // play sound
             (new Sound(getSoundEffect(), 1.0F, 1.0F)).playSound(event.getPlayer().getLocation());
+            // check if player is not null
             // add recoil
-            if (player != null) player.getPlayerRecoil().addRecoil(getWeapon(), getRecoil());
+            player.getPlayerRecoil().addRecoil(getWeapon(), getRecoil());
+            // used bullet
+            player.getPlayerBullet().getBullet(getWeapon().getName()).usedBullet(1);
+            updateBulletCount(player);
+            if (player.getPlayerBullet().getBullet(getWeapon().getName()).getBulletCount() <= 0) {
+                (new BulletReloadTask(player, getWeapon(), event.getItem())).runTaskTimer(getPlugin(), 0, 20);
+            }
             // add cooldown
             tag.attach();
         }
+    }
+
+    private void updateBulletCount(CvCPlayer player) {
+        player.getPlayer().getItemInHand().setAmount(player.getPlayerBullet().getBullet(getWeapon().getName()).getBulletCount());
     }
 
     public FiringMode getFiringMode() {

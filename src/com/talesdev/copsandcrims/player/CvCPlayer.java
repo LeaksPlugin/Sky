@@ -1,6 +1,10 @@
 package com.talesdev.copsandcrims.player;
 
+import com.talesdev.copsandcrims.CopsAndCrims;
+import com.talesdev.copsandcrims.weapon.Weapon;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * CvC Player
@@ -72,5 +76,16 @@ public class CvCPlayer {
 
     public PlayerBullet getPlayerBullet() {
         return playerBullet;
+    }
+
+    public <T extends Weapon> ItemStack getWeapon(Class<T> weaponClass) {
+        T weapon = CopsAndCrims.getPlugin().getWeaponFactory().getWeapon(weaponClass);
+        if (weapon == null) return new ItemStack(Material.AIR);
+        for (ItemStack itemStack : getPlayer().getInventory().getContents()) {
+            if (weapon.isWeapon(itemStack)) {
+                return itemStack;
+            }
+        }
+        return new ItemStack(Material.AIR);
     }
 }

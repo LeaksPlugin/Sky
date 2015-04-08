@@ -4,6 +4,7 @@ import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.WeaponType;
 import com.talesdev.copsandcrims.weapon.bullet.Accuracy;
 import com.talesdev.copsandcrims.weapon.bullet.BulletAccuracy;
+import com.talesdev.copsandcrims.weapon.module.InventoryControlModule;
 import com.talesdev.copsandcrims.weapon.module.ShootingModule;
 import com.talesdev.core.math.Range;
 import org.bukkit.Material;
@@ -20,6 +21,7 @@ public class DesertEagle extends Weapon {
         super("DesertEagle", "Desert Eagle", blankAliases(), WeaponType.PISTOL);
         ShootingModule shootingModule = new ShootingModule();
         shootingModule.setRecoil(5.0D);
+        shootingModule.setMaxBullet(30);
         shootingModule.setBulletDelay(1);
         shootingModule.setCooldownTime(3);
         shootingModule.setAccuracy(new BulletAccuracy(
@@ -30,15 +32,18 @@ public class DesertEagle extends Weapon {
                 new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)) // jumping
         ));
         addModule(shootingModule);
+        InventoryControlModule controlModule = new InventoryControlModule();
+        addModule(controlModule);
     }
 
     @Override
     public ItemStack createItemStack() {
-        return new ItemStack(Material.GOLD_HOE);
+        return new ItemStack(Material.GOLD_HOE, 30);
     }
 
     @Override
     public boolean isWeapon(ItemStack itemStack) {
+        if (itemStack == null) return false;
         if (itemStack.getType().equals(Material.GOLD_HOE)) {
             return true;
         }

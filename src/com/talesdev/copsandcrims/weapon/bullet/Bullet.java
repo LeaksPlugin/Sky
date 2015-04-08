@@ -211,6 +211,8 @@ public class Bullet {
             }
         }
         BulletHitResult result = new BulletHitResult(this, location, location.getBlock());
+        if (location.getBlock().getType().equals(Material.BARRIER) || location.getBlock().getType().equals(Material.IRON_FENCE))
+            return true;
         if (action != null) {
             action.bulletHitObject(result);
             if (action instanceof BulletParticle) ((BulletParticle) action).createHitParticle(result);

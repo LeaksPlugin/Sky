@@ -34,7 +34,7 @@ public class WeaponBullet {
     }
 
     public void setBulletCount(int bulletCount) {
-        if (this.bulletCount - bulletCount > 0) {
+        if (bulletCount > 0) {
             this.bulletCount = bulletCount;
         } else {
             this.bulletCount = 0;
