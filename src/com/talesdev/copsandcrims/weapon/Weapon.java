@@ -15,6 +15,15 @@ import java.util.List;
  */
 public abstract class Weapon implements WeaponItem {
     protected final String name;
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
     protected String displayName;
     protected final WeaponType weaponType;
     protected List<String> lore;

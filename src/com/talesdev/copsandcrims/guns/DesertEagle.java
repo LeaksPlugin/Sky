@@ -7,8 +7,10 @@ import com.talesdev.copsandcrims.weapon.bullet.BulletAccuracy;
 import com.talesdev.copsandcrims.weapon.module.ItemControlModule;
 import com.talesdev.copsandcrims.weapon.module.ShootingModule;
 import com.talesdev.core.math.Range;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  * Desert Eagle
@@ -38,7 +40,11 @@ public class DesertEagle extends Weapon {
 
     @Override
     public ItemStack createItemStack() {
-        return new ItemStack(Material.GOLD_HOE, 30);
+        ItemStack itemStack = new ItemStack(Material.GOLD_HOE, 30);
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.setDisplayName(ChatColor.BLUE + getDisplayName());
+        itemStack.setItemMeta(meta);
+        return itemStack;
     }
 
     @Override

@@ -4,15 +4,24 @@ import com.talesdev.copsandcrims.CopsAndCrims;
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.core.entity.MetaData;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Module for controlling item in inventory
@@ -26,7 +35,11 @@ public class ItemControlModule extends WeaponModule {
 
     @EventHandler
     public void onItemClick(InventoryClickEvent event) {
-        if (getWeapon().isWeapon(event.getCurrentItem())) {
+        if (getWeapon().isWeapon(event.getCurrentItem()) ||
+                getWeapon().isWeapon(event.getCursor()) ||
+                getWeapon().isWeapon(event.getInventory().getItem(event.getHotbarButton())) ||
+                event.getClick().equals(ClickType.NUMBER_KEY)
+                ) {
             event.setCancelled(true);
         }
     }
@@ -49,7 +62,7 @@ public class ItemControlModule extends WeaponModule {
     public void onPickUpItem(PlayerPickupItemEvent event) {
         if (getWeapon().isWeapon(event.getItem().getItemStack())) {
             CvCPlayer player = getPlugin().getServerCvCPlayer().getPlayer(event.getPlayer());
-            if (!player.getWeapon(getWeapon().getClass()).getType().equals(Material.AIR)) {
+            if (player.getWeapon(getWeapon().getClass()).getType() != Material.AIR) {
                 event.setCancelled(true);
                 return;
             }
@@ -88,6 +101,39 @@ public class ItemControlModule extends WeaponModule {
             if (getWeapon().isWeapon(player.getItemInHand())) {
                 event.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler
+    public void onItemMove(InventoryMoveItemEvent event) {
+        if (getWeapon().isWeapon(event.getItem())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        for (Iterator<ItemStack> it = event.getDrops().iterator(); it.hasNext(); ) {
+            ItemStack itemStack = it.next();
+            if (!getPlugin().getWeaponFactory().isWeapon(itemStack)) {
+                it.remove();
+            } else {
+                itemStack.setAmount(1);
+                List<String> lores = new ArrayList<>();
+                lores.add(event.getEntity().getName());
+                itemStack.getItemMeta().setLore(lores);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onItemSpawn(ItemSpawnEvent event) {
+        ItemStack itemStack = event.getEntity().getItemStack();
+        if (itemStack.hasItemMeta() && getPlugin().getWeaponFactory().isWeapon(itemStack)) {
+            String player = itemStack.getItemMeta().getLore().get(0);
+            CvCPlayer cvCPlayer = getPlugin().getServerCvCPlayer().getPlayer(Bukkit.getPlayer(player));
+            MetaData metaData = new MetaData(event.getEntity(), getPlugin());
+            metaData.setMetadata("bulletAmount", cvCPlayer.getPlayerBullet().getBullet(getWeapon().getName()).getBulletCount());
         }
     }
 }
