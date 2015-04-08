@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -35,10 +36,14 @@ public class ItemControlModule extends WeaponModule {
 
     @EventHandler
     public void onItemClick(InventoryClickEvent event) {
+        System.out.println("Inventory clicked!");
+        if (getPlugin().getConfig().getBoolean("strict-inventory-check")) {
+            if (event.getClick().equals(ClickType.NUMBER_KEY)) {
+                event.setCancelled(true);
+            }
+        }
         if (getWeapon().isWeapon(event.getCurrentItem()) ||
-                getWeapon().isWeapon(event.getCursor()) ||
-                getWeapon().isWeapon(event.getInventory().getItem(event.getHotbarButton())) ||
-                event.getClick().equals(ClickType.NUMBER_KEY)
+                getWeapon().isWeapon(event.getCursor())
                 ) {
             event.setCancelled(true);
         }
@@ -73,6 +78,7 @@ public class ItemControlModule extends WeaponModule {
             } else {
                 bulletAmount = player.getPlayerBullet().getBullet(getWeapon().getName()).getMaxBullet();
             }
+            player.getPlayerBullet().getBullet(getWeapon().getName()).setBulletCount(bulletAmount);
             player.getWeapon(getWeapon().getClass()).setAmount(bulletAmount);
             ItemStack itemStack = event.getItem().getItemStack();
             getPlugin().getServer().getScheduler().runTaskLater(getPlugin(), new Runnable() {
@@ -121,7 +127,9 @@ public class ItemControlModule extends WeaponModule {
                 itemStack.setAmount(1);
                 List<String> lores = new ArrayList<>();
                 lores.add(event.getEntity().getName());
-                itemStack.getItemMeta().setLore(lores);
+                ItemMeta itemMeta = itemStack.getItemMeta();
+                itemMeta.setLore(lores);
+                itemStack.setItemMeta(itemMeta);
             }
         }
     }
@@ -130,10 +138,13 @@ public class ItemControlModule extends WeaponModule {
     public void onItemSpawn(ItemSpawnEvent event) {
         ItemStack itemStack = event.getEntity().getItemStack();
         if (itemStack.hasItemMeta() && getPlugin().getWeaponFactory().isWeapon(itemStack)) {
-            String player = itemStack.getItemMeta().getLore().get(0);
-            CvCPlayer cvCPlayer = getPlugin().getServerCvCPlayer().getPlayer(Bukkit.getPlayer(player));
-            MetaData metaData = new MetaData(event.getEntity(), getPlugin());
-            metaData.setMetadata("bulletAmount", cvCPlayer.getPlayerBullet().getBullet(getWeapon().getName()).getBulletCount());
+            if (itemStack.getItemMeta().hasLore()) {
+                String player = itemStack.getItemMeta().getLore().get(0);
+                CvCPlayer cvCPlayer = getPlugin().getServerCvCPlayer().getPlayer(Bukkit.getPlayer(player));
+                MetaData metaData = new MetaData(event.getEntity(), getPlugin());
+                int bulletCount = cvCPlayer.getPlayerBullet().getBullet(getWeapon().getName()).getBulletCount();
+                metaData.setMetadata("bulletAmount", bulletCount);
+            }
         }
     }
 }

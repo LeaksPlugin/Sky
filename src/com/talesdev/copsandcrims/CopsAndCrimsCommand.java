@@ -1,6 +1,8 @@
 package com.talesdev.copsandcrims;
 
 import com.talesdev.copsandcrims.guns.DesertEagle;
+import com.talesdev.copsandcrims.player.CvCPlayer;
+import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.core.player.UUIDTask;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -26,9 +28,13 @@ public class CopsAndCrimsCommand implements CommandExecutor {
                 }
             } else if (args[0].equalsIgnoreCase("test")) {
                 if (sender instanceof Player) {
+                    Weapon weapon = CopsAndCrims.getPlugin().getWeaponFactory().getWeapon(DesertEagle.class);
                     ((Player) sender).getInventory().addItem(CopsAndCrims.getPlugin().getWeaponFactory().createWeaponItem(DesertEagle.class));
+                    CvCPlayer cvCPlayer = CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer((Player) sender);
+                    cvCPlayer.getPlayerBullet().getBullet(weapon.getName()).setBulletCount(
+                            cvCPlayer.getPlayerBullet().getBullet(weapon.getName()).getMaxBullet()
+                    );
                 }
-                return true;
             }
         }
         return false;
