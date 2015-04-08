@@ -21,7 +21,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public class ItemControlModule extends WeaponModule {
     public ItemControlModule() {
-        super("InventoryControl");
+        super("ItemControl");
     }
 
     @EventHandler
@@ -48,19 +48,26 @@ public class ItemControlModule extends WeaponModule {
     @EventHandler
     public void onPickUpItem(PlayerPickupItemEvent event) {
         if (getWeapon().isWeapon(event.getItem().getItemStack())) {
+            CvCPlayer player = getPlugin().getServerCvCPlayer().getPlayer(event.getPlayer());
+            if (!player.getWeapon(getWeapon().getClass()).getType().equals(Material.AIR)) {
+                event.setCancelled(true);
+                return;
+            }
+            int bulletAmount = 0;
             if (event.getItem().hasMetadata("bulletAmount")) {
                 MetaData metaData = new MetaData(event.getItem(), getPlugin());
-                int bulletAmount = (int) metaData.getMetadata("bulletAmount");
-                CvCPlayer player = getPlugin().getServerCvCPlayer().getPlayer(event.getPlayer());
-                player.getWeapon(getWeapon().getClass()).setAmount(bulletAmount);
-                ItemStack itemStack = event.getItem().getItemStack();
-                getPlugin().getServer().getScheduler().runTaskLater(getPlugin(), new Runnable() {
-                    @Override
-                    public void run() {
-                        player.getWeapon(getWeapon().getClass()).setAmount(player.getPlayerBullet().getBullet(getWeapon().getName()).getBulletCount());
-                    }
-                }, 1);
+                bulletAmount = (int) metaData.getMetadata("bulletAmount");
+            } else {
+                bulletAmount = player.getPlayerBullet().getBullet(getWeapon().getName()).getMaxBullet();
             }
+            player.getWeapon(getWeapon().getClass()).setAmount(bulletAmount);
+            ItemStack itemStack = event.getItem().getItemStack();
+            getPlugin().getServer().getScheduler().runTaskLater(getPlugin(), new Runnable() {
+                @Override
+                public void run() {
+                    player.getWeapon(getWeapon().getClass()).setAmount(player.getPlayerBullet().getBullet(getWeapon().getName()).getBulletCount());
+                }
+            }, 1);
         }
     }
 

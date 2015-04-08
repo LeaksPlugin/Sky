@@ -20,16 +20,15 @@ public class CopsAndCrimsListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        plugin.getServerCvCPlayer().addNewPlayer(plugin.getServerCvCPlayer().createPlayer(event.getPlayer()));
+        plugin.getServerCvCPlayer().addNewPlayer(plugin.getServerCvCPlayer().loadUserData(event.getPlayer()));
         // DEBUG
-        System.out.println(plugin.getServerCvCPlayer().getAllPlayers());
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
+        plugin.getServerCvCPlayer().saveUserData(plugin.getServerCvCPlayer().getPlayer(event.getPlayer()));
         plugin.getServerCvCPlayer().removePlayer(plugin.getServerCvCPlayer().getPlayer(event.getPlayer()));
         // DEBUG
-        System.out.println(plugin.getServerCvCPlayer().getAllPlayers());
     }
 
     @EventHandler

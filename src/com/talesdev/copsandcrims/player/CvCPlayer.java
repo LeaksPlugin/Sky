@@ -17,7 +17,6 @@ public class CvCPlayer {
     private Player player;
     private PlayerRecoil playerRecoil;
     private PlayerBullet playerBullet;
-    private CvCPlayerData playerData;
 
     public CvCPlayer(Player player) {
         this.player = player;

@@ -1,5 +1,5 @@
 name: CopsAndCrims
-version: 1.2.1
+version: 1.3
 author: MoKunz
 main: com.talesdev.copsandcrims.CopsAndCrims
 depend: [TalesCore]
