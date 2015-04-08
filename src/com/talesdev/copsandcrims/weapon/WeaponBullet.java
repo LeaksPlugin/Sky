@@ -10,6 +10,7 @@ public class WeaponBullet {
     private int bulletCount;
     private int maxBullet;
     private boolean reloading = false;
+    private boolean cancel = false;
 
     public WeaponBullet(String weaponName, int maxBullet, int bulletCount) {
         this.weaponName = weaponName;
@@ -59,5 +60,17 @@ public class WeaponBullet {
 
     public void usedBullet(int amount) {
         setBulletCount(getBulletCount() - amount);
+    }
+
+    public void cancel() {
+        this.cancel = true;
+    }
+
+    public boolean isCancel() {
+        return this.cancel;
+    }
+
+    public void respondCancel() {
+        this.cancel = false;
     }
 }

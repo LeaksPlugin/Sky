@@ -4,7 +4,6 @@ import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.WeaponBullet;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -37,12 +36,14 @@ public class BulletReloadTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (player.getWeapon(weapon.getClass()).getType().equals(Material.AIR)) {
+        if ((!weapon.isWeapon(player.getWeapon(weapon.getClass()))) || player.getPlayerBullet().getBullet(weapon.getName()).isCancel()) {
+            player.getPlayerBullet().getBullet(weapon.getName()).respondCancel();
             player.getPlayerBullet().getBullet(weapon.getName()).finishedReloading();
+            player.getPlayer().sendMessage(ChatColor.RED + "Reloading cancelled!");
             cancel();
             return;
         }
-        if (getTickCounter() > 5) {
+        if (getTickCounter() > 80) {
             WeaponBullet weaponBullet = player.getPlayerBullet().getBullet(weapon.getName());
             weaponBullet.setBulletCount(weaponBullet.getMaxBullet());
             weaponBullet.finishedReloading();

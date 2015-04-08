@@ -4,7 +4,7 @@ import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.WeaponType;
 import com.talesdev.copsandcrims.weapon.bullet.Accuracy;
 import com.talesdev.copsandcrims.weapon.bullet.BulletAccuracy;
-import com.talesdev.copsandcrims.weapon.module.InventoryControlModule;
+import com.talesdev.copsandcrims.weapon.module.ItemControlModule;
 import com.talesdev.copsandcrims.weapon.module.ShootingModule;
 import com.talesdev.core.math.Range;
 import org.bukkit.Material;
@@ -32,7 +32,7 @@ public class DesertEagle extends Weapon {
                 new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)) // jumping
         ));
         addModule(shootingModule);
-        InventoryControlModule controlModule = new InventoryControlModule();
+        ItemControlModule controlModule = new ItemControlModule();
         addModule(controlModule);
     }
 

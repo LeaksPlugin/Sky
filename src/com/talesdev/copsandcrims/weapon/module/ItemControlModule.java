@@ -1,11 +1,16 @@
 package com.talesdev.copsandcrims.weapon.module;
 
+import com.talesdev.copsandcrims.CopsAndCrims;
 import com.talesdev.copsandcrims.player.CvCPlayer;
+import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.core.entity.MetaData;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -14,8 +19,8 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author MoKunz
  */
-public class InventoryControlModule extends WeaponModule {
-    public InventoryControlModule() {
+public class ItemControlModule extends WeaponModule {
+    public ItemControlModule() {
         super("InventoryControl");
     }
 
@@ -55,6 +60,26 @@ public class InventoryControlModule extends WeaponModule {
                         player.getWeapon(getWeapon().getClass()).setAmount(player.getPlayerBullet().getBullet(getWeapon().getName()).getBulletCount());
                     }
                 }, 1);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onSlotChange(PlayerItemHeldEvent event) {
+        CopsAndCrims plugin = CopsAndCrims.getPlugin();
+        CvCPlayer player = plugin.getServerCvCPlayer().getPlayer(event.getPlayer());
+        Weapon weapon = plugin.getWeaponFactory().getWeapon(player.getPlayer().getInventory().getItem(event.getPreviousSlot()));
+        if (weapon != null && player.getPlayerBullet().getBullet(weapon.getName()).isReloading()) {
+            player.getPlayerBullet().getBullet(weapon.getName()).cancel();
+        }
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof Player) {
+            Player player = (Player) event.getDamager();
+            if (getWeapon().isWeapon(player.getItemInHand())) {
+                event.setCancelled(true);
             }
         }
     }

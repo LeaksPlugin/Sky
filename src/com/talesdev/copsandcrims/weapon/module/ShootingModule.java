@@ -2,6 +2,7 @@ package com.talesdev.copsandcrims.weapon.module;
 
 import com.talesdev.copsandcrims.CopsAndCrims;
 import com.talesdev.copsandcrims.player.CvCPlayer;
+import com.talesdev.copsandcrims.weapon.WeaponBullet;
 import com.talesdev.copsandcrims.weapon.WeaponCooldownTag;
 import com.talesdev.copsandcrims.weapon.bullet.*;
 import com.talesdev.core.item.MaterialComparator;
@@ -62,7 +63,11 @@ public class ShootingModule extends WeaponModule {
                 if (ClickingAction.isRightClick(event.getAction())) {
                     shootBullet(event);
                 } else if (ClickingAction.isLeftClick(event.getAction())) {
-                    // TODO : Attachment
+                    CvCPlayer cvCPlayer = getPlugin().getServerCvCPlayer().getPlayer(event.getPlayer());
+                    WeaponBullet weaponBullet = cvCPlayer.getPlayerBullet().getBullet(getWeapon().getName());
+                    if ((!weaponBullet.isReloading()) && weaponBullet.getBulletCount() < weaponBullet.getMaxBullet()) {
+                        (new BulletReloadTask(cvCPlayer, getWeapon(), event.getItem())).runTaskTimer(getPlugin(), 0, 1);
+                    }
                 }
                 event.setUseInteractedBlock(Event.Result.DENY);
                 event.setUseItemInHand(Event.Result.DENY);
@@ -77,7 +82,13 @@ public class ShootingModule extends WeaponModule {
         WeaponCooldownTag tag = new WeaponCooldownTag(getCooldownTime(), event.getPlayer());
         if (!tag.isCooldown()) {
             // start shooting (no cooldown now!)
+            // check if player is reloading bullet
             if (player.getPlayerBullet().getBullet(getWeapon().getName()).isReloading()) {
+                return;
+            }
+            // force reload if player has no bullet
+            if (player.getPlayerBullet().getBullet(getWeapon().getName()).getBulletCount() <= 0) {
+                (new BulletReloadTask(player, getWeapon(), event.getItem())).runTaskTimer(getPlugin(), 0, 1);
                 return;
             }
             // get last recoil
@@ -101,7 +112,7 @@ public class ShootingModule extends WeaponModule {
             player.getPlayerBullet().getBullet(getWeapon().getName()).usedBullet(1);
             updateBulletCount(player);
             if (player.getPlayerBullet().getBullet(getWeapon().getName()).getBulletCount() <= 0) {
-                (new BulletReloadTask(player, getWeapon(), event.getItem())).runTaskTimer(getPlugin(), 0, 20);
+                (new BulletReloadTask(player, getWeapon(), event.getItem())).runTaskTimer(getPlugin(), 0, 1);
             }
             // add cooldown
             tag.attach();

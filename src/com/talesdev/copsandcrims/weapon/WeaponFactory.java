@@ -74,4 +74,22 @@ public class WeaponFactory {
         }
         return new ItemStack(Material.AIR);
     }
+
+    public boolean isWeapon(ItemStack itemStack) {
+        for (Weapon weapon : getAllWeapon()) {
+            if (weapon.isWeapon(itemStack)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Weapon getWeapon(ItemStack itemStack) {
+        for (Weapon weapon : getAllWeapon()) {
+            if (weapon.isWeapon(itemStack)) {
+                return weapon;
+            }
+        }
+        return null;
+    }
 }
