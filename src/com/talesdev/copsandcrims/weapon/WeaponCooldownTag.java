@@ -11,7 +11,7 @@ import org.bukkit.metadata.FixedMetadataValue;
  * @author MoKunz
  */
 public class WeaponCooldownTag {
-    private final int coolDownTime;
+    private int coolDownTime;
     private static final String KEY = "WeaponCooldown";
     private Entity entity;
 
@@ -33,5 +33,9 @@ public class WeaponCooldownTag {
 
     public boolean isCooldown() {
         return entity.hasMetadata(KEY);
+    }
+
+    public void setCoolDownTime(int coolDownTime) {
+        this.coolDownTime = coolDownTime;
     }
 }

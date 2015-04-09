@@ -23,6 +23,10 @@ public class BulletAccuracy {
         this(defaultAccuracy, defaultAccuracy, defaultAccuracy, defaultAccuracy, defaultAccuracy);
     }
 
+    public BulletAccuracy(Accuracy defaultAccuracy, Accuracy sneakingAccuracy) {
+        this(defaultAccuracy, sneakingAccuracy, defaultAccuracy, defaultAccuracy, defaultAccuracy);
+    }
+
     public BulletAccuracy(Accuracy defaultAccuracy, Accuracy sneakingAccuracy, Accuracy walkingAccuracy, Accuracy sprintingAccuracy, Accuracy jumpingAccuracy) {
         this.defaultAccuracy = defaultAccuracy;
         this.sneakingAccuracy = sneakingAccuracy;

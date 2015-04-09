@@ -3,7 +3,11 @@ package com.talesdev.copsandcrims.weapon.bullet;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
+import com.talesdev.copsandcrims.CopsAndCrims;
+import com.talesdev.copsandcrims.player.PlayerLastDamage;
+import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.core.entity.BoundingBox;
+import com.talesdev.core.player.LastPlayerDamage;
 import com.talesdev.core.world.NMSRayTrace;
 import com.talesdev.core.world.NearbyEntity;
 import com.talesdev.core.world.RayTrace;
@@ -40,6 +44,7 @@ public class Bullet {
     protected double damage = 4;
     protected double headShotDamage = damage * 2;
     private boolean cancel = false;
+    private Weapon weapon;
 
     public Bullet(Player player, BulletListener action, double damage, BulletAccuracy accuracy, double recoil) {
         this.player = player;
@@ -221,9 +226,8 @@ public class Bullet {
         }
         // break grass
         Block block = location.getBlock();
-        if (block.getType().equals(Material.GLASS) ||
+        if (
                 block.getType().equals(Material.THIN_GLASS) ||
-                block.getType().equals(Material.STAINED_GLASS) ||
                 block.getType().equals(Material.STAINED_GLASS_PANE)) {
             getWorld().getBlockAt(location).setType(Material.AIR);
             return true;
@@ -245,11 +249,15 @@ public class Bullet {
             }
             // damage entity
             if (entity instanceof LivingEntity) {
+                boolean isHeadShot = false;
                 if ((Math.abs(((LivingEntity) entity).getEyeLocation().getY() - currentLocation.getY()) <= 0.5) &&
                         (((LivingEntity) entity).getEyeLocation().distanceSquared(currentLocation) <= 0.5)
                         ) {
                     damage = headShotDamage;
+                    isHeadShot = true;
                 }
+                PlayerLastDamage lastDamage = new PlayerLastDamage(getPlayer(), getWeapon(), this, isHeadShot);
+                LastPlayerDamage lastPlayerDamage = new LastPlayerDamage(entity, CopsAndCrims.getPlugin());
                 if (((LivingEntity) entity).getHealth() - damage > 0) {
                     // damage packet
                     PacketContainer entityStatus = new PacketContainer(PacketType.Play.Server.ENTITY_STATUS);
@@ -268,6 +276,7 @@ public class Bullet {
                     ((LivingEntity) entity).damage(damage + 1);
                     cancel();
                 }
+                lastPlayerDamage.setLastDamage(lastDamage);
                 return false;
             }
         }
@@ -276,5 +285,13 @@ public class Bullet {
 
     private void createBulletParticle(Location location) {
         ParticleEffect.FLAME.display(0.01F, 0.01F, 0.01F, 0.001F, 1, location, 128);
+    }
+
+    public Weapon getWeapon() {
+        return weapon;
+    }
+
+    public void setWeapon(Weapon weapon) {
+        this.weapon = weapon;
     }
 }

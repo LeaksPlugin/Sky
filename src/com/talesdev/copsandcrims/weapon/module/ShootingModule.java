@@ -15,6 +15,7 @@ import com.talesdev.core.world.SoundEffectInterface;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  * Weapon shooting module
@@ -102,22 +103,57 @@ public class ShootingModule extends WeaponModule {
             bullet.setHeadShotDamage(getHeadShotDamage());
             bullet.setRayParameter(2000, 0.05, 4);
             bullet.setSpeed(getSpeed());
+            // burst fire
+            BurstFireModule burstFireModule = getWeapon().getModule(BurstFireModule.class);
+            if (burstFireModule != null) {
+                if (burstFireModule.isEnabled() && burstFireModule.goingToBurstFire(player.getPlayer())) {
+                    bullet = getWeapon().getModule(BurstFireModule.class).createBurstFireBullet(bullet);
+                    tag.setCoolDownTime(burstFireModule.getBurstFireCooldown());
+                }
+            }
+            bullet.setWeapon(getWeapon());
+            // some bullet ...
+            int usedBullet = getBulletCount();
+            if (burstFireModule != null) {
+                if (burstFireModule.isEnabled() && burstFireModule.goingToBurstFire(player.getPlayer())) {
+                    usedBullet = burstFireModule.getBurstFireBullet();
+                }
+            }
             // shoot bullet
-            (new BulletTask(bullet, getBulletCount())).runTaskTimer(CopsAndCrims.getPlugin(), 0, getBulletDelay());
+            if (burstFireModule != null) {
+                if (burstFireModule.isEnabled() && burstFireModule.goingToBurstFire(player.getPlayer())) {
+                    // System.out.println("Shooting in burst fire mode!");
+                    burstFireModule.runBurstFireTask(bullet);
+                } else {
+                    // System.out.println("Shooting in normal mode!");
+                    runBulletTask(createBulletTask(bullet));
+                }
+            } else {
+                // System.out.println("Module BurstFire not found!");
+                runBulletTask(createBulletTask(bullet));
+            }
             // play sound
             (new Sound(getSoundEffect(), 1.0F, 1.0F)).playSound(event.getPlayer().getLocation());
             // check if player is not null
             // add recoil
             player.getPlayerRecoil().addRecoil(getWeapon(), getRecoil());
-            // used bullet
-            player.getPlayerBullet().getBullet(getWeapon().getName()).usedBullet(getBulletCount());
-            updateBulletCount(player);
+            // update bullet
+            updateBulletCount(player);/*
+            // reload if run out of bullet
             if (player.getPlayerBullet().getBullet(getWeapon().getName()).getBulletCount() <= 0) {
                 (new BulletReloadTask(player, getWeapon(), event.getItem(), getReloadTime())).runTaskTimer(getPlugin(), 0, 1);
-            }
+            }*/
             // add cooldown
             tag.attach();
         }
+    }
+
+    private BulletTask createBulletTask(Bullet bullet) {
+        return new BulletTask(bullet, getBulletCount(), getWeapon());
+    }
+
+    private BukkitTask runBulletTask(BulletTask task) {
+        return task.runTaskTimer(CopsAndCrims.getPlugin(), 0, getBulletDelay());
     }
 
     private void updateBulletCount(CvCPlayer player) {

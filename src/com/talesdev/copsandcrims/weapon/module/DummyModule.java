@@ -48,7 +48,7 @@ public class DummyModule extends WeaponModule {
                 bullet.setRecoil(recoil);
                 bullet.setRayParameter(2000, 0.05, 4);
                 bullet.setSpeed(500);
-                (new BulletTask(bullet, 1)).runTaskTimer(CopsAndCrims.getPlugin(), 0, 1);
+                (new BulletTask(bullet, 1, getWeapon())).runTaskTimer(CopsAndCrims.getPlugin(), 0, 1);
                 float volume = 1.0F;
                 if (event.getPlayer().getEyeLocation().getBlock().isLiquid()) volume = 0.8F;
                 (new Sound(SoundEffect.MOB_SKELETON_DEATH, volume, 1)).playSound(event.getPlayer(), event.getPlayer().getLocation());
