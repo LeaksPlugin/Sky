@@ -34,6 +34,7 @@ public class CopsAndCrimsCommand implements CommandExecutor {
                     cvCPlayer.getPlayerBullet().getBullet(weapon.getName()).setBulletCount(
                             cvCPlayer.getPlayerBullet().getBullet(weapon.getName()).getMaxBullet()
                     );
+                    return true;
                 }
             }
         }

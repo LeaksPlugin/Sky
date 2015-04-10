@@ -4,6 +4,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.talesdev.copsandcrims.arena.DefaultArena;
 import com.talesdev.copsandcrims.guns.DesertEagle;
 import com.talesdev.copsandcrims.player.PlayerBulletTask;
+import com.talesdev.copsandcrims.player.PlayerEquipmentListener;
 import com.talesdev.copsandcrims.weapon.WeaponFactory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -15,6 +16,7 @@ import org.bukkit.scheduler.BukkitTask;
 public class CopsAndCrims extends JavaPlugin {
     private boolean debug = true;
     private BukkitTask recoilTask;
+    private BukkitTask scopeTask;
     private WeaponFactory weaponFactory;
     private ServerCvCPlayer serverCvCPlayer;
     @Override
@@ -33,13 +35,17 @@ public class CopsAndCrims extends JavaPlugin {
         getWeaponFactory().addWeapon(new DesertEagle());
         // protocol
         ProtocolLibrary.getProtocolManager().addPacketListener(new MyPacketAdapter(this));
+        ProtocolLibrary.getProtocolManager().addPacketListener(new PlayerEquipmentListener(this));
         // task
         recoilTask = getServer().getScheduler().runTaskTimerAsynchronously(this, new PlayerBulletTask(this), 0, 1);
+        //scopeTask = getServer().getScheduler().runTaskTimer(this, new PlayerScopeTask(this), 0, 10);
     }
 
     @Override
     public void onDisable() {
         recoilTask.cancel();
+        //scopeTask.cancel();
+        getServerCvCPlayer().getAllPlayers().forEach(getServerCvCPlayer()::saveUserData);
         saveConfig();
     }
     public static CopsAndCrims getPlugin(){

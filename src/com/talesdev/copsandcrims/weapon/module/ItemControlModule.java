@@ -36,7 +36,6 @@ public class ItemControlModule extends WeaponModule {
 
     @EventHandler
     public void onItemClick(InventoryClickEvent event) {
-        System.out.println("Inventory clicked!");
         if (getPlugin().getConfig().getBoolean("strict-inventory-check")) {
             if (event.getClick().equals(ClickType.NUMBER_KEY)) {
                 event.setCancelled(true);

@@ -3,6 +3,7 @@ package com.talesdev.copsandcrims.weapon.bullet;
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.WeaponBullet;
+import com.talesdev.core.player.ActionBar;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -24,7 +25,8 @@ public class BulletReloadTask extends BukkitRunnable {
         this.weapon = weapon;
         this.itemStack = itemStack;
         this.reloadTime = reloadTime;
-        player.getPlayer().sendMessage(ChatColor.GREEN + "Reloading...");
+        ActionBar actionBar = new ActionBar(ChatColor.GREEN + "Reloading");
+        actionBar.send(player.getPlayer());
         player.getPlayerBullet().getBullet(weapon.getName()).reload();
     }
 
@@ -41,7 +43,8 @@ public class BulletReloadTask extends BukkitRunnable {
         if ((!weapon.isWeapon(player.getWeapon(weapon.getClass()))) || player.getPlayerBullet().getBullet(weapon.getName()).isCancel()) {
             player.getPlayerBullet().getBullet(weapon.getName()).respondCancel();
             player.getPlayerBullet().getBullet(weapon.getName()).finishedReloading();
-            player.getPlayer().sendMessage(ChatColor.RED + "Reloading cancelled!");
+            ActionBar actionBar = new ActionBar(ChatColor.RED + "Reloading cancelled!");
+            actionBar.send(player.getPlayer());
             cancel();
             return;
         }
@@ -49,7 +52,8 @@ public class BulletReloadTask extends BukkitRunnable {
             WeaponBullet weaponBullet = player.getPlayerBullet().getBullet(weapon.getName());
             weaponBullet.setBulletCount(weaponBullet.getMaxBullet());
             weaponBullet.finishedReloading();
-            player.getPlayer().sendMessage(ChatColor.GREEN + "Reload completed");
+            ActionBar actionBar = new ActionBar(ChatColor.GREEN + "Reloading completed!");
+            actionBar.send(player.getPlayer());
             player.getWeapon(weapon.getClass()).setAmount(weaponBullet.getMaxBullet());
             cancel();
             return;

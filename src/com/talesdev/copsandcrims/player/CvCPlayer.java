@@ -8,12 +8,15 @@ import org.bukkit.inventory.ItemStack;
 
 /**
  * CvC Player
+ *
  * @author MoKunz
  */
 public class CvCPlayer {
     private boolean isWalking = false;
+    private boolean isSneaking = false;
     private long lastWalkingTime;
     private double armorPoint;
+    private boolean isScoping = false;
     private Player player;
     private PlayerRecoil playerRecoil;
     private PlayerBullet playerBullet;
@@ -41,6 +44,7 @@ public class CvCPlayer {
     public boolean isWalking() {
         return isWalking;
     }
+
     public void setArmorPoint(double armorPoint) {
         if (armorPoint > 0) {
             this.armorPoint = armorPoint;
@@ -55,12 +59,20 @@ public class CvCPlayer {
         return playerRecoil;
     }
 
-    public Player getPlayer(){
+    public Player getPlayer() {
         return player;
     }
 
-    public String getPlayerName(){
+    public String getPlayerName() {
         return player.getName();
+    }
+
+    public boolean isScoping() {
+        return isScoping;
+    }
+
+    public void setScoping(boolean isScoping) {
+        this.isScoping = isScoping;
     }
 
     @Override
@@ -86,5 +98,13 @@ public class CvCPlayer {
             }
         }
         return new ItemStack(Material.AIR);
+    }
+
+    public boolean isSneaking() {
+        return isSneaking;
+    }
+
+    public void setSneaking(boolean isSneaking) {
+        this.isSneaking = isSneaking;
     }
 }

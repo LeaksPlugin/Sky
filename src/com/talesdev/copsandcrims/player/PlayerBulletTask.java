@@ -33,6 +33,16 @@ public class PlayerBulletTask implements Runnable {
                     }
                 }
             });
+            plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    if (player.isScoping()) {
+                        player.getPlayer().setWalkSpeed(0.01F);
+                    } else {
+                        player.getPlayer().setWalkSpeed(0.2F);
+                    }
+                }
+            });
         }
     }
 }

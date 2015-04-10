@@ -9,6 +9,7 @@ import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 
 /**
  * A helper class for sending title to player
@@ -16,9 +17,9 @@ import java.lang.reflect.InvocationTargetException;
  * @author MoKunz
  */
 public class Title {
-    private ProtocolManager protocolManager;
-    private WrappedChatComponent title;
-    private WrappedChatComponent subtitle;
+    private ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+    private String title;
+    private String subtitle;
     private int fadeIn;
     private int stay;
     private int fadeOut;
@@ -31,7 +32,6 @@ public class Title {
     }
 
     public Title(String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-        protocolManager = ProtocolLibrary.getProtocolManager();
         set(title, subtitle);
         setFadeIn(fadeIn);
         setStay(stay);
@@ -55,15 +55,19 @@ public class Title {
         }
     }
 
+    public void send(Collection<Player> players) {
+        players.forEach(this::send);
+    }
+
     public void sendTitle(Player player) throws InvocationTargetException {
         PacketContainer titlePacket = createTitlePacket(TitleAction.TITLE);
-        titlePacket.getChatComponents().write(0, title);
+        titlePacket.getChatComponents().write(0, WrappedChatComponent.fromText(title));
         protocolManager.sendServerPacket(player, titlePacket);
     }
 
     public void sendSubtitle(Player player) throws InvocationTargetException {
         PacketContainer subtitlePacket = createTitlePacket(TitleAction.SUBTITLE);
-        subtitlePacket.getChatComponents().write(0, subtitle);
+        subtitlePacket.getChatComponents().write(0, WrappedChatComponent.fromText(subtitle));
         protocolManager.sendServerPacket(player, subtitlePacket);
     }
 
@@ -84,21 +88,21 @@ public class Title {
         protocolManager.sendServerPacket(player, createTitlePacket(TitleAction.RESET));
     }
 
-    public void set(String jsonTile, String jsonSubtitle) {
-        title.setJson(jsonTile);
-        subtitle.setJson(jsonSubtitle);
+    public void set(String title, String subtitle) {
+        this.title = title;
+        this.subtitle = subtitle;
     }
 
     public String getTitle() {
-        return title.getJson();
+        return title;
     }
 
     public void setTitle(String title) {
-        this.title.setJson(title);
+        this.title = title;
     }
 
     public void setSubtitle(String subtitle) {
-        this.subtitle.setJson(subtitle);
+        this.subtitle = subtitle;
     }
 
     public int getFadeIn() {
