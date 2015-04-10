@@ -1,8 +1,10 @@
 package com.talesdev.copsandcrims;
 
 import com.talesdev.copsandcrims.player.CvCPlayer;
+import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.core.player.LastDamageCause;
 import com.talesdev.core.player.LastPlayerDamage;
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -43,12 +45,19 @@ public class CopsAndCrimsListener implements Listener {
         }
     }
 
-    @EventHandler
+    //@EventHandler
     public void onPlayerDeath(EntityDeathEvent event) {
         LastPlayerDamage lastPlayerDamage = new LastPlayerDamage(event.getEntity(), plugin);
         LastDamageCause lastDamageCause = lastPlayerDamage.getLastDamage();
         if (lastDamageCause != null) {
-            System.out.println(lastDamageCause.getAttachmentMap());
+            String headShot = "";
+            if (lastDamageCause.getAttachment("HeadShot", Boolean.TYPE)) headShot = "(Headshot)";
+            plugin.getServer().broadcastMessage(ChatColor.GREEN +
+                            event.getEntity().getName() + ChatColor.BLUE +
+                            " was killed by " + ChatColor.RED +
+                            lastDamageCause.getEntity().getName() + ChatColor.BLUE + " using " +
+                            ChatColor.YELLOW + lastDamageCause.getAttachment("Weapon", Weapon.class).getDisplayName() + headShot
+            );
         }
     }
 }

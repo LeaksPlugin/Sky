@@ -31,6 +31,7 @@ public class DelayedBullet extends Bullet {
 
     public DelayedBullet(DelayedBullet bullet) {
         this(bullet.getPlayer(), bullet.getListener(), bullet.getDamage(), bullet.getBulletAccuracy(), bullet.getSpeed(), bullet.getRecoil());
+        this.setWeapon(bullet.getWeapon());
     }
 
     public void setSpeed(int speed) {

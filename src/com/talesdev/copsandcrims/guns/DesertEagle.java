@@ -5,6 +5,7 @@ import com.talesdev.copsandcrims.weapon.WeaponType;
 import com.talesdev.copsandcrims.weapon.bullet.Accuracy;
 import com.talesdev.copsandcrims.weapon.bullet.BulletAccuracy;
 import com.talesdev.copsandcrims.weapon.module.BurstFireModule;
+import com.talesdev.copsandcrims.weapon.module.DeathMessageModule;
 import com.talesdev.copsandcrims.weapon.module.ItemControlModule;
 import com.talesdev.copsandcrims.weapon.module.ShootingModule;
 import com.talesdev.core.math.Range;
@@ -25,6 +26,7 @@ public class DesertEagle extends Weapon {
         ShootingModule shootingModule = new ShootingModule();
         ItemControlModule controlModule = new ItemControlModule();
         BurstFireModule burstFireModule = new BurstFireModule();
+        DeathMessageModule deathMessageModule = new DeathMessageModule();
         shootingModule.setRecoil(5.0D);
         shootingModule.setMaxBullet(30);
         shootingModule.setBulletDelay(1);
@@ -40,6 +42,7 @@ public class DesertEagle extends Weapon {
         addModule(controlModule);
         burstFireModule.setEnabled(true);
         addModule(burstFireModule);
+        addModule(deathMessageModule);
     }
 
     @Override

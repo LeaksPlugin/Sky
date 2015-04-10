@@ -258,6 +258,7 @@ public class Bullet {
                 }
                 PlayerLastDamage lastDamage = new PlayerLastDamage(getPlayer(), getWeapon(), this, isHeadShot);
                 LastPlayerDamage lastPlayerDamage = new LastPlayerDamage(entity, CopsAndCrims.getPlugin());
+                lastPlayerDamage.setLastDamage(lastDamage);
                 if (((LivingEntity) entity).getHealth() - damage > 0) {
                     // damage packet
                     PacketContainer entityStatus = new PacketContainer(PacketType.Play.Server.ENTITY_STATUS);
@@ -276,7 +277,6 @@ public class Bullet {
                     ((LivingEntity) entity).damage(damage + 1);
                     cancel();
                 }
-                lastPlayerDamage.setLastDamage(lastDamage);
                 return false;
             }
         }
