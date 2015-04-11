@@ -22,31 +22,33 @@ public class DesertEagle extends Weapon {
         super("DesertEagle", "Desert Eagle", blankAliases(), WeaponType.PISTOL);
         ShootingModule shootingModule = new ShootingModule();
         ItemControlModule controlModule = new ItemControlModule();
-        BurstFireModule burstFireModule = new BurstFireModule();
+        AlternativeFireModule alternativeFireModule = new AlternativeFireModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
         ScopeModule scopeModule = new ScopeModule();
+        shootingModule.setFiringMode(FiringMode.BOLT);
         shootingModule.setRecoil(5.0D);
-        shootingModule.setMaxBullet(30);
+        shootingModule.setMaxBullet(20);
         shootingModule.setBulletDelay(1);
         shootingModule.setCooldownTime(3);
         shootingModule.setAccuracy(new BulletAccuracy(
-                new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)), // default
+                new Accuracy(new Range(-10, 10), new Range(-10, 10), new Range(-10, 10)), // default
                 new Accuracy(new Range(0, 0), new Range(0, 0), new Range(0, 0)), // sneaking
-                new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)), // walking
-                new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)), // sprinting
-                new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)) // jumping
+                new Accuracy(new Range(-10, 10), new Range(-10, 10), new Range(-10, 10)), // walking
+                new Accuracy(new Range(-10, 10), new Range(-10, 10), new Range(-10, 10)), // sprinting
+                new Accuracy(new Range(-10, 10), new Range(-10, 10), new Range(-10, 10)) // jumping
         ));
+        alternativeFireModule.setEnabled(true);
+        scopeModule.setZoomLevel(5);
         addModule(shootingModule);
         addModule(controlModule);
-        burstFireModule.setEnabled(true);
-        addModule(burstFireModule);
+        addModule(alternativeFireModule);
         addModule(deathMessageModule);
         addModule(scopeModule);
     }
 
     @Override
     public ItemStack createItemStack() {
-        ItemStack itemStack = new ItemStack(Material.GOLD_HOE, 30);
+        ItemStack itemStack = new ItemStack(Material.GOLD_PICKAXE, 20);
         ItemMeta meta = itemStack.getItemMeta();
         meta.setDisplayName(ChatColor.BLUE + getDisplayName());
         itemStack.setItemMeta(meta);
@@ -56,7 +58,7 @@ public class DesertEagle extends Weapon {
     @Override
     public boolean isWeapon(ItemStack itemStack) {
         if (itemStack == null) return false;
-        if (itemStack.getType().equals(Material.GOLD_HOE)) {
+        if (itemStack.getType().equals(Material.GOLD_PICKAXE)) {
             return true;
         }
         return super.isWeapon(itemStack);

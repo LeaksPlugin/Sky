@@ -256,6 +256,13 @@ public class Bullet {
                     damage = headShotDamage;
                     isHeadShot = true;
                 }
+                // skip creative gamemode
+                if (entity instanceof Player) {
+                    if (((Player) entity).getGameMode().equals(GameMode.CREATIVE)) {
+                        return false;
+                    }
+                }
+                // damaging
                 PlayerLastDamage lastDamage = new PlayerLastDamage(getPlayer(), getWeapon(), this, isHeadShot);
                 LastPlayerDamage lastPlayerDamage = new LastPlayerDamage(entity, CopsAndCrims.getPlugin());
                 lastPlayerDamage.setLastDamage(lastDamage);

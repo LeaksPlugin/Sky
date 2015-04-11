@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 public class CvCPlayer {
     private boolean isWalking = false;
     private boolean isSneaking = false;
+    private ItemStack lastHelmet = new ItemStack(Material.AIR);
     private long lastWalkingTime;
     private double armorPoint;
     private boolean isScoping = false;
@@ -106,5 +107,13 @@ public class CvCPlayer {
 
     public void setSneaking(boolean isSneaking) {
         this.isSneaking = isSneaking;
+    }
+
+    public ItemStack getLastHelmet() {
+        return lastHelmet;
+    }
+
+    public void setLastHelmet(ItemStack lastHelmet) {
+        this.lastHelmet = lastHelmet;
     }
 }

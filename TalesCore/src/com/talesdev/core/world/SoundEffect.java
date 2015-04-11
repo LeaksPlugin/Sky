@@ -309,6 +309,10 @@ public enum SoundEffect implements SoundEffectInterface {
         }
     }
 
+    @Override
+    public String asString() {
+        return toString();
+    }
 
     public String toString() {
         return super.toString().replaceAll("_", "\\.").toLowerCase();
@@ -317,7 +321,7 @@ public enum SoundEffect implements SoundEffectInterface {
     public static Sound getMobHurtSound(Entity entity) {
         EntityType type = entity.getType();
         SoundEffect soundEffect = SoundEffect.BLANK;
-        Sound sound = new Sound(soundEffect,1.0F,1.0F);
+        Sound sound = new Sound(soundEffect, 1.0F, 1.0F);
         boolean isBaby = false;
         if (entity instanceof Ageable) {
             isBaby = !((Ageable) entity).isAdult();
@@ -464,7 +468,7 @@ public enum SoundEffect implements SoundEffectInterface {
                 break;
         }
         sound.setSoundEffect(soundEffect);
-        if(isBaby) sound.setPitch(1.5F);
+        if (isBaby) sound.setPitch(1.5F);
         return sound;
     }
 }

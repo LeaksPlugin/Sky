@@ -46,13 +46,13 @@ public class Accuracy {
         return new Vector(
                 MathRandom.randomRange(
                         getXSpread().getStart(),
-                        getXSpread().getEnd()) / 100D,
+                        getXSpread().getEnd()) / 1000D,
                 MathRandom.randomRange(
                         getYSpread().getStart(),
-                        getYSpread().getEnd()) / 100D,
+                        getYSpread().getEnd()) / 1000D,
                 MathRandom.randomRange(
                         getZSpread().getStart(),
-                        getZSpread().getEnd()) / 100D
+                        getZSpread().getEnd()) / 1000D
         );
     }
 }

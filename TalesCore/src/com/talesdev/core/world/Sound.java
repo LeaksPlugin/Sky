@@ -25,6 +25,10 @@ public class Sound {
         this.pitch = pitch;
     }
 
+    public Sound(SoundEffectInterface soundEffect) {
+        this(soundEffect, 1.0F, 1.0F);
+    }
+
     public SoundEffectInterface getSoundEffect() {
         return effect;
     }
@@ -61,10 +65,10 @@ public class Sound {
         PacketConstructor soundPacket;
         // This allows us to call one of the constructors of Packet62NamedSoundEffect
         soundPacket = manager.createPacketConstructor(
-                PacketType.Play.Server.NAMED_SOUND_EFFECT, effect.toString(), x, y, z, volume, pitch);
+                PacketType.Play.Server.NAMED_SOUND_EFFECT, effect.asString(), x, y, z, volume, pitch);
 
         try {
-            manager.sendServerPacket(target, soundPacket.createPacket(effect.toString(), x, y, z, volume, pitch));
+            manager.sendServerPacket(target, soundPacket.createPacket(effect.asString(), x, y, z, volume, pitch));
         } catch (InvocationTargetException e) {
             throw new RuntimeException("Cannot invoke PacketNamedSoundEffect constructor.", e);
         }

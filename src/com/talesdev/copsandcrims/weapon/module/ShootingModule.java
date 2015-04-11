@@ -1,6 +1,7 @@
 package com.talesdev.copsandcrims.weapon.module;
 
 import com.talesdev.copsandcrims.CopsAndCrims;
+import com.talesdev.copsandcrims.CvCSound;
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.copsandcrims.weapon.WeaponBullet;
 import com.talesdev.copsandcrims.weapon.WeaponCooldownTag;
@@ -10,7 +11,6 @@ import com.talesdev.core.item.RightClickable;
 import com.talesdev.core.math.Range;
 import com.talesdev.core.player.ClickingAction;
 import com.talesdev.core.world.Sound;
-import com.talesdev.core.world.SoundEffect;
 import com.talesdev.core.world.SoundEffectInterface;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -33,19 +33,23 @@ public class ShootingModule extends WeaponModule {
     private int speed = 500;
     private BulletListener listener = null;
     private BulletAccuracy accuracy = null;
-    private SoundEffectInterface soundEffect = null;
+    private SoundEffectInterface shootingSoundEffect = null;
+    private SoundEffectInterface reloadStartSoundEffect = null;
+    private SoundEffectInterface reloadEndSoundEffect = null;
     private int maxBullet = 10;
     private int reloadTime = 60;
 
     public ShootingModule() {
         super("Shooting");
-        setSoundEffect(SoundEffect.MOB_SKELETON_DEATH);
+        setShootingSoundEffect(CvCSound.MCGO_WEAPONS_PISTOLSHOT);
+        setReloadStartSoundEffect(CvCSound.MCGO_RANDOM_RELOAD__START);
+        setReloadEndSoundEffect(CvCSound.MCGO_RANDOM_RELOAD__END);
         setAccuracy(new BulletAccuracy(
-                new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)), // default
-                new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)), // sneaking
-                new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)), // walking
-                new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)), // sprinting
-                new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)) // jumping
+                new Accuracy(new Range(-10, 10), new Range(-10, 10), new Range(-10, 10)), // default
+                new Accuracy(new Range(0, 0), new Range(0, 0), new Range(0, 0)), // sneaking
+                new Accuracy(new Range(-10, 10), new Range(-10, 10), new Range(-10, 10)), // walking
+                new Accuracy(new Range(-10, 10), new Range(-10, 10), new Range(-10, 10)), // sprinting
+                new Accuracy(new Range(-10, 10), new Range(-10, 10), new Range(-10, 10)) // jumping
         ));
         setFiringMode(FiringMode.SEMI_AUTO);
     }
@@ -55,6 +59,8 @@ public class ShootingModule extends WeaponModule {
         if (event.getItem() != null) {
             // is weapon
             if (getWeapon().isWeapon(event.getItem())) {
+                // HACK
+                event.getItem().setDurability((short) 0);
                 if (event.getClickedBlock() != null) {
                     MaterialComparator comparator = new MaterialComparator(new RightClickable());
                     if (comparator.containThisMaterial(event.getClickedBlock().getType())) {
@@ -64,15 +70,17 @@ public class ShootingModule extends WeaponModule {
                 }
                 if (ClickingAction.isRightClick(event.getAction())) {
                     shootBullet(event);
+                    event.setUseInteractedBlock(Event.Result.DENY);
+                    event.setUseItemInHand(Event.Result.DENY);
                 } else if (ClickingAction.isLeftClick(event.getAction())) {
                     CvCPlayer cvCPlayer = getPlugin().getServerCvCPlayer().getPlayer(event.getPlayer());
                     WeaponBullet weaponBullet = cvCPlayer.getPlayerBullet().getBullet(getWeapon().getName());
                     if ((!weaponBullet.isReloading()) && weaponBullet.getBulletCount() < weaponBullet.getMaxBullet()) {
                         (new BulletReloadTask(cvCPlayer, getWeapon(), event.getItem(), getReloadTime())).runTaskTimer(getPlugin(), 0, 1);
                     }
+                    event.setUseInteractedBlock(Event.Result.DENY);
+                    event.setUseItemInHand(Event.Result.DENY);
                 }
-                event.setUseInteractedBlock(Event.Result.DENY);
-                event.setUseItemInHand(Event.Result.DENY);
             }
         }
     }
@@ -104,26 +112,26 @@ public class ShootingModule extends WeaponModule {
             bullet.setRayParameter(2000, 0.05, 4);
             bullet.setSpeed(getSpeed());
             // burst fire
-            BurstFireModule burstFireModule = getWeapon().getModule(BurstFireModule.class);
-            if (burstFireModule != null) {
-                if (burstFireModule.isEnabled() && burstFireModule.goingToBurstFire(player.getPlayer())) {
-                    bullet = getWeapon().getModule(BurstFireModule.class).createBurstFireBullet(bullet);
-                    tag.setCoolDownTime(burstFireModule.getBurstFireCooldown());
+            AlternativeFireModule alternativeFireModule = getWeapon().getModule(AlternativeFireModule.class);
+            if (alternativeFireModule != null) {
+                if (alternativeFireModule.isEnabled() && alternativeFireModule.goingToBurstFire(player.getPlayer())) {
+                    bullet = getWeapon().getModule(AlternativeFireModule.class).createBurstFireBullet(bullet);
+                    tag.setCoolDownTime(alternativeFireModule.getAlternativeFireCooldown());
                 }
             }
             bullet.setWeapon(getWeapon());
             // some bullet ...
             int usedBullet = getBulletCount();
-            if (burstFireModule != null) {
-                if (burstFireModule.isEnabled() && burstFireModule.goingToBurstFire(player.getPlayer())) {
-                    usedBullet = burstFireModule.getBurstFireBullet();
+            if (alternativeFireModule != null) {
+                if (alternativeFireModule.isEnabled() && alternativeFireModule.goingToBurstFire(player.getPlayer())) {
+                    usedBullet = alternativeFireModule.getAlternativeFireBullet();
                 }
             }
             // shoot bullet
-            if (burstFireModule != null) {
-                if (burstFireModule.isEnabled() && burstFireModule.goingToBurstFire(player.getPlayer())) {
+            if (alternativeFireModule != null) {
+                if (alternativeFireModule.isEnabled() && alternativeFireModule.goingToBurstFire(player.getPlayer())) {
                     // System.out.println("Shooting in burst fire mode!");
-                    burstFireModule.runBurstFireTask(bullet);
+                    alternativeFireModule.runBurstFireTask(bullet);
                 } else {
                     // System.out.println("Shooting in normal mode!");
                     runBulletTask(createBulletTask(bullet));
@@ -133,7 +141,7 @@ public class ShootingModule extends WeaponModule {
                 runBulletTask(createBulletTask(bullet));
             }
             // play sound
-            (new Sound(getSoundEffect(), 1.0F, 1.0F)).playSound(event.getPlayer().getLocation());
+            (new Sound(getShootingSoundEffect(), 1.0F, 1.0F)).playSound(event.getPlayer().getLocation());
             // check if player is not null
             // add recoil
             player.getPlayerRecoil().addRecoil(getWeapon(), getRecoil());
@@ -216,12 +224,12 @@ public class ShootingModule extends WeaponModule {
         this.accuracy = accuracy;
     }
 
-    public SoundEffectInterface getSoundEffect() {
-        return soundEffect;
+    public SoundEffectInterface getShootingSoundEffect() {
+        return shootingSoundEffect;
     }
 
-    public void setSoundEffect(SoundEffectInterface soundEffect) {
-        this.soundEffect = soundEffect;
+    public void setShootingSoundEffect(SoundEffectInterface shootingSoundEffect) {
+        this.shootingSoundEffect = shootingSoundEffect;
     }
 
     public int getSpeed() {
@@ -264,5 +272,21 @@ public class ShootingModule extends WeaponModule {
     public void setReloadTime(int reloadTime) {
         if (reloadTime < 0) return;
         this.reloadTime = reloadTime;
+    }
+
+    public SoundEffectInterface getReloadStartSoundEffect() {
+        return reloadStartSoundEffect;
+    }
+
+    public void setReloadStartSoundEffect(SoundEffectInterface reloadStartSoundEffect) {
+        this.reloadStartSoundEffect = reloadStartSoundEffect;
+    }
+
+    public SoundEffectInterface getReloadEndSoundEffect() {
+        return reloadEndSoundEffect;
+    }
+
+    public void setReloadEndSoundEffect(SoundEffectInterface reloadEndSoundEffect) {
+        this.reloadEndSoundEffect = reloadEndSoundEffect;
     }
 }

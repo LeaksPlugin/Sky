@@ -1,6 +1,9 @@
 package com.talesdev.copsandcrims.weapon.bullet;
 
 import com.talesdev.copsandcrims.CopsAndCrims;
+import com.talesdev.copsandcrims.weapon.module.FiringMode;
+import com.talesdev.copsandcrims.weapon.module.ScopeModule;
+import com.talesdev.copsandcrims.weapon.module.ShootingModule;
 import com.talesdev.core.world.NearbyEntity;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
@@ -45,6 +48,12 @@ public class DelayedBullet extends Bullet {
     public void fire() {
         DelayedBulletTask task = new DelayedBulletTask(new DelayedBullet(this));
         task.runTaskTimer(CopsAndCrims.getPlugin(), 0, 1);
+        // bolt scoping
+        if (getWeapon().containsModule(ScopeModule.class)) {
+            if (getWeapon().getModule(ShootingModule.class).getFiringMode().equals(FiringMode.BOLT)) {
+                getWeapon().getModule(ScopeModule.class).cancelZoom(CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(getPlayer()));
+            }
+        }
     }
 
     private void oneTickPassed() {

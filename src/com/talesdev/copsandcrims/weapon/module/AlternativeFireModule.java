@@ -13,26 +13,27 @@ import org.bukkit.scheduler.BukkitTask;
  *
  * @author MoKunz
  */
-public class BurstFireModule extends WeaponModule {
+public class AlternativeFireModule extends WeaponModule {
 
     private boolean enabled = false;
-    private int burstFireDelay = 1;
-    private int burstFireCooldown = 20;
-    private int burstFireBullet = 3;
+    private int alternativeFireDelay = 1;
+    private int alternativeFireCooldown = 20;
+    private int alternativeFireBullet = 3;
+    private double alternativeRecoil = 0.1D;
     private BulletAccuracy burstFireAccuracy;
 
-    public BurstFireModule() {
+    public AlternativeFireModule() {
         this(true);
     }
 
-    public BurstFireModule(boolean enabled) {
+    public AlternativeFireModule(boolean enabled) {
         this(enabled, new BulletAccuracy(
                 new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)),
                 new Accuracy(new Range(0, 0), new Range(0, 0), new Range(0, 0))
         ));
     }
 
-    public BurstFireModule(boolean enabled, BulletAccuracy burstFireAccuracy) {
+    public AlternativeFireModule(boolean enabled, BulletAccuracy burstFireAccuracy) {
         super("BurstFire");
         this.enabled = enabled;
         this.burstFireAccuracy = burstFireAccuracy;
@@ -53,7 +54,7 @@ public class BurstFireModule extends WeaponModule {
     }
 
     public BukkitTask runBurstFireTask(DelayedBullet delayedBullet) {
-        return new BulletTask(delayedBullet, getBurstFireBullet(), getWeapon()).runTaskTimer(getPlugin(), 0, getBurstFireDelay());
+        return new BulletTask(delayedBullet, getAlternativeFireBullet(), getWeapon()).runTaskTimer(getPlugin(), 0, getAlternativeFireDelay());
     }
 
     public boolean isEnabled() {
@@ -72,27 +73,35 @@ public class BurstFireModule extends WeaponModule {
         this.burstFireAccuracy = burstFireAccuracy;
     }
 
-    public int getBurstFireDelay() {
-        return burstFireDelay;
+    public int getAlternativeFireDelay() {
+        return alternativeFireDelay;
     }
 
-    public void setBurstFireDelay(int burstFireDelay) {
-        this.burstFireDelay = burstFireDelay;
+    public void setAlternativeFireDelay(int alternativeFireDelay) {
+        this.alternativeFireDelay = alternativeFireDelay;
     }
 
-    public int getBurstFireBullet() {
-        return burstFireBullet;
+    public int getAlternativeFireBullet() {
+        return alternativeFireBullet;
     }
 
-    public void setBurstFireBullet(int burstFireBullet) {
-        this.burstFireBullet = burstFireBullet;
+    public void setAlternativeFireBullet(int alternativeFireBullet) {
+        this.alternativeFireBullet = alternativeFireBullet;
     }
 
-    public int getBurstFireCooldown() {
-        return burstFireCooldown;
+    public int getAlternativeFireCooldown() {
+        return alternativeFireCooldown;
     }
 
-    public void setBurstFireCooldown(int burstFireCooldown) {
-        this.burstFireCooldown = burstFireCooldown;
+    public void setAlternativeFireCooldown(int alternativeFireCooldown) {
+        this.alternativeFireCooldown = alternativeFireCooldown;
+    }
+
+    public double getAlternativeRecoil() {
+        return alternativeRecoil;
+    }
+
+    public void setAlternativeRecoil(double alternativeRecoil) {
+        this.alternativeRecoil = alternativeRecoil;
     }
 }

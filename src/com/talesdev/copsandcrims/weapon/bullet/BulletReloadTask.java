@@ -3,7 +3,9 @@ package com.talesdev.copsandcrims.weapon.bullet;
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.WeaponBullet;
+import com.talesdev.copsandcrims.weapon.module.ShootingModule;
 import com.talesdev.core.player.ActionBar;
+import com.talesdev.core.world.Sound;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -26,6 +28,8 @@ public class BulletReloadTask extends BukkitRunnable {
         this.itemStack = itemStack;
         this.reloadTime = reloadTime;
         ActionBar actionBar = new ActionBar(ChatColor.GREEN + "Reloading");
+        Sound sound = new Sound(weapon.getModule(ShootingModule.class).getReloadStartSoundEffect());
+        sound.playSound(player.getPlayer().getLocation());
         actionBar.send(player.getPlayer());
         player.getPlayerBullet().getBullet(weapon.getName()).reload();
     }
@@ -53,6 +57,8 @@ public class BulletReloadTask extends BukkitRunnable {
             weaponBullet.setBulletCount(weaponBullet.getMaxBullet());
             weaponBullet.finishedReloading();
             ActionBar actionBar = new ActionBar(ChatColor.GREEN + "Reloading completed!");
+            Sound sound = new Sound(weapon.getModule(ShootingModule.class).getReloadEndSoundEffect());
+            sound.playSound(player.getPlayer().getLocation());
             actionBar.send(player.getPlayer());
             player.getWeapon(weapon.getClass()).setAmount(weaponBullet.getMaxBullet());
             cancel();
