@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -44,6 +45,7 @@ public class ItemControlModule extends WeaponModule {
         if (getWeapon().isWeapon(event.getCurrentItem()) ||
                 getWeapon().isWeapon(event.getCursor())
                 ) {
+            Bukkit.getPlayer(event.getWhoClicked().getName()).updateInventory();
             event.setCancelled(true);
         }
     }
@@ -93,6 +95,7 @@ public class ItemControlModule extends WeaponModule {
     public void onSlotChange(PlayerItemHeldEvent event) {
         CopsAndCrims plugin = CopsAndCrims.getPlugin();
         CvCPlayer player = plugin.getServerCvCPlayer().getPlayer(event.getPlayer());
+        doUpdateInventory(player.getPlayer());
         Weapon weapon = plugin.getWeaponFactory().getWeapon(player.getPlayer().getInventory().getItem(event.getPreviousSlot()));
         if (weapon != null && player.getPlayerBullet().getBullet(weapon.getName()).isReloading()) {
             player.getPlayerBullet().getBullet(weapon.getName()).cancel();
@@ -103,10 +106,18 @@ public class ItemControlModule extends WeaponModule {
     public void onDamage(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player) {
             Player player = (Player) event.getDamager();
+            doUpdateInventory(player);
+            CvCPlayer cPlayer = getPlugin().getServerCvCPlayer().getPlayer(player);
             if (getWeapon().isWeapon(player.getItemInHand())) {
+                System.out.println(player.getItemInHand().getDurability());
                 event.setCancelled(true);
             }
         }
+    }
+
+    @EventHandler
+    public void blockBreak(BlockBreakEvent event) {
+        doUpdateInventory(event.getPlayer());
     }
 
     @EventHandler
@@ -118,6 +129,7 @@ public class ItemControlModule extends WeaponModule {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
+        doUpdateInventory(event.getEntity());
         for (Iterator<ItemStack> it = event.getDrops().iterator(); it.hasNext(); ) {
             ItemStack itemStack = it.next();
             if (!getPlugin().getWeaponFactory().isWeapon(itemStack)) {
@@ -145,5 +157,14 @@ public class ItemControlModule extends WeaponModule {
                 metaData.setMetadata("bulletAmount", bulletCount);
             }
         }
+    }
+
+    public void doUpdateInventory(Player player) {
+        getPlugin().getServer().getScheduler().runTaskLater(getPlugin(), new Runnable() {
+            @Override
+            public void run() {
+                player.updateInventory();
+            }
+        }, 1);
     }
 }

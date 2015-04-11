@@ -12,7 +12,6 @@ import com.talesdev.core.player.ClickingAction;
 import com.talesdev.core.world.Sound;
 import com.talesdev.core.world.SoundEffect;
 import org.bukkit.event.Event;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
@@ -23,7 +22,7 @@ public class DummyModule extends WeaponModule {
         super("Dummy");
     }
 
-    @EventHandler
+    //@EventHandler
     public void onInteract(PlayerInteractEvent event) {
         if (event.getItem() == null) return;
         if (getWeapon().isWeapon(event.getItem()) &&
