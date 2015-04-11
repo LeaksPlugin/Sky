@@ -163,6 +163,10 @@ public class ItemControlModule extends WeaponModule {
         getPlugin().getServer().getScheduler().runTaskLater(getPlugin(), new Runnable() {
             @Override
             public void run() {
+                CvCPlayer cPlayer = CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(player);
+                ItemStack itemStack = cPlayer.getWeapon(getWeapon().getClass());
+                itemStack.setAmount(itemStack.getAmount());
+                itemStack.setDurability(itemStack.getDurability());
                 player.updateInventory();
             }
         }, 1);

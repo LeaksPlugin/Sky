@@ -59,8 +59,10 @@ public class ShootingModule extends WeaponModule {
         if (event.getItem() != null) {
             // is weapon
             if (getWeapon().isWeapon(event.getItem())) {
-                // HACK
-                event.getItem().setDurability((short) 0);
+                // update inv
+                if (getWeapon().containsModule(ItemControlModule.class)) {
+                    getWeapon().getModule(ItemControlModule.class).doUpdateInventory(event.getPlayer());
+                }
                 if (event.getClickedBlock() != null) {
                     MaterialComparator comparator = new MaterialComparator(new RightClickable());
                     if (comparator.containThisMaterial(event.getClickedBlock().getType())) {
