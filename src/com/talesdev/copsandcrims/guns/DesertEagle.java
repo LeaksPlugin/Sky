@@ -19,38 +19,34 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class DesertEagle extends Weapon {
 
     public DesertEagle() {
-        super("DesertEagle", "Desert Eagle", blankAliases(), WeaponType.PISTOL);
+        super("DesertEagle", ChatColor.GREEN + "Desert Eagle", blankAliases(), WeaponType.PISTOL);
         ShootingModule shootingModule = new ShootingModule();
         ItemControlModule controlModule = new ItemControlModule();
-        AlternativeFireModule alternativeFireModule = new AlternativeFireModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
-        ScopeModule scopeModule = new ScopeModule();
-        shootingModule.setFiringMode(FiringMode.BOLT);
-        shootingModule.setRecoil(5.0D);
-        shootingModule.setMaxBullet(20);
-        shootingModule.setBulletDelay(1);
-        shootingModule.setCooldownTime(3);
+        shootingModule.setDamage(13.6);
+        shootingModule.setHeadShotDamage(40.8);
+        shootingModule.setRecoil(7.0D);
+        shootingModule.setMaxBullet(7);
+        shootingModule.setBulletDelay(6);
+        shootingModule.setCooldownTime(6);
+        shootingModule.setReloadTime(44);
         shootingModule.setAccuracy(new BulletAccuracy(
                 new Accuracy(new Range(-10, 10), new Range(-10, 10), new Range(-10, 10)), // default
-                new Accuracy(new Range(0, 0), new Range(0, 0), new Range(0, 0)), // sneaking
-                new Accuracy(new Range(-10, 10), new Range(-10, 10), new Range(-10, 10)), // walking
-                new Accuracy(new Range(-10, 10), new Range(-10, 10), new Range(-10, 10)), // sprinting
-                new Accuracy(new Range(-10, 10), new Range(-10, 10), new Range(-10, 10)) // jumping
+                new Accuracy(new Range(3, 3), new Range(3, 3), new Range(3, 3)), // sneaking
+                new Accuracy(new Range(-20, 20), new Range(-20, 20), new Range(-20, 20)), // walking
+                new Accuracy(new Range(-80, 80), new Range(-80, 80), new Range(-80, 80)), // sprinting
+                new Accuracy(new Range(-100, 100), new Range(-100, 100), new Range(-100, 100)) // jumping
         ));
-        alternativeFireModule.setEnabled(true);
-        scopeModule.setZoomLevel(5);
         addModule(shootingModule);
         addModule(controlModule);
-        addModule(alternativeFireModule);
         addModule(deathMessageModule);
-        addModule(scopeModule);
     }
 
     @Override
     public ItemStack createItemStack() {
-        ItemStack itemStack = new ItemStack(Material.GOLD_PICKAXE, 20);
+        ItemStack itemStack = new ItemStack(Material.GOLD_PICKAXE, 7);
         ItemMeta meta = itemStack.getItemMeta();
-        meta.setDisplayName(ChatColor.BLUE + getDisplayName());
+        meta.setDisplayName(ChatColor.GREEN + getDisplayName());
         itemStack.setItemMeta(meta);
         return itemStack;
     }
