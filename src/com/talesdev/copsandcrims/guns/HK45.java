@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 /**
- * Desert Eagle
+ * HK45
  *
  * @author sonSunnoi
  */
