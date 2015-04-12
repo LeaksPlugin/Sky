@@ -122,7 +122,6 @@ public class ItemControlModule extends WeaponModule {
             doUpdateInventory(player);
             CvCPlayer cPlayer = getPlugin().getServerCvCPlayer().getPlayer(player);
             if (getWeapon().isWeapon(player.getItemInHand())) {
-                System.out.println(player.getItemInHand().getDurability());
                 event.setCancelled(true);
             }
         }

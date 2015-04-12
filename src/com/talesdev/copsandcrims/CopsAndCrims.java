@@ -3,6 +3,7 @@ package com.talesdev.copsandcrims;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.talesdev.copsandcrims.arena.DefaultArena;
 import com.talesdev.copsandcrims.guns.DesertEagle;
+import com.talesdev.copsandcrims.guns.Knife;
 import com.talesdev.copsandcrims.player.PlayerBulletTask;
 import com.talesdev.copsandcrims.player.PlayerEquipmentListener;
 import com.talesdev.copsandcrims.weapon.WeaponFactory;
@@ -33,6 +34,7 @@ public class CopsAndCrims extends JavaPlugin {
         getCommand("cvc").setExecutor(new CopsAndCrimsCommand());
         // item
         getWeaponFactory().addWeapon(new DesertEagle());
+        getWeaponFactory().addWeapon(new Knife());
         // protocol
         ProtocolLibrary.getProtocolManager().addPacketListener(new MyPacketAdapter(this));
         ProtocolLibrary.getProtocolManager().addPacketListener(new PlayerEquipmentListener(this));
