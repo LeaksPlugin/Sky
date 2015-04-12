@@ -35,6 +35,9 @@ public class DelayedBullet extends Bullet {
     public DelayedBullet(DelayedBullet bullet) {
         this(bullet.getPlayer(), bullet.getListener(), bullet.getDamage(), bullet.getBulletAccuracy(), bullet.getSpeed(), bullet.getRecoil());
         this.setWeapon(bullet.getWeapon());
+        this.setSpeed(bullet.getSpeed());
+        this.setDamage(bullet.getDamage());
+        this.setHeadShotDamage(bullet.getHeadShotDamage());
     }
 
     public void setSpeed(int speed) {
@@ -75,7 +78,6 @@ public class DelayedBullet extends Bullet {
         // action hook
         if (action != null) action.prepareFiring(this);
     }
-
 
     public void process() {
         // this do trick!

@@ -30,7 +30,9 @@ public class DeathMessageModule extends WeaponModule {
         LastPlayerDamage lastPlayerDamage = new LastPlayerDamage(event.getEntity(), getPlugin());
         LastDamageCause lastDamageCause = lastPlayerDamage.getLastDamage();
         if (lastDamageCause != null) {
-            getPlugin().getServer().broadcastMessage(getFormattedDeathMessage(event, lastDamageCause));
+            if (getWeapon().getName().equalsIgnoreCase(lastDamageCause.getAttachment("Weapon", Weapon.class).getName())) {
+                getPlugin().getServer().broadcastMessage(getFormattedDeathMessage(event, lastDamageCause));
+            }
         }
     }
 
@@ -38,7 +40,7 @@ public class DeathMessageModule extends WeaponModule {
         FormattedMessage message = new FormattedMessage(getDeathMessage());
         message.addPattern("entity", event.getEntity().getName());
         message.addPattern("killer", lastDamageCause.getEntity().getName());
-        message.addPattern("weapon", lastDamageCause.getAttachment("Weapon", Weapon.class).getName());
+        message.addPattern("weapon", lastDamageCause.getAttachment("Weapon", Weapon.class).getDisplayName());
         message.addPattern("headshot", ((Boolean) lastDamageCause.getAttachment("HeadShot")) ? "(Headshot)" : "");
         return message.getMessage();
     }

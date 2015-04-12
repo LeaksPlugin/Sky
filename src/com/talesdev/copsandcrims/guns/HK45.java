@@ -5,7 +5,9 @@ import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.WeaponType;
 import com.talesdev.copsandcrims.weapon.bullet.Accuracy;
 import com.talesdev.copsandcrims.weapon.bullet.BulletAccuracy;
-import com.talesdev.copsandcrims.weapon.module.*;
+import com.talesdev.copsandcrims.weapon.module.DeathMessageModule;
+import com.talesdev.copsandcrims.weapon.module.ItemControlModule;
+import com.talesdev.copsandcrims.weapon.module.ShootingModule;
 import com.talesdev.core.math.Range;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -41,7 +43,7 @@ import org.bukkit.inventory.meta.ItemMeta;
         addModule(shootingModule);
         addModule(controlModule);
         addModule(deathMessageModule);
-
+    }
     @Override
     public ItemStack createItemStack() {
         ItemStack itemStack = new ItemStack(Material.WOOD_PICKAXE, 13);

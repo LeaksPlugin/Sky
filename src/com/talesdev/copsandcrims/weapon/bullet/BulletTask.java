@@ -22,6 +22,7 @@ public class BulletTask extends BukkitRunnable {
         this.count = count;
         this.player = CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(bullet.getPlayer());
         this.weapon = weapon;
+        // debug
     }
     @Override
     public void run() {

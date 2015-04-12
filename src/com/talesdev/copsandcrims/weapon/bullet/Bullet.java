@@ -42,7 +42,7 @@ public class Bullet {
     protected double distance = 0.05;
     protected double bias = 3;
     protected double damage = 4;
-    protected double headShotDamage = damage * 2;
+    protected double headShotDamage = 8;
     private boolean cancel = false;
     private Weapon weapon;
 
@@ -237,7 +237,7 @@ public class Bullet {
     }
 
     protected boolean foundEntity(Location currentLocation, Vector currentVector, Entity entity) {
-        double damage = this.damage;
+        double damage = getDamage();
         if (entity.getName().equals(player.getName())) return true;
         BoundingBox box = new BoundingBox(entity);
         if (box.isInside(currentVector)) {
@@ -253,7 +253,7 @@ public class Bullet {
                 if ((Math.abs(((LivingEntity) entity).getEyeLocation().getY() - currentLocation.getY()) <= 0.5) &&
                         (((LivingEntity) entity).getEyeLocation().distanceSquared(currentLocation) <= 0.5)
                         ) {
-                    damage = headShotDamage;
+                    damage = getHeadShotDamage();
                     isHeadShot = true;
                 }
                 // skip creative gamemode

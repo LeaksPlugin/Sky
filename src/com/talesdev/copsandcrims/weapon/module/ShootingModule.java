@@ -110,6 +110,7 @@ public class ShootingModule extends WeaponModule {
             DelayedBullet bullet = new DelayedBullet(
                     event.getPlayer(), getListener(), getDamage(), getAccuracy(), recoil
             );
+            bullet.setDamage(getDamage());
             bullet.setHeadShotDamage(getHeadShotDamage());
             bullet.setRayParameter(2000, 0.05, 4);
             bullet.setSpeed(getSpeed());

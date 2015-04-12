@@ -76,7 +76,6 @@ public class ItemControlModule extends WeaponModule {
 
     @EventHandler
     public void onPickUpItem(PlayerPickupItemEvent event) {
-        if (!pickupActive) return;
         if (getWeapon().isWeapon(event.getItem().getItemStack())) {
             CvCPlayer player = getPlugin().getServerCvCPlayer().getPlayer(event.getPlayer());
             if (player.getWeapon(getWeapon().getClass()).getType() != Material.AIR) {
@@ -104,7 +103,6 @@ public class ItemControlModule extends WeaponModule {
 
     @EventHandler
     public void onSlotChange(PlayerItemHeldEvent event) {
-        if (!slotChangeActive) return;
         CopsAndCrims plugin = CopsAndCrims.getPlugin();
         CvCPlayer player = plugin.getServerCvCPlayer().getPlayer(event.getPlayer());
         doUpdateInventory(player.getPlayer());
@@ -116,7 +114,6 @@ public class ItemControlModule extends WeaponModule {
 
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent event) {
-        if (!damageActive) return;
         if (event.getDamager() instanceof Player) {
             Player player = (Player) event.getDamager();
             doUpdateInventory(player);
@@ -129,13 +126,11 @@ public class ItemControlModule extends WeaponModule {
 
     @EventHandler
     public void blockBreak(BlockBreakEvent event) {
-        if (!blockBreakActive) return;
         doUpdateInventory(event.getPlayer());
     }
 
     @EventHandler
     public void onItemMove(InventoryMoveItemEvent event) {
-        if (!itemMoveActive) return;
         if (getWeapon().isWeapon(event.getItem())) {
             event.setCancelled(true);
         }
@@ -143,7 +138,6 @@ public class ItemControlModule extends WeaponModule {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        if (!playerDeathActive) return;
         doUpdateInventory(event.getEntity());
         for (Iterator<ItemStack> it = event.getDrops().iterator(); it.hasNext(); ) {
             ItemStack itemStack = it.next();
@@ -162,12 +156,15 @@ public class ItemControlModule extends WeaponModule {
 
     @EventHandler
     public void onItemSpawn(ItemSpawnEvent event) {
-        if (!playerDeathActive) return;
         ItemStack itemStack = event.getEntity().getItemStack();
         if (itemStack.hasItemMeta() && getPlugin().getWeaponFactory().isWeapon(itemStack)) {
             if (itemStack.getItemMeta().hasLore()) {
                 String player = itemStack.getItemMeta().getLore().get(0);
                 CvCPlayer cvCPlayer = getPlugin().getServerCvCPlayer().getPlayer(Bukkit.getPlayer(player));
+                ItemMeta itemMeta = itemStack.getItemMeta();
+                itemMeta.setLore(new ArrayList<>());
+                itemStack.setItemMeta(itemMeta);
+                event.getEntity().setItemStack(itemStack);
                 MetaData metaData = new MetaData(event.getEntity(), getPlugin());
                 int bulletCount = cvCPlayer.getPlayerBullet().getBullet(getWeapon().getName()).getBulletCount();
                 metaData.setMetadata("bulletAmount", bulletCount);

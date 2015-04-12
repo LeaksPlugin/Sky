@@ -2,8 +2,7 @@ package com.talesdev.copsandcrims;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.talesdev.copsandcrims.arena.DefaultArena;
-import com.talesdev.copsandcrims.guns.DesertEagle;
-import com.talesdev.copsandcrims.guns.Knife;
+import com.talesdev.copsandcrims.guns.*;
 import com.talesdev.copsandcrims.player.PlayerBulletTask;
 import com.talesdev.copsandcrims.player.PlayerEquipmentListener;
 import com.talesdev.copsandcrims.weapon.WeaponFactory;
@@ -35,6 +34,9 @@ public class CopsAndCrims extends JavaPlugin {
         // item
         getWeaponFactory().addWeapon(new DesertEagle());
         getWeaponFactory().addWeapon(new Knife());
+        getWeaponFactory().addWeapon(new Glock18());
+        getWeaponFactory().addWeapon(new HK45());
+        getWeaponFactory().addWeapon(new M1911());
         // protocol
         ProtocolLibrary.getProtocolManager().addPacketListener(new MyPacketAdapter(this));
         ProtocolLibrary.getProtocolManager().addPacketListener(new PlayerEquipmentListener(this));
