@@ -9,6 +9,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R1.block.CraftBlock;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
@@ -61,6 +62,7 @@ public class NMSRayTrace {
     private BlockVector hitBlock;
     private BlockFace hitFace;
     private Vector hitPos;
+    private Entity entity;
 
     protected NMSRayTrace(World inWorld, MovingObjectPosition traceRes) {
         this.isHit = traceRes != null;

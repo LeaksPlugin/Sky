@@ -31,12 +31,21 @@ import java.util.List;
  * @author MoKunz
  */
 public class ItemControlModule extends WeaponModule {
+    private boolean clickActive = true;
+    private boolean dropActive = true;
+    private boolean pickupActive = true;
+    private boolean slotChangeActive = false;
+    private boolean damageActive = true;
+    private boolean blockBreakActive = true;
+    private boolean itemMoveActive = true;
+    private boolean playerDeathActive = true;
     public ItemControlModule() {
         super("ItemControl");
     }
 
     @EventHandler
     public void onItemClick(InventoryClickEvent event) {
+        if (!clickActive) return;
         if (getPlugin().getConfig().getBoolean("strict-inventory-check")) {
             if (event.getClick().equals(ClickType.NUMBER_KEY)) {
                 event.setCancelled(true);
@@ -52,6 +61,7 @@ public class ItemControlModule extends WeaponModule {
 
     @EventHandler
     public void onPlayerDrop(PlayerDropItemEvent event) {
+        if (!dropActive) return;
         if (getWeapon().isWeapon(event.getItemDrop().getItemStack())) {
             int bullet = 0;
             if (getWeapon().containsModule(ShootingModule.class)) {
@@ -66,6 +76,7 @@ public class ItemControlModule extends WeaponModule {
 
     @EventHandler
     public void onPickUpItem(PlayerPickupItemEvent event) {
+        if (!pickupActive) return;
         if (getWeapon().isWeapon(event.getItem().getItemStack())) {
             CvCPlayer player = getPlugin().getServerCvCPlayer().getPlayer(event.getPlayer());
             if (player.getWeapon(getWeapon().getClass()).getType() != Material.AIR) {
@@ -93,6 +104,7 @@ public class ItemControlModule extends WeaponModule {
 
     @EventHandler
     public void onSlotChange(PlayerItemHeldEvent event) {
+        if (!slotChangeActive) return;
         CopsAndCrims plugin = CopsAndCrims.getPlugin();
         CvCPlayer player = plugin.getServerCvCPlayer().getPlayer(event.getPlayer());
         doUpdateInventory(player.getPlayer());
@@ -104,6 +116,7 @@ public class ItemControlModule extends WeaponModule {
 
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent event) {
+        if (!damageActive) return;
         if (event.getDamager() instanceof Player) {
             Player player = (Player) event.getDamager();
             doUpdateInventory(player);
@@ -117,11 +130,13 @@ public class ItemControlModule extends WeaponModule {
 
     @EventHandler
     public void blockBreak(BlockBreakEvent event) {
+        if (!blockBreakActive) return;
         doUpdateInventory(event.getPlayer());
     }
 
     @EventHandler
     public void onItemMove(InventoryMoveItemEvent event) {
+        if (!itemMoveActive) return;
         if (getWeapon().isWeapon(event.getItem())) {
             event.setCancelled(true);
         }
@@ -129,6 +144,7 @@ public class ItemControlModule extends WeaponModule {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
+        if (!playerDeathActive) return;
         doUpdateInventory(event.getEntity());
         for (Iterator<ItemStack> it = event.getDrops().iterator(); it.hasNext(); ) {
             ItemStack itemStack = it.next();
@@ -147,6 +163,7 @@ public class ItemControlModule extends WeaponModule {
 
     @EventHandler
     public void onItemSpawn(ItemSpawnEvent event) {
+        if (!playerDeathActive) return;
         ItemStack itemStack = event.getEntity().getItemStack();
         if (itemStack.hasItemMeta() && getPlugin().getWeaponFactory().isWeapon(itemStack)) {
             if (itemStack.getItemMeta().hasLore()) {
@@ -170,5 +187,69 @@ public class ItemControlModule extends WeaponModule {
                 player.updateInventory();
             }
         }, 1);
+    }
+
+    public boolean isClickActive() {
+        return clickActive;
+    }
+
+    public void setClickActive(boolean clickActive) {
+        this.clickActive = clickActive;
+    }
+
+    public boolean isDropActive() {
+        return dropActive;
+    }
+
+    public void setDropActive(boolean dropActive) {
+        this.dropActive = dropActive;
+    }
+
+    public boolean isPickupActive() {
+        return pickupActive;
+    }
+
+    public void setPickupActive(boolean pickupActive) {
+        this.pickupActive = pickupActive;
+    }
+
+    public boolean isSlotChangeActive() {
+        return !slotChangeActive;
+    }
+
+    public void setSlotChangeActive(boolean slotChangeActive) {
+        this.slotChangeActive = !slotChangeActive;
+    }
+
+    public boolean isDamageActive() {
+        return damageActive;
+    }
+
+    public void setDamageActive(boolean damageActive) {
+        this.damageActive = damageActive;
+    }
+
+    public boolean isBlockBreakActive() {
+        return blockBreakActive;
+    }
+
+    public void setBlockBreakActive(boolean blockBreakActive) {
+        this.blockBreakActive = blockBreakActive;
+    }
+
+    public boolean isItemMoveActive() {
+        return itemMoveActive;
+    }
+
+    public void setItemMoveActive(boolean itemMoveActive) {
+        this.itemMoveActive = itemMoveActive;
+    }
+
+    public boolean isPlayerDeathActive() {
+        return playerDeathActive;
+    }
+
+    public void setPlayerDeathActive(boolean playerDeathActive) {
+        this.playerDeathActive = playerDeathActive;
     }
 }
