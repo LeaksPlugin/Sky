@@ -12,28 +12,28 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 /**
- * Desert Eagle
+ * Glock-18
  *
  * @author MoKunz
  */
-public class DesertEagle extends Weapon {
+public class Glock18 extends Weapon {
 
-    public DesertEagle() {
-        super("DesertEagle", ChatColor.GREEN + "Desert Eagle", blankAliases(), WeaponType.PISTOL);
+    public Glock18() {
+        super("Glock18", ChatColor.GREEN + "Glock-18", blankAliases(), WeaponType.PISTOL);
         ShootingModule shootingModule = new ShootingModule();
         ItemControlModule controlModule = new ItemControlModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
-        shootingModule.setDamage(13.6);
-        shootingModule.setHeadShotDamage(40.8);
-        shootingModule.setRecoil(7.0D);
-        shootingModule.setMaxBullet(7);
-        shootingModule.setBulletDelay(6);
-        shootingModule.setCooldownTime(6);
+        shootingModule.setDamage(6);
+        shootingModule.setHeadShotDamage(19.6);
+        shootingModule.setRecoil(2.5D);
+        shootingModule.setMaxBullet(20);
+        shootingModule.setBulletDelay(4);
+        shootingModule.setCooldownTime(4);
         shootingModule.setReloadTime(44);
         shootingModule.setAccuracy(new BulletAccuracy(
-                new Accuracy(new Range(-10, 10), new Range(-10, 10), new Range(-10, 10)), // default
-                new Accuracy(new Range(3, 3), new Range(3, 3), new Range(3, 3)), // sneaking
-                new Accuracy(new Range(-20, 20), new Range(-20, 20), new Range(-20, 20)), // walking
+                new Accuracy(new Range(-13, 13), new Range(-13, 13), new Range(-13, 13)), // default
+                new Accuracy(new Range(5, 5), new Range(5, 5), new Range(5, 5)), // sneaking
+                new Accuracy(new Range(-25, 25), new Range(-25, 25), new Range(-25, 25)), // walking
                 new Accuracy(new Range(-80, 80), new Range(-80, 80), new Range(-80, 80)), // sprinting
                 new Accuracy(new Range(-100, 100), new Range(-100, 100), new Range(-100, 100)) // jumping
         ));
@@ -44,7 +44,7 @@ public class DesertEagle extends Weapon {
 
     @Override
     public ItemStack createItemStack() {
-        ItemStack itemStack = new ItemStack(Material.GOLD_PICKAXE, 7);
+        ItemStack itemStack = new ItemStack(Material.STONE_PICKAXE, 20);
         ItemMeta meta = itemStack.getItemMeta();
         meta.setDisplayName(ChatColor.GREEN + getDisplayName());
         itemStack.setItemMeta(meta);
@@ -54,7 +54,7 @@ public class DesertEagle extends Weapon {
     @Override
     public boolean isWeapon(ItemStack itemStack) {
         if (itemStack == null) return false;
-        if (itemStack.getType().equals(Material.GOLD_PICKAXE)) {
+        if (itemStack.getType().equals(Material.STONE_PICKAXE)) {
             return true;
         }
         return super.isWeapon(itemStack);

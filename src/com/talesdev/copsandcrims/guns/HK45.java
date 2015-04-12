@@ -1,3 +1,4 @@
+
 package com.talesdev.copsandcrims.guns;
 
 import com.talesdev.copsandcrims.weapon.Weapon;
@@ -12,39 +13,38 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 /**
- * Desert Eagle
+ * HK45
  *
- * @author MoKunz
+ * @author sonSunnoi
  */
-public class DesertEagle extends Weapon {
-
-    public DesertEagle() {
-        super("DesertEagle", ChatColor.GREEN + "Desert Eagle", blankAliases(), WeaponType.PISTOL);
+ public class HK45 extends Weapon {
+ 
+    public HK45() {
+        super("HK45", ChatColor.GREEN + "HK45", blankAliases(), WeaponType.PISTOL);
         ShootingModule shootingModule = new ShootingModule();
         ItemControlModule controlModule = new ItemControlModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
-        shootingModule.setDamage(13.6);
-        shootingModule.setHeadShotDamage(40.8);
-        shootingModule.setRecoil(7.0D);
-        shootingModule.setMaxBullet(7);
-        shootingModule.setBulletDelay(6);
-        shootingModule.setCooldownTime(6);
-        shootingModule.setReloadTime(44);
+        shootingModule.setDamage(7.6);
+        shootingModule.setHeadShotDamage(25.4);
+        shootingModule.setRecoil(4.0D);
+        shootingModule.setMaxBullet(13);
+        shootingModule.setBulletDelay(4);
+        shootingModule.setCooldownTime(4);
+        shootingModule.setReloadTime(54);
         shootingModule.setAccuracy(new BulletAccuracy(
-                new Accuracy(new Range(-10, 10), new Range(-10, 10), new Range(-10, 10)), // default
-                new Accuracy(new Range(3, 3), new Range(3, 3), new Range(3, 3)), // sneaking
-                new Accuracy(new Range(-20, 20), new Range(-20, 20), new Range(-20, 20)), // walking
+                new Accuracy(new Range(-11, 11), new Range(-11, 11), new Range(-11, 11)), // default
+                new Accuracy(new Range(5, 5), new Range(5, 5), new Range(5, 5)), // sneaking
+                new Accuracy(new Range(-23, 23), new Range(-23, 23), new Range(-23, 23)), // walking
                 new Accuracy(new Range(-80, 80), new Range(-80, 80), new Range(-80, 80)), // sprinting
                 new Accuracy(new Range(-100, 100), new Range(-100, 100), new Range(-100, 100)) // jumping
         ));
         addModule(shootingModule);
         addModule(controlModule);
         addModule(deathMessageModule);
-    }
 
     @Override
     public ItemStack createItemStack() {
-        ItemStack itemStack = new ItemStack(Material.GOLD_PICKAXE, 7);
+        ItemStack itemStack = new ItemStack(Material.WOOD_PICKAXE, 13);
         ItemMeta meta = itemStack.getItemMeta();
         meta.setDisplayName(ChatColor.GREEN + getDisplayName());
         itemStack.setItemMeta(meta);
@@ -54,7 +54,7 @@ public class DesertEagle extends Weapon {
     @Override
     public boolean isWeapon(ItemStack itemStack) {
         if (itemStack == null) return false;
-        if (itemStack.getType().equals(Material.GOLD_PICKAXE)) {
+        if (itemStack.getType().equals(Material.WOOD_PICKAXE)) {
             return true;
         }
         return super.isWeapon(itemStack);
