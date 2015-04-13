@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 public class Knife extends Weapon {
     public Knife() {
         super("Knife", "Knife", blankAliases(), WeaponType.MELEE);
-        MeleeModule meleeModule = new MeleeModule(4, 8);
+        MeleeModule meleeModule = new MeleeModule(5, 15, 30, 75);
         addModule(meleeModule);
     }
 
