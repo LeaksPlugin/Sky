@@ -1,5 +1,7 @@
 package com.talesdev.copsandcrims.arena;
 
+import com.talesdev.copsandcrims.CopsAndCrims;
+
 /**
  * Default Arena for testing
  * @author MoKunz
@@ -7,7 +9,9 @@ package com.talesdev.copsandcrims.arena;
 public class DefaultArena {
     public static CvCArena instance;
     public static CvCArena getInstance(){
-        if(instance == null) instance = new CvCArena("DefaultArena", new CvCArenaController("Defusal") {
+        if (instance == null) instance = new CvCArena(
+                CopsAndCrims.getPlugin().getServerCvCArena(), "DefaultArena",
+                new CvCArenaController("Defusal") {
             @Override
             public void startArena() {
                 System.out.println("Arena starting...");
