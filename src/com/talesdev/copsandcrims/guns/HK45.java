@@ -28,7 +28,7 @@ import org.bukkit.inventory.meta.ItemMeta;
         DeathMessageModule deathMessageModule = new DeathMessageModule();
         shootingModule.setDamage(7.6);
         shootingModule.setHeadShotDamage(25.4);
-        shootingModule.setRecoil(4.0D);
+        shootingModule.setRecoil(8.0D);
         shootingModule.setMaxBullet(13);
         shootingModule.setBulletDelay(4);
         shootingModule.setCooldownTime(4);
