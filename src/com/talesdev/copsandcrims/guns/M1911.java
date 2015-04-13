@@ -25,7 +25,7 @@ public class M1911 extends Weapon {
         DeathMessageModule deathMessageModule = new DeathMessageModule();
         shootingModule.setDamage(8.1);
         shootingModule.setHeadShotDamage(26.2);
-        shootingModule.setRecoil(4.5D);
+        shootingModule.setRecoil(9.0D);
         shootingModule.setMaxBullet(13);
         shootingModule.setBulletDelay(4);
         shootingModule.setCooldownTime(4);
