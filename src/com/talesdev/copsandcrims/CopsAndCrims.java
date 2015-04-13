@@ -22,10 +22,12 @@ public class CopsAndCrims extends JavaPlugin {
     private BukkitTask scopeTask;
     private WeaponFactory weaponFactory;
     private ServerCvCPlayer serverCvCPlayer;
+    private ServerCvCArena serverCvCArena;
     @Override
     public void onEnable() {
         weaponFactory = new WeaponFactory(this);
-        serverCvCPlayer = new ServerCvCPlayer();
+        serverCvCPlayer = new ServerCvCPlayer(this);
+        serverCvCArena = new ServerCvCArena(this);
         // arena
         System.out.println(DefaultArena.getInstance().getArenaName() + " starting...");
         // save config
@@ -40,19 +42,20 @@ public class CopsAndCrims extends JavaPlugin {
         getWeaponFactory().addWeapon(new Glock18());
         getWeaponFactory().addWeapon(new HK45());
         // protocol
-        //ProtocolLibrary.getProtocolManager().addPacketListener(new MyPacketAdapter(this));
         ProtocolLibrary.getProtocolManager().addPacketListener(new PlayerEquipmentListener(this));
         // task
         recoilTask = getServer().getScheduler().runTaskTimerAsynchronously(this, new PlayerBulletTask(this), 0, 1);
-        //scopeTask = getServer().getScheduler().runTaskTimer(this, new PlayerScopeTask(this), 0, 10);
     }
 
     @Override
     public void onDisable() {
+        // cancel task
         recoilTask.cancel();
-        //scopeTask.cancel();
-        getServerCvCPlayer().getAllPlayers().forEach(getServerCvCPlayer()::saveUserData);
+        // shutdown system
+        getServerCvCPlayer().shutdown();
+        getServerCvCArena().shutDown();
         saveConfig();
+        getLogger().info("Plugin has been disabled!");
     }
     public static CopsAndCrims getPlugin(){
         return CopsAndCrims.getPlugin(CopsAndCrims.class);
@@ -64,5 +67,9 @@ public class CopsAndCrims extends JavaPlugin {
 
     public ServerCvCPlayer getServerCvCPlayer() {
         return serverCvCPlayer;
+    }
+
+    public ServerCvCArena getServerCvCArena() {
+        return serverCvCArena;
     }
 }

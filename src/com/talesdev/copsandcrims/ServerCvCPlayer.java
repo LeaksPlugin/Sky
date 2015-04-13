@@ -20,8 +20,10 @@ public class ServerCvCPlayer {
     private File configFile;
     private FileConfiguration configuration;
     private List<CvCPlayer> playerList = new ArrayList<>();
+    private CopsAndCrims plugin;
 
-    public ServerCvCPlayer() {
+    public ServerCvCPlayer(CopsAndCrims plugin) {
+        this.plugin = plugin;
         this.configFile = new File("plugins/CopsAndCrims/userdata.yml");
         if (!configFile.exists()) {
             try {
@@ -113,11 +115,6 @@ public class ServerCvCPlayer {
     }
 
     public void shutdown() {
-        try {
-            getConfig().save(configFile);
-        } catch (IOException e) {
-            System.out.println("Error while saving user data!");
-            e.printStackTrace();
-        }
+        getAllPlayers().forEach(this::saveUserData);
     }
 }
