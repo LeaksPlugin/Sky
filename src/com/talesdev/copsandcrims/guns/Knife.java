@@ -2,6 +2,7 @@ package com.talesdev.copsandcrims.guns;
 
 import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.WeaponType;
+import com.talesdev.copsandcrims.weapon.module.DeathMessageModule;
 import com.talesdev.copsandcrims.weapon.module.MeleeModule;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -15,6 +16,8 @@ public class Knife extends Weapon {
     public Knife() {
         super("Knife", "Knife", blankAliases(), WeaponType.MELEE);
         MeleeModule meleeModule = new MeleeModule(5, 15, 30, 75);
+        DeathMessageModule messageModule = new DeathMessageModule();
+        addModule(messageModule);
         addModule(meleeModule);
     }
 

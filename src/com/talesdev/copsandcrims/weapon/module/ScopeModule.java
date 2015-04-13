@@ -94,6 +94,9 @@ public class ScopeModule extends WeaponModule {
         cPlayer.setScoping(true);
         cPlayer.setLastHelmet(cPlayer.getPlayer().getEquipment().getHelmet());
         cPlayer.getPlayer().getEquipment().setHelmet(new ItemStack(Material.PUMPKIN));
+        if (getWeapon().getModule(ShootingModule.class).getFiringMode().equals(FiringMode.BOLT)) {
+            cPlayer.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 1, 1));
+        }
         cPlayer.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, zoomLevel, true, false));
     }
 

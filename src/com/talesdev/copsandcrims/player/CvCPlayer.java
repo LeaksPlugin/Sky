@@ -1,10 +1,13 @@
 package com.talesdev.copsandcrims.player;
 
 import com.talesdev.copsandcrims.CopsAndCrims;
+import com.talesdev.copsandcrims.arena.CvCArena;
 import com.talesdev.copsandcrims.weapon.Weapon;
+import com.talesdev.core.scoreboard.WrappedSidebarObjective;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scoreboard.Scoreboard;
 
 /**
  * CvC Player
@@ -12,6 +15,8 @@ import org.bukkit.inventory.ItemStack;
  * @author MoKunz
  */
 public class CvCPlayer {
+    private Scoreboard playerScoreboard;
+    private WrappedSidebarObjective sidebarObjective;
     private boolean isWalking = false;
     private boolean isSneaking = false;
     private ItemStack lastHelmet = new ItemStack(Material.AIR);
@@ -24,6 +29,10 @@ public class CvCPlayer {
 
     public CvCPlayer(Player player) {
         this.player = player;
+        playerScoreboard = CopsAndCrims.getPlugin().getServer().getScoreboardManager().getNewScoreboard();
+        sidebarObjective = new WrappedSidebarObjective(player.getName());
+        sidebarObjective.applyTo(playerScoreboard);
+        getPlayer().setScoreboard(playerScoreboard);
         this.playerBullet = new PlayerBullet(this);
         this.playerRecoil = new PlayerRecoil(this);
         this.isWalking = false;
@@ -115,5 +124,32 @@ public class CvCPlayer {
 
     public void setLastHelmet(ItemStack lastHelmet) {
         this.lastHelmet = lastHelmet;
+    }
+
+    public void joinArena(CvCArena cvCArena) {
+        if (!cvCArena.hasPlayer(this)) cvCArena.addPlayer(this);
+    }
+
+    public void leaveArena(CvCArena cvCArena) {
+        if (cvCArena.hasPlayer(this)) cvCArena.removePlayer(this);
+    }
+
+    public Scoreboard getPlayerScoreboard() {
+        return playerScoreboard;
+    }
+
+    public WrappedSidebarObjective getSidebarObjective() {
+        return sidebarObjective;
+    }
+
+    public void updateScoreboard() {
+        getSidebarObjective().reset(getPlayerScoreboard());
+        getSidebarObjective().applyTo(getPlayerScoreboard());
+        getPlayer().setScoreboard(getPlayerScoreboard());
+    }
+
+    public void clearScoreboard() {
+        getSidebarObjective().reset(getPlayerScoreboard());
+        getPlayer().setScoreboard(getPlayerScoreboard());
     }
 }

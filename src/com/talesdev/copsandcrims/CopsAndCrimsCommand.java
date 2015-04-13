@@ -6,10 +6,11 @@ import com.comphenix.protocol.wrappers.nbt.NbtFactory;
 import com.talesdev.copsandcrims.guns.DesertEagle;
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.copsandcrims.weapon.Weapon;
+import com.talesdev.core.math.MathRandom;
 import com.talesdev.core.player.UUIDTask;
+import com.talesdev.core.scoreboard.WrappedSidebarObjective;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -79,14 +80,17 @@ public class CopsAndCrimsCommand implements CommandExecutor {
                     sender.sendMessage(ChatColor.RED + "Error : player not found!");
                 }
                 return true;
-            } else if (args[0].equalsIgnoreCase("hideattrib")) {
+            } else if (args[0].equalsIgnoreCase("sbt")) {
                 if (sender instanceof Player) {
                     Player player = (Player) sender;
-                    if (!player.getItemInHand().getType().equals(Material.AIR)) {
-                        int slotNumber = player.getInventory().getHeldItemSlot();
-                        ItemStack itemStack = removeAttribute(player.getItemInHand());
-                        player.getInventory().setItem(slotNumber, itemStack);
-                    }
+                    CvCPlayer cPlayer = CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(player);
+                    WrappedSidebarObjective objective = cPlayer.getSidebarObjective();
+                    objective.setTitle(ChatColor.GREEN + "Your stats");
+                    objective.setLine(14, ChatColor.BLUE + "Kills");
+                    objective.setLine(13, ChatColor.GRAY + " " + Integer.toString(MathRandom.randomRange(5, 10)));
+                    objective.setLine(11, ChatColor.RED + "Deaths");
+                    objective.setLine(10, ChatColor.GRAY + " " + Integer.toString(MathRandom.randomRange(10, 20)));
+                    cPlayer.updateScoreboard();
                     return true;
                 }
             }

@@ -38,7 +38,7 @@ public class CopsAndCrims extends JavaPlugin {
         getWeaponFactory().addWeapon(new HK45());
         getWeaponFactory().addWeapon(new M1911());
         // protocol
-        ProtocolLibrary.getProtocolManager().addPacketListener(new MyPacketAdapter(this));
+        //ProtocolLibrary.getProtocolManager().addPacketListener(new MyPacketAdapter(this));
         ProtocolLibrary.getProtocolManager().addPacketListener(new PlayerEquipmentListener(this));
         // task
         recoilTask = getServer().getScheduler().runTaskTimerAsynchronously(this, new PlayerBulletTask(this), 0, 1);

@@ -6,7 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 /**
- * Created by MoKunz on 4/4/2015.
+ * Unicode command executor
+ * @author MoKunz
  */
 public class UnicodeCommandExecutor implements CommandExecutor {
     @Override

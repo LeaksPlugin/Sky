@@ -1,7 +1,9 @@
 package com.talesdev.copsandcrims.weapon.module;
 
+import com.talesdev.copsandcrims.player.PlayerLastDamage;
 import com.talesdev.core.entity.BoundingBox;
 import com.talesdev.core.player.ActionBar;
+import com.talesdev.core.player.LastPlayerDamage;
 import com.talesdev.core.system.NMSClass;
 import com.talesdev.core.system.ReflectionUtils;
 import com.talesdev.core.system.ReflectionUtils.RefClass;
@@ -57,12 +59,13 @@ public class MeleeModule extends WeaponModule {
                 // op
                 double damage;
                 boolean backStab = false;
+                boolean headShot = false;
                 if (isBackStab(Math.abs(getNMSYaw(entity)), Math.abs(getNMSYaw(player)))) {
                     backStab = true;
                 }
                 String message = ChatColor.RED + "";
                 if (rayTrace(player)) {
-                    message += "Headshot";
+                    headShot = true;
                     if (backStab) {
                         damage = getBackStabHeadDamage();
                     } else {
@@ -75,12 +78,24 @@ public class MeleeModule extends WeaponModule {
                         damage = getDamage();
                     }
                 }
-                if (backStab) message += " & Backstab!";
-                else message += "!";
+                if (backStab) {
+                    if (headShot) {
+                        message = "Headshot&Backstab!";
+                    } else {
+                        message = "Backstab!";
+                    }
+                } else {
+                    if (headShot) {
+                        message = "Headshot!";
+                    }
+                }
                 ActionBar actionBar = new ActionBar(message);
                 actionBar.send(player);
                 // apply
                 event.setDamage(damage);
+                // last damage cause
+                LastPlayerDamage lastPlayerDamage = new LastPlayerDamage(event.getEntity(), getPlugin());
+                lastPlayerDamage.setLastDamage(new PlayerLastDamage(player, getWeapon(), null, headShot));
             }
         }
     }
