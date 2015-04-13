@@ -14,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 /**
  * Glock-18
  *
- * @author MoKunz
+ * @author MoKunz & sonSunnoi
  */
 public class Glock18 extends Weapon {
 
