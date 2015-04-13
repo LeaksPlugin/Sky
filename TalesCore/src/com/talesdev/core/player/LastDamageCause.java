@@ -21,6 +21,8 @@ public interface LastDamageCause {
 
     public EntityDamageEvent.DamageCause getDamageCause();
 
+    public void setDamageCause(EntityDamageEvent.DamageCause damageCause);
+
     public Entity getEntity();
 
     public <T> T getAttachment(String key, Class<T> attachmentClass);

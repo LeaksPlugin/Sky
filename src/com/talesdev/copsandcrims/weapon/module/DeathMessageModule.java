@@ -5,6 +5,7 @@ import com.talesdev.core.player.LastDamageCause;
 import com.talesdev.core.player.LastPlayerDamage;
 import com.talesdev.core.text.FormattedMessage;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 /**
@@ -30,19 +31,25 @@ public class DeathMessageModule extends WeaponModule {
         LastPlayerDamage lastPlayerDamage = new LastPlayerDamage(event.getEntity(), getPlugin());
         LastDamageCause lastDamageCause = lastPlayerDamage.getLastDamage();
         if (lastDamageCause != null) {
-            if (getWeapon().getName().equalsIgnoreCase(lastDamageCause.getAttachment("Weapon", Weapon.class).getName())) {
-                getPlugin().getServer().broadcastMessage(getFormattedDeathMessage(event, lastDamageCause));
+            if (lastDamageCause.getAttachment("Weapon", Weapon.class) != null) {
+                if (getWeapon().getName().equalsIgnoreCase(lastDamageCause.getAttachment("Weapon", Weapon.class).getName())) {
+                    getPlugin().getServer().broadcastMessage(getFormattedDeathMessage(event, lastDamageCause));
+                }
             }
         }
     }
 
     public String getFormattedDeathMessage(EntityDeathEvent event, LastDamageCause lastDamageCause) {
-        FormattedMessage message = new FormattedMessage(getDeathMessage());
-        message.addPattern("entity", event.getEntity().getName());
-        message.addPattern("killer", lastDamageCause.getEntity().getName());
-        message.addPattern("weapon", lastDamageCause.getAttachment("Weapon", Weapon.class).getDisplayName());
-        message.addPattern("headshot", ((Boolean) lastDamageCause.getAttachment("HeadShot")) ? "(Headshot)" : "");
-        return message.getMessage();
+        if (lastDamageCause.getDamageCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK)) {
+            FormattedMessage message = new FormattedMessage(getDeathMessage());
+            message.addPattern("entity", event.getEntity().getName());
+            message.addPattern("killer", lastDamageCause.getEntity().getName());
+            message.addPattern("weapon", lastDamageCause.getAttachment("Weapon", Weapon.class).getDisplayName());
+            message.addPattern("headshot", ((Boolean) lastDamageCause.getAttachment("HeadShot")) ? "(Headshot)" : "");
+            return message.getMessage();
+        } else {
+            return event.getEntity().getName() + " Died";
+        }
     }
 
     public String getDeathMessage() {

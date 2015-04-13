@@ -1,8 +1,12 @@
 package com.talesdev.copsandcrims;
 
 import com.talesdev.copsandcrims.player.CvCPlayer;
+import com.talesdev.copsandcrims.player.PlayerLastDamage;
+import com.talesdev.core.player.LastDamageCause;
+import com.talesdev.core.player.LastPlayerDamage;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -37,6 +41,18 @@ public class CopsAndCrimsListener implements Listener {
         if (player != null) {
             player.setWalking(true);
             player.updateLastWalkingTime();
+        }
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageEvent event) {
+        LastPlayerDamage lastPlayerDamage = new LastPlayerDamage(event.getEntity(), plugin);
+        LastDamageCause lastDamageCause = lastPlayerDamage.getLastDamage();
+        if (lastDamageCause != null) {
+            lastDamageCause.setDamageCause(event.getCause());
+        } else {
+            PlayerLastDamage lastDamage = new PlayerLastDamage(event.getCause());
+            lastPlayerDamage.setLastDamage(lastDamage);
         }
     }
 }

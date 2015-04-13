@@ -37,6 +37,14 @@ public class PlayerLastDamage implements LastDamageCause {
         addAttachment("Entity", entity);
     }
 
+    public PlayerLastDamage(EntityDamageEvent.DamageCause damageCause) {
+        this.damageCause = damageCause;
+    }
+
+    public void setDamageCause(EntityDamageEvent.DamageCause damageCause) {
+        this.damageCause = damageCause;
+    }
+
     @Override
     public Plugin getPlugin() {
         return CopsAndCrims.getPlugin();
