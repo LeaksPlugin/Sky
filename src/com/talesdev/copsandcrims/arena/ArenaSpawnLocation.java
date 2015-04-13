@@ -8,10 +8,6 @@ import org.bukkit.Location;
  *
  * @author MoKunz
  */
-public interface ArenaLocation {
-    public Location getLobbyLocation(CvCArena arena, CvCPlayer player);
-
+public interface ArenaSpawnLocation {
     public Location getSpawnLocation(CvCArena arena, CvCPlayer player);
-
-    public Location getEndLocation(CvCArena arena, CvCPlayer player);
 }

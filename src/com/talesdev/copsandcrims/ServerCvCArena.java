@@ -1,9 +1,11 @@
 package com.talesdev.copsandcrims;
 
+import com.talesdev.copsandcrims.arena.ArenaFileCollection;
 import com.talesdev.copsandcrims.arena.CvCArena;
 import com.talesdev.core.config.ConfigFile;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,13 +21,23 @@ public class ServerCvCArena {
 
     public ServerCvCArena(CopsAndCrims plugin) {
         this.plugin = plugin;
+        File dir = new File("plugins/CopsAndCrims/arena");
+        if (!dir.exists()) {
+            boolean mkdirs = dir.mkdirs();
+            if (!mkdirs) System.out.println("Error while creating directory plugins/CopsAndCrims/arena !");
+        }
         this.configFile = new ConfigFile("plugins/CopsAndCrims/arena.yml");
         this.arenaList = new ArrayList<>();
+        // begin arena loading
+        ArenaFileCollection collection = new ArenaFileCollection(this, new File("plugins/CopsAndCrims/arena"));
+        collection.getAll().forEach(this::addArena);
     }
 
     public void addArena(CvCArena arena) {
-        if (!containsArena(arena.getArenaName())) {
-            getArenaList().add(arena);
+        if (arena != null) {
+            if (!containsArena(arena.getArenaName())) {
+                getArenaList().add(arena);
+            }
         }
     }
 

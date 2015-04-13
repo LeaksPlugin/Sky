@@ -4,6 +4,7 @@ import com.talesdev.copsandcrims.CopsAndCrims;
 import com.talesdev.copsandcrims.ServerCvCArena;
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.core.config.ConfigFile;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -16,15 +17,23 @@ import java.util.List;
  * @author MoKunz
  */
 public class CvCArena {
+    // Player collection
     private List<CvCPlayer> players;
+    // Arena config file
     private ConfigFile configFile;
+    // Plugin reference
     private CopsAndCrims plugin;
+    // Current arena status
     private ArenaStatus status;
+    // Arena name
     private String arenaName;
+    // Reference to host (server) of this arena
     private ServerCvCArena serverArena;
+    // location stuff
+    private Location lobbyLocation = null;
 
     public CvCArena(ServerCvCArena serverArena, String arenaName, CvCArenaController controller) {
-        this.configFile = new ConfigFile("plugins/CopsAndCrims/arena-" + arenaName + ".yml");
+        this.configFile = new ConfigFile("plugins/CopsAndCrims/arena/" + arenaName + ".yml");
         this.serverArena = serverArena;
         plugin = CopsAndCrims.getPlugin();
         this.players = new ArrayList<>();
