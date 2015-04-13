@@ -4,7 +4,10 @@ import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.WeaponType;
 import com.talesdev.copsandcrims.weapon.bullet.Accuracy;
 import com.talesdev.copsandcrims.weapon.bullet.BulletAccuracy;
-import com.talesdev.copsandcrims.weapon.module.*;
+import com.talesdev.copsandcrims.weapon.module.AlternativeFireModule;
+import com.talesdev.copsandcrims.weapon.module.DeathMessageModule;
+import com.talesdev.copsandcrims.weapon.module.ItemControlModule;
+import com.talesdev.copsandcrims.weapon.module.ShootingModule;
 import com.talesdev.core.math.Range;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -23,6 +26,7 @@ public class Glock18 extends Weapon {
         ShootingModule shootingModule = new ShootingModule();
         ItemControlModule controlModule = new ItemControlModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
+        AlternativeFireModule alternativeFireModule = new AlternativeFireModule(true);
         shootingModule.setDamage(6);
         shootingModule.setHeadShotDamage(19.6);
         shootingModule.setRecoil(5.0D);
@@ -37,7 +41,12 @@ public class Glock18 extends Weapon {
                 new Accuracy(new Range(-80, 80), new Range(-80, 80), new Range(-80, 80)), // sprinting
                 new Accuracy(new Range(-100, 100), new Range(-100, 100), new Range(-100, 100)) // jumping
         ));
+        alternativeFireModule.setAlternativeFireBullet(3);
+        alternativeFireModule.setAlternativeFireDelay(1);
+        alternativeFireModule.setAlternativeFireCooldown(30);
+        alternativeFireModule.setEnabled(true);
         addModule(shootingModule);
+        addModule(alternativeFireModule);
         addModule(controlModule);
         addModule(deathMessageModule);
     }

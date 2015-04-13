@@ -20,6 +20,8 @@ public class AlternativeFireModule extends WeaponModule {
     private int alternativeFireCooldown = 20;
     private int alternativeFireBullet = 3;
     private double alternativeRecoil = 0.1D;
+    private double damage = -1;
+    private double headShotDamage = -1;
     private BulletAccuracy burstFireAccuracy;
 
     public AlternativeFireModule() {
@@ -47,7 +49,16 @@ public class AlternativeFireModule extends WeaponModule {
         DelayedBullet bullet = new DelayedBullet(
                 oldBullet.getPlayer(), oldBullet.getListener(), oldBullet.getDamage(), getBurstFireAccuracy(), 0.0D
         );
-        bullet.setHeadShotDamage(oldBullet.getHeadShotDamage());
+        if (getHeadShotDamage() > -1) {
+            bullet.setHeadShotDamage(getHeadShotDamage());
+        } else {
+            bullet.setHeadShotDamage(oldBullet.getHeadShotDamage());
+        }
+        if (getDamage() > -1) {
+            bullet.setDamage(getDamage());
+        } else {
+            bullet.setDamage(oldBullet.getDamage());
+        }
         bullet.setRayParameter(2000, 0.05, 4);
         bullet.setSpeed(oldBullet.getSpeed());
         return bullet;
@@ -103,5 +114,21 @@ public class AlternativeFireModule extends WeaponModule {
 
     public void setAlternativeRecoil(double alternativeRecoil) {
         this.alternativeRecoil = alternativeRecoil;
+    }
+
+    public double getDamage() {
+        return damage;
+    }
+
+    public void setDamage(double damage) {
+        this.damage = damage;
+    }
+
+    public double getHeadShotDamage() {
+        return headShotDamage;
+    }
+
+    public void setHeadShotDamage(double headShotDamage) {
+        this.headShotDamage = headShotDamage;
     }
 }
