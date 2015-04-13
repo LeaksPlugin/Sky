@@ -14,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 /**
  * Desert Eagle
  *
- * @author MoKunz
+ * @author MoKunz & sonSunnoi
  */
 public class DesertEagle extends Weapon {
 

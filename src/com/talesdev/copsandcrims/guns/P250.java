@@ -12,20 +12,20 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 /**
- * Colt M1911
+ * P250
  *
- * @author MoKunz
+ * @author sonSunnoi
  */
-public class M1911 extends Weapon {
+public class P250 extends Weapon {
 
-    public M1911() {
-        super("M1911", ChatColor.GREEN + "Colt M1911", blankAliases(), WeaponType.PISTOL);
+    public P250() {
+        super("P250", ChatColor.GREEN + "P250", blankAliases(), WeaponType.PISTOL);
         ShootingModule shootingModule = new ShootingModule();
         ItemControlModule controlModule = new ItemControlModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
-        shootingModule.setDamage(8.1);
-        shootingModule.setHeadShotDamage(26.2);
-        shootingModule.setRecoil(9.0D);
+        shootingModule.setDamage(7.8);
+        shootingModule.setHeadShotDamage(24.2);
+        shootingModule.setRecoil(7.0D);
         shootingModule.setMaxBullet(13);
         shootingModule.setBulletDelay(4);
         shootingModule.setCooldownTime(4);
