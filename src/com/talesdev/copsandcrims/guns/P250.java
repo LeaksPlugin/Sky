@@ -14,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 /**
  * P250
  *
- * @author MoKunz
+ * @author sonSunnoi
  */
 public class P250 extends Weapon {
 
