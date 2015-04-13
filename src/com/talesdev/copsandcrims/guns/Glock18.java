@@ -25,7 +25,7 @@ public class Glock18 extends Weapon {
         DeathMessageModule deathMessageModule = new DeathMessageModule();
         shootingModule.setDamage(6);
         shootingModule.setHeadShotDamage(19.6);
-        shootingModule.setRecoil(5);
+        shootingModule.setRecoil(5.0D);
         shootingModule.setMaxBullet(20);
         shootingModule.setBulletDelay(4);
         shootingModule.setCooldownTime(4);
