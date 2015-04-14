@@ -1,8 +1,8 @@
 package com.talesdev.copsandcrims.arena;
 
 import com.talesdev.copsandcrims.ServerCvCArena;
+import org.bukkit.configuration.file.FileConfiguration;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -12,23 +12,25 @@ import java.util.Set;
  *
  * @author MoKunz
  */
-public class ArenaFileCollection {
-    private File dir;
+public class ArenaCollection {
     private ServerCvCArena arena;
 
-    public ArenaFileCollection(ServerCvCArena arena, File directory) {
-        this.dir = directory;
+    public ArenaCollection(ServerCvCArena arena) {
         this.arena = arena;
     }
 
     public List<CvCArena> getAll() {
         List<CvCArena> arenaList = new ArrayList<>();
-        Set<String> arenas = arena.getConfig().getConfigurationSection("Arena").getKeys(false);
+        Set<String> arenas = getConfig().getConfigurationSection("Arena").getKeys(false);
         if (arenas.size() > 0) {
             for (String arena : arenas) {
-                String arenaName = arena;
+
             }
         }
         return arenaList;
+    }
+
+    protected FileConfiguration getConfig() {
+        return arena.getConfig();
     }
 }

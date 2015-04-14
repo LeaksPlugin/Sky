@@ -20,4 +20,12 @@ public abstract class CvCArenaController implements Listener{
     }
     public abstract void startArena();
     public abstract void endArena();
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof CvCArenaController) {
+            return ((CvCArenaController) obj).getArenaType().equalsIgnoreCase(getArenaType());
+        }
+        return false;
+    }
 }

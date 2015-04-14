@@ -19,6 +19,10 @@ public abstract class WeaponModule implements Listener {
         this.plugin = CopsAndCrims.getPlugin();
     }
 
+    public void postAdd() {
+
+    }
+
     public String getModuleName() {
         return moduleName;
     }

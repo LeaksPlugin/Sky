@@ -65,6 +65,7 @@ public abstract class Weapon implements WeaponItem {
         weaponModule.linkWeapon(this);
         modules.add(weaponModule);
         Bukkit.getServer().getPluginManager().registerEvents(weaponModule, CopsAndCrims.getPlugin());
+        weaponModule.postAdd();
     }
 
     @SuppressWarnings("unchecked")

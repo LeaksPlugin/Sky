@@ -1,8 +1,10 @@
 package com.talesdev.copsandcrims.weapon.module;
 
+import com.talesdev.copsandcrims.CvCSound;
 import com.talesdev.copsandcrims.player.PlayerLastDamage;
 import com.talesdev.core.entity.BoundingBox;
 import com.talesdev.core.player.ActionBar;
+import com.talesdev.core.player.ClickingAction;
 import com.talesdev.core.player.LastPlayerDamage;
 import com.talesdev.core.system.NMSClass;
 import com.talesdev.core.system.ReflectionUtils;
@@ -10,11 +12,13 @@ import com.talesdev.core.system.ReflectionUtils.RefClass;
 import com.talesdev.core.system.ReflectionUtils.RefMethod;
 import com.talesdev.core.world.NearbyEntity;
 import com.talesdev.core.world.RayTrace;
+import com.talesdev.core.world.Sound;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
 /**
@@ -41,6 +45,17 @@ public class MeleeModule extends WeaponModule {
 
     public MeleeModule(double damage, double headDamage) {
         this(damage, headDamage, headDamage, headDamage + damage);
+    }
+
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event) {
+        if (ClickingAction.isLeftClick(event.getAction())) {
+            if (getWeapon().isWeapon(event.getItem())) {
+                Sound sound = new Sound(CvCSound.MCGO_WEAPONS_KNIFESWING);
+                sound.playSound(event.getPlayer().getLocation());
+            }
+        }
     }
 
     @EventHandler

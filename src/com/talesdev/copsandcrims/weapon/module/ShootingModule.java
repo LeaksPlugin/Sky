@@ -54,6 +54,29 @@ public class ShootingModule extends WeaponModule {
         setFiringMode(FiringMode.SEMI_AUTO);
     }
 
+    @Override
+    public void postAdd() {
+        switch (getWeapon().getWeaponType()) {
+            case PISTOL:
+                setShootingSoundEffect(CvCSound.MCGO_WEAPONS_PISTOLSHOT);
+                break;
+            case SUB_MACHINE_GUN:
+                setShootingSoundEffect(CvCSound.MCGO_WEAPONS_SMGSHOT);
+                break;
+            case SHOTGUN:
+                setShootingSoundEffect(CvCSound.MCGO_WEAPONS_SHOTGUNSHOT);
+                break;
+            case ASSAULT_RIFLE:
+                setShootingSoundEffect(CvCSound.MCGO_WEAPONS_AKSHOT);
+                break;
+            case SNIPER_RIFLE:
+                setShootingSoundEffect(CvCSound.MCGO_WEAPONS_SNIPERSHOT);
+                break;
+            default:
+                break;
+        }
+    }
+
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         if (event.getItem() != null) {

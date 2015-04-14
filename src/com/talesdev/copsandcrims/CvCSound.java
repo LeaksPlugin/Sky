@@ -9,7 +9,7 @@ import com.talesdev.core.world.SoundEffectInterface;
  */
 public enum CvCSound implements SoundEffectInterface {
     // Weapons
-    MCGO_WEAPONS_AK47SHOT,
+    MCGO_WEAPONS_AKSHOT,
     MCGO_WEAPONS_CARBINESHOT,
     MCGO_WEAPONS_KNIFESWING,
     MCGO_WEAPONS_MAGNUMSHOT,

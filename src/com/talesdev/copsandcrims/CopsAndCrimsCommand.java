@@ -6,6 +6,7 @@ import com.comphenix.protocol.wrappers.nbt.NbtFactory;
 import com.talesdev.copsandcrims.guns.DesertEagle;
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.copsandcrims.weapon.Weapon;
+import com.talesdev.copsandcrims.weapon.module.ShootingModule;
 import com.talesdev.core.math.MathRandom;
 import com.talesdev.core.player.UUIDTask;
 import com.talesdev.core.scoreboard.WrappedSidebarObjective;
@@ -49,7 +50,13 @@ public class CopsAndCrimsCommand implements CommandExecutor {
                     if (args.length > 1) {
                         Weapon weapon = CopsAndCrims.getPlugin().getWeaponFactory().getWeapon(args[1]);
                         if (weapon != null) {
+                            CvCPlayer cPlayer = CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(player);
                             player.getInventory().addItem(weapon.createItemStack());
+                            if (weapon.containsModule(ShootingModule.class)) {
+                                cPlayer.getPlayerBullet().getBullet(weapon.getName()).setBulletCount(
+                                        weapon.getModule(ShootingModule.class).getMaxBullet()
+                                );
+                            }
                             player.sendMessage(ChatColor.GREEN + "Give " + args[1] + " to you.");
                         } else {
                             player.sendMessage(ChatColor.RED + "Error : Weapon " + args[1] + " not found!");

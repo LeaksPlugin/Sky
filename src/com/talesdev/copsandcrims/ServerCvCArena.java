@@ -1,6 +1,7 @@
 package com.talesdev.copsandcrims;
 
 import com.talesdev.copsandcrims.arena.CvCArena;
+import com.talesdev.copsandcrims.arena.CvCArenaController;
 import com.talesdev.core.config.ConfigFile;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -16,6 +17,7 @@ import java.util.List;
 public class ServerCvCArena {
     private ConfigFile configFile;
     private List<CvCArena> arenaList;
+    private List<CvCArenaController> controllerList;
     private CopsAndCrims plugin;
 
     public ServerCvCArena(CopsAndCrims plugin) {
@@ -28,6 +30,27 @@ public class ServerCvCArena {
         this.configFile = new ConfigFile("plugins/CopsAndCrims/arena.yml");
         this.arenaList = new ArrayList<>();
         // begin arena loading
+    }
+
+    public List<CvCArenaController> getControllerList() {
+        return controllerList;
+    }
+
+    public void addController(CvCArenaController controller) {
+        if (!containsController(controller)) getControllerList().add(controller);
+    }
+
+    public void removeController(CvCArenaController controller) {
+        if (containsController(controller)) getControllerList().remove(controller);
+    }
+
+    public boolean containsController(CvCArenaController controller) {
+        for (CvCArenaController arenaController : getControllerList()) {
+            if (arenaController.getArenaType().equalsIgnoreCase(controller.getArenaType())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void addArena(CvCArena arena) {

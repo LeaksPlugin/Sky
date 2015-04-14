@@ -158,17 +158,21 @@ public class ItemControlModule extends WeaponModule {
     public void onItemSpawn(ItemSpawnEvent event) {
         ItemStack itemStack = event.getEntity().getItemStack();
         if (itemStack.hasItemMeta() && getPlugin().getWeaponFactory().isWeapon(itemStack)) {
-            if (itemStack.getItemMeta().hasLore()) {
-                String player = itemStack.getItemMeta().getLore().get(0);
-                CvCPlayer cvCPlayer = getPlugin().getServerCvCPlayer().getPlayer(Bukkit.getPlayer(player));
-                ItemMeta itemMeta = itemStack.getItemMeta();
-                itemMeta.setLore(new ArrayList<>());
-                itemStack.setItemMeta(itemMeta);
-                event.getEntity().setItemStack(itemStack);
-                MetaData metaData = new MetaData(event.getEntity(), getPlugin());
-                int bulletCount = cvCPlayer.getPlayerBullet().getBullet(getWeapon().getName()).getBulletCount();
-                System.out.println(bulletCount);
-                metaData.setMetadata("bulletAmount", bulletCount);
+            Weapon weapon = getPlugin().getWeaponFactory().getWeapon(itemStack);
+            // check if spawned item is correct weapon
+            if (weapon.getName().equals(getWeapon().getName())) {
+                if (itemStack.getItemMeta().hasLore()) {
+                    String player = itemStack.getItemMeta().getLore().get(0);
+                    CvCPlayer cvCPlayer = getPlugin().getServerCvCPlayer().getPlayer(Bukkit.getPlayer(player));
+                    ItemMeta itemMeta = itemStack.getItemMeta();
+                    itemMeta.setLore(new ArrayList<>());
+                    itemStack.setItemMeta(itemMeta);
+                    event.getEntity().setItemStack(itemStack);
+                    MetaData metaData = new MetaData(event.getEntity(), getPlugin());
+                    int bulletCount = cvCPlayer.getPlayerBullet().getBullet(getWeapon().getName()).getBulletCount();
+                    System.out.println(bulletCount);
+                    metaData.setMetadata("bulletAmount", bulletCount);
+                }
             }
         }
     }

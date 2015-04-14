@@ -2,11 +2,12 @@ package com.talesdev.copsandcrims;
 
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.copsandcrims.player.PlayerLastDamage;
-import com.talesdev.core.player.LastDamageCause;
 import com.talesdev.core.player.LastPlayerDamage;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -44,15 +45,17 @@ public class CopsAndCrimsListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onDamage(EntityDamageEvent event) {
-        LastPlayerDamage lastPlayerDamage = new LastPlayerDamage(event.getEntity(), plugin);
-        LastDamageCause lastDamageCause = lastPlayerDamage.getLastDamage();
-        if (lastDamageCause != null) {
-            lastDamageCause.setDamageCause(event.getCause());
-        } else {
-            PlayerLastDamage lastDamage = new PlayerLastDamage(event.getCause());
-            lastPlayerDamage.setLastDamage(lastDamage);
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onEntityDamage(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof LivingEntity) {
+            LivingEntity damager = ((LivingEntity) event.getDamager());
+            LastPlayerDamage damage = new LastPlayerDamage(event.getEntity(), plugin);
+            PlayerLastDamage lastDamage = new PlayerLastDamage(damager);
+            lastDamage.setDamageCause(event.getCause());
+            lastDamage.addAttachment("Weapon", null);
+            lastDamage.addAttachment("Bullet", null);
+            lastDamage.addAttachment("HeadShot", false);
+            damage.setLastDamage(lastDamage);
         }
     }
 }
