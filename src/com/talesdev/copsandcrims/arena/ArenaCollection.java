@@ -19,12 +19,18 @@ public class ArenaCollection {
         this.arena = arena;
     }
 
+
     public List<CvCArena> getAll() {
         List<CvCArena> arenaList = new ArrayList<>();
         Set<String> arenas = getConfig().getConfigurationSection("Arena").getKeys(false);
         if (arenas.size() > 0) {
             for (String arena : arenas) {
-
+                String arenaName = arena;
+                String type = getConfig().getString("Arena" + "." + arenaName);
+                CvCArenaController arenaController = this.arena.getController(type);
+                if (arenaController != null) {
+                    arenaList.add(new CvCArena(this.arena, arenaName, arenaController));
+                }
             }
         }
         return arenaList;

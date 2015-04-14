@@ -1,5 +1,6 @@
 package com.talesdev.copsandcrims;
 
+import com.talesdev.copsandcrims.arena.ArenaCollection;
 import com.talesdev.copsandcrims.arena.CvCArena;
 import com.talesdev.copsandcrims.arena.CvCArenaController;
 import com.talesdev.core.config.ConfigFile;
@@ -31,6 +32,8 @@ public class ServerCvCArena {
         this.arenaList = new ArrayList<>();
         this.controllerList = new ArrayList<>();
         // begin arena loading
+        ArenaCollection collection = new ArenaCollection(this);
+        collection.getAll().forEach(this::addArena);
     }
 
     public List<CvCArenaController> getControllerList() {
@@ -39,6 +42,15 @@ public class ServerCvCArena {
 
     public void addController(CvCArenaController controller) {
         if (!containsController(controller)) getControllerList().add(controller);
+    }
+
+    public CvCArenaController getController(String type) {
+        for (CvCArenaController arenaController : getControllerList()) {
+            if (arenaController.getArenaType().equalsIgnoreCase(type)) {
+                return arenaController;
+            }
+        }
+        return null;
     }
 
     public void removeController(CvCArenaController controller) {
