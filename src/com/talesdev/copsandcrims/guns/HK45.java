@@ -46,7 +46,7 @@ import org.bukkit.inventory.meta.ItemMeta;
     }
     @Override
     public ItemStack createItemStack() {
-        ItemStack itemStack = new ItemStack(Material.WOOD_PICKAXE, 13);
+        ItemStack itemStack = new ItemStack(Material.WOOD_HOE, 13);
         ItemMeta meta = itemStack.getItemMeta();
         meta.setDisplayName(ChatColor.GREEN + getDisplayName());
         itemStack.setItemMeta(meta);
@@ -56,7 +56,7 @@ import org.bukkit.inventory.meta.ItemMeta;
     @Override
     public boolean isWeapon(ItemStack itemStack) {
         if (itemStack == null) return false;
-        if (itemStack.getType().equals(Material.WOOD_PICKAXE)) {
+        if (itemStack.getType().equals(Material.WOOD_HOE)) {
             return true;
         }
         return super.isWeapon(itemStack);
