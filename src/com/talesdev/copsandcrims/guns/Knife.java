@@ -23,12 +23,12 @@ public class Knife extends Weapon {
 
     @Override
     public ItemStack createItemStack() {
-        return new ItemStack(Material.WOOD_SWORD);
+        return new ItemStack(Material.IRON_AXE);
     }
 
     @Override
     public boolean isWeapon(ItemStack itemStack) {
-        if (itemStack != null) return itemStack.getType().equals(Material.WOOD_SWORD);
+        if (itemStack != null) return itemStack.getType().equals(Material.IRON_AXE);
         return false;
     }
 }
