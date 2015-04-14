@@ -4,7 +4,9 @@ import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.WeaponType;
 import com.talesdev.copsandcrims.weapon.bullet.Accuracy;
 import com.talesdev.copsandcrims.weapon.bullet.BulletAccuracy;
-import com.talesdev.copsandcrims.weapon.module.*;
+import com.talesdev.copsandcrims.weapon.module.DeathMessageModule;
+import com.talesdev.copsandcrims.weapon.module.ItemControlModule;
+import com.talesdev.copsandcrims.weapon.module.ShootingModule;
 import com.talesdev.core.math.Range;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -45,7 +47,7 @@ public class GalilAR extends Weapon {
 
     @Override
     public ItemStack createItemStack() {
-        ItemStack itemStack = new ItemStack(Material.WOOD_PICKAXE, 35);
+        ItemStack itemStack = new ItemStack(Material.STONE_PICKAXE, 35);
         ItemMeta meta = itemStack.getItemMeta();
         meta.setDisplayName(ChatColor.GREEN + getDisplayName());
         itemStack.setItemMeta(meta);
@@ -55,7 +57,7 @@ public class GalilAR extends Weapon {
     @Override
     public boolean isWeapon(ItemStack itemStack) {
         if (itemStack == null) return false;
-        if (itemStack.getType().equals(Material.WOOD_PICKAXE)) {
+        if (itemStack.getType().equals(Material.STONE_PICKAXE)) {
             return true;
         }
         return super.isWeapon(itemStack);
