@@ -27,9 +27,9 @@ public class AK47 extends Weapon {
         shootingModule.setHeadShotDamage(27.4);
         shootingModule.setRecoil(6.0D);
         shootingModule.setMaxBullet(30);
-        shootingModule.setBulletDelay(3);
+        shootingModule.setBulletDelay(2);
         shootingModule.setBulletCount(2);
-        shootingModule.setCooldownTime(3);
+        shootingModule.setCooldownTime(2);
         shootingModule.setReloadTime(50);
         shootingModule.setAccuracy(new BulletAccuracy(
                 new Accuracy(new Range(-12, 12), new Range(-12, 12), new Range(-12, 12)), // default
