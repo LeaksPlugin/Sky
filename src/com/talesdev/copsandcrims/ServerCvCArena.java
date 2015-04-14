@@ -1,6 +1,5 @@
 package com.talesdev.copsandcrims;
 
-import com.talesdev.copsandcrims.arena.ArenaFileCollection;
 import com.talesdev.copsandcrims.arena.CvCArena;
 import com.talesdev.core.config.ConfigFile;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -29,8 +28,6 @@ public class ServerCvCArena {
         this.configFile = new ConfigFile("plugins/CopsAndCrims/arena.yml");
         this.arenaList = new ArrayList<>();
         // begin arena loading
-        ArenaFileCollection collection = new ArenaFileCollection(this, new File("plugins/CopsAndCrims/arena"));
-        collection.getAll().forEach(this::addArena);
     }
 
     public void addArena(CvCArena arena) {

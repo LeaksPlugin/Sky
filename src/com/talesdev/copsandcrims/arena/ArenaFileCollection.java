@@ -25,8 +25,8 @@ public class ArenaFileCollection {
         List<CvCArena> arenaList = new ArrayList<>();
         Set<String> arenas = arena.getConfig().getConfigurationSection("Arena").getKeys(false);
         if (arenas.size() > 0) {
-            for (String arenaName : arenas) {
-
+            for (String arena : arenas) {
+                String arenaName = arena;
             }
         }
         return arenaList;

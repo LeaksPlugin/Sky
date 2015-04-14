@@ -167,6 +167,7 @@ public class ItemControlModule extends WeaponModule {
                 event.getEntity().setItemStack(itemStack);
                 MetaData metaData = new MetaData(event.getEntity(), getPlugin());
                 int bulletCount = cvCPlayer.getPlayerBullet().getBullet(getWeapon().getName()).getBulletCount();
+                System.out.println(bulletCount);
                 metaData.setMetadata("bulletAmount", bulletCount);
             }
         }
