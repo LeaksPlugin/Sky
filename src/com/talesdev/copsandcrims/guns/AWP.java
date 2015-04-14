@@ -37,6 +37,7 @@ public class AWP extends Weapon {
                 new Accuracy(new Range(-20, 20), new Range(-20, 20), new Range(-20, 20)), // walking
                 new Accuracy(new Range(-80, 80), new Range(-80, 80), new Range(-80, 80)), // sprinting
                 new Accuracy(new Range(-100, 100), new Range(-100, 100), new Range(-100, 100)) // jumping
+        ));
         scopeModule.setZoomLevel(5);
         addModule(shootingModule);
         addModule(controlModule);
