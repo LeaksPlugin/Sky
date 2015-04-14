@@ -44,7 +44,7 @@ public class DesertEagle extends Weapon {
 
     @Override
     public ItemStack createItemStack() {
-        ItemStack itemStack = new ItemStack(Material.GOLD_PICKAXE, 7);
+        ItemStack itemStack = new ItemStack(Material.GOLD_HOE, 7);
         ItemMeta meta = itemStack.getItemMeta();
         meta.setDisplayName(ChatColor.GREEN + getDisplayName());
         itemStack.setItemMeta(meta);
@@ -54,7 +54,7 @@ public class DesertEagle extends Weapon {
     @Override
     public boolean isWeapon(ItemStack itemStack) {
         if (itemStack == null) return false;
-        if (itemStack.getType().equals(Material.GOLD_PICKAXE)) {
+        if (itemStack.getType().equals(Material.GOLD_HOE)) {
             return true;
         }
         return super.isWeapon(itemStack);
