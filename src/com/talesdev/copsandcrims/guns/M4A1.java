@@ -28,6 +28,7 @@ public class M4A1 extends Weapon {
         shootingModule.setRecoil(3.5D);
         shootingModule.setMaxBullet(30);
         shootingModule.setBulletDelay(2);
+        shootingModule.setBulletCount(2);
         shootingModule.setCooldownTime(2);
         shootingModule.setReloadTime(61);
         shootingModule.setAccuracy(new BulletAccuracy(
