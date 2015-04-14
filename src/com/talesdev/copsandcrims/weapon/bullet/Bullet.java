@@ -95,7 +95,7 @@ public class Bullet {
                 modifyAccuracy(baseAccuracy, sprintFactor);
             }
             // normal bullet spread
-            return this.direction.add(accuracy.getDefaultAccuracy().toVector());
+            return this.direction.add(baseAccuracy.toVector());
         }
         return this.direction;
     }
