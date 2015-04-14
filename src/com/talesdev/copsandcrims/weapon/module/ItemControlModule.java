@@ -1,6 +1,7 @@
 package com.talesdev.copsandcrims.weapon.module;
 
 import com.talesdev.copsandcrims.CopsAndCrims;
+import com.talesdev.copsandcrims.event.PlayerDropWeaponEvent;
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.core.entity.MetaData;
@@ -63,6 +64,15 @@ public class ItemControlModule extends WeaponModule {
     public void onPlayerDrop(PlayerDropItemEvent event) {
         if (!dropActive) return;
         if (getWeapon().isWeapon(event.getItemDrop().getItemStack())) {
+            // call event before
+            PlayerDropWeaponEvent weaponEvent = new PlayerDropWeaponEvent(
+                    event.getPlayer(), getWeapon(), event.getItemDrop().getItemStack()
+            );
+            getPlugin().getServer().getPluginManager().callEvent(weaponEvent);
+            if (weaponEvent.isCancelled()) {
+                event.setCancelled(true);
+                return;
+            }
             int bullet = 0;
             if (getWeapon().containsModule(ShootingModule.class)) {
                 bullet = getWeapon().getModule(ShootingModule.class).getMaxBullet();
