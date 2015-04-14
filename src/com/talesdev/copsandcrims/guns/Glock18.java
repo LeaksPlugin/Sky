@@ -43,7 +43,7 @@ public class Glock18 extends Weapon {
         ));
         alternativeFireModule.setAlternativeFireBullet(3);
         alternativeFireModule.setAlternativeFireDelay(1);
-        alternativeFireModule.setAlternativeFireCooldown(30);
+        alternativeFireModule.setAlternativeFireCooldown(20);
         alternativeFireModule.setEnabled(true);
         addModule(shootingModule);
         addModule(alternativeFireModule);
