@@ -24,7 +24,7 @@ public class M4A1 extends Weapon {
         ItemControlModule controlModule = new ItemControlModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
         shootingModule.setDamage(6.6);
-        shootingModule.setHeadShotDamage(23.1);
+        shootingModule.setHeadShotDamage(20.2);
         shootingModule.setRecoil(3.5D);
         shootingModule.setMaxBullet(30);
         shootingModule.setBulletDelay(2);

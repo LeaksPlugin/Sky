@@ -28,8 +28,8 @@ public class AWP extends Weapon {
         shootingModule.setHeadShotDamage(82.1);
         shootingModule.setRecoil(15.0D);
         shootingModule.setMaxBullet(10);
-        shootingModule.setBulletDelay(29);
-        shootingModule.setCooldownTime(29);
+        shootingModule.setBulletDelay(25);
+        shootingModule.setCooldownTime(25);
         shootingModule.setReloadTime(72);
         shootingModule.setAccuracy(new BulletAccuracy(
                 new Accuracy(new Range(-200, 200), new Range(-200, 200), new Range(-200, 200)), // default
