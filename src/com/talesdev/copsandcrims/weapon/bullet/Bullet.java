@@ -7,6 +7,7 @@ import com.talesdev.copsandcrims.CopsAndCrims;
 import com.talesdev.copsandcrims.player.PlayerLastDamage;
 import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.core.entity.BoundingBox;
+import com.talesdev.core.math.Range;
 import com.talesdev.core.player.LastPlayerDamage;
 import com.talesdev.core.world.NMSRayTrace;
 import com.talesdev.core.world.NearbyEntity;
@@ -75,22 +76,36 @@ public class Bullet {
             }
             /**
              * Buggy code
-             * TODO : Fixed the buggy bullet spreading
+             * trying to reimplement this
              */
-/*            // jumping?
+            // base accuracy
+            Accuracy baseAccuracy = accuracy.getDefaultAccuracy();
+            // factor
+            Accuracy jumpFactor = accuracy.getJumpingAccuracy();
+            Accuracy walkFactor = accuracy.getWalkingAccuracy();
+            Accuracy sprintFactor = accuracy.getSprintingAccuracy();
+            // jumping?
             if (isJumping()) {
-                vector.add(accuracy.getJumpingAccuracy().toVector());
+                modifyAccuracy(baseAccuracy, jumpFactor);
             }
             if (CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(player).isWalking()) {
-                vector.add(accuracy.getWalkingAccuracy().toVector());
+                modifyAccuracy(baseAccuracy, walkFactor);
             }
             if (player.isSprinting()) {
-                vector.add(accuracy.getSprintingAccuracy().toVector());
-            }*/
+                modifyAccuracy(baseAccuracy, sprintFactor);
+            }
             // normal bullet spread
             return this.direction.add(accuracy.getDefaultAccuracy().toVector());
         }
         return this.direction;
+    }
+
+    private void modifyAccuracy(Accuracy base, Accuracy add) {
+        Range xBase = base.getXSpread(), yBase = base.getYSpread(), zBase = base.getZSpread();
+        Range xAdd = add.getXSpread(), yAdd = add.getYSpread(), zAdd = add.getZSpread();
+        base.setXSpread(new Range(xBase.getStart() + xAdd.getStart(), xBase.getEnd() + xAdd.getEnd()));
+        base.setYSpread(new Range(yBase.getStart() + yAdd.getStart(), yBase.getEnd() + yAdd.getEnd()));
+        base.setZSpread(new Range(zBase.getStart() + zAdd.getStart(), zBase.getEnd() + zAdd.getEnd()));
     }
 
     private boolean isJumping() {
