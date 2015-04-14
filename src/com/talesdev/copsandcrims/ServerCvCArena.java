@@ -29,6 +29,7 @@ public class ServerCvCArena {
         }
         this.configFile = new ConfigFile("plugins/CopsAndCrims/arena.yml");
         this.arenaList = new ArrayList<>();
+        this.controllerList = new ArrayList<>();
         // begin arena loading
     }
 

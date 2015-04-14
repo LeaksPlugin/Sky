@@ -26,6 +26,7 @@ public class FAMAS extends Weapon {
         ShootingModule shootingModule = new ShootingModule();
         ItemControlModule controlModule = new ItemControlModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
+        AlternativeFireModule alternativeFireModule = new AlternativeFireModule();
         shootingModule.setDamage(6);
         shootingModule.setHeadShotDamage(22);
         shootingModule.setRecoil(4.0D);

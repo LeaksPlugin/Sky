@@ -36,7 +36,10 @@ public class CopsAndCrims extends JavaPlugin {
         getCommand("cvc").setExecutor(new CopsAndCrimsCommand());
         // item
         getWeaponFactory().addWeapon(new AK47());
+        getWeaponFactory().addWeapon(new AWP());
         getWeaponFactory().addWeapon(new DesertEagle());
+        getWeaponFactory().addWeapon(new FAMAS());
+        getWeaponFactory().addWeapon(new GalilAR());
         getWeaponFactory().addWeapon(new Knife());
         getWeaponFactory().addWeapon(new Glock18());
         getWeaponFactory().addWeapon(new HK45());
