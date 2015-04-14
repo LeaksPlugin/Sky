@@ -1,6 +1,7 @@
 package com.talesdev.copsandcrims.arena;
 
 import com.talesdev.copsandcrims.ServerCvCArena;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
@@ -22,14 +23,17 @@ public class ArenaCollection {
 
     public List<CvCArena> getAll() {
         List<CvCArena> arenaList = new ArrayList<>();
-        Set<String> arenas = getConfig().getConfigurationSection("Arena").getKeys(false);
-        if (arenas.size() > 0) {
-            for (String arena : arenas) {
-                String arenaName = arena;
-                String type = getConfig().getString("Arena" + "." + arenaName);
-                CvCArenaController arenaController = this.arena.getController(type);
-                if (arenaController != null) {
-                    arenaList.add(new CvCArena(this.arena, arenaName, arenaController));
+        if (!getConfig().isSet("Arena")) getConfig().set("Arena", null);
+        ConfigurationSection section = getConfig().getConfigurationSection("Arena");
+        if (section != null) {
+            Set<String> arenas = section.getKeys(false);
+            if (arenas.size() > 0) {
+                for (String arena : arenas) {
+                    String type = getConfig().getString("Arena" + "." + arena);
+                    CvCArenaController arenaController = this.arena.getController(type);
+                    if (arenaController != null) {
+                        arenaList.add(new CvCArena(this.arena, arena, arenaController));
+                    }
                 }
             }
         }

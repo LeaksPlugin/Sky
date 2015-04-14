@@ -26,8 +26,6 @@ public class CopsAndCrims extends JavaPlugin {
         weaponFactory = new WeaponFactory(this);
         serverCvCPlayer = new ServerCvCPlayer(this);
         serverCvCArena = new ServerCvCArena(this);
-        // arena
-        System.out.println(DefaultArena.getInstance().getArenaName() + " starting...");
         // save config
         saveDefaultConfig();
         // listener

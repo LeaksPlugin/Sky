@@ -104,17 +104,4 @@ public class CopsAndCrimsCommand implements CommandExecutor {
         }
         return false;
     }
-
-    private ItemStack removeAttribute(ItemStack stack) {
-        NbtCompound compound = (NbtCompound) NbtFactory.fromItemTag(stack = getCraftItemStack(stack));
-        compound.put(NbtFactory.ofList("AttributeModifiers"));
-        return stack;
-    }
-
-    private ItemStack getCraftItemStack(ItemStack stack) {
-        if (!MinecraftReflection.isCraftItemStack(stack))
-            return MinecraftReflection.getBukkitItemStack(stack);
-        else
-            return stack;
-    }
 }
