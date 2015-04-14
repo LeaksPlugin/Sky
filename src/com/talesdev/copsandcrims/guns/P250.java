@@ -44,7 +44,7 @@ public class P250 extends Weapon {
 
     @Override
     public ItemStack createItemStack() {
-        ItemStack itemStack = new ItemStack(Material.IRON_PICKAXE, 13);
+        ItemStack itemStack = new ItemStack(Material.DIAMOND_HOE, 13);
         ItemMeta meta = itemStack.getItemMeta();
         meta.setDisplayName(ChatColor.GREEN + getDisplayName());
         itemStack.setItemMeta(meta);
@@ -54,7 +54,7 @@ public class P250 extends Weapon {
     @Override
     public boolean isWeapon(ItemStack itemStack) {
         if (itemStack == null) return false;
-        if (itemStack.getType().equals(Material.IRON_PICKAXE)) {
+        if (itemStack.getType().equals(Material.DIAMOND_HOE)) {
             return true;
         }
         return super.isWeapon(itemStack);
