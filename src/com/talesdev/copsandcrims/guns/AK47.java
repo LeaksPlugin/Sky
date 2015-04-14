@@ -28,6 +28,7 @@ public class AK47 extends Weapon {
         shootingModule.setRecoil(6.0D);
         shootingModule.setMaxBullet(30);
         shootingModule.setBulletDelay(3);
+        shootingModule.setBulletCount(2);
         shootingModule.setCooldownTime(3);
         shootingModule.setReloadTime(50);
         shootingModule.setAccuracy(new BulletAccuracy(
@@ -44,7 +45,7 @@ public class AK47 extends Weapon {
 
     @Override
     public ItemStack createItemStack() {
-        ItemStack itemStack = new ItemStack(Material.STONE_HOE, 30);
+        ItemStack itemStack = new ItemStack(Material.WOOD_SPADE, 30);
         ItemMeta meta = itemStack.getItemMeta();
         meta.setDisplayName(ChatColor.GREEN + getDisplayName());
         itemStack.setItemMeta(meta);
@@ -54,7 +55,7 @@ public class AK47 extends Weapon {
     @Override
     public boolean isWeapon(ItemStack itemStack) {
         if (itemStack == null) return false;
-        if (itemStack.getType().equals(Material.STONE_HOE)) {
+        if (itemStack.getType().equals(Material.WOOD_SPADE)) {
             return true;
         }
         return super.isWeapon(itemStack);
