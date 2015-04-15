@@ -25,6 +25,8 @@ public class AK47 extends Weapon {
         DeathMessageModule deathMessageModule = new DeathMessageModule();
         shootingModule.setDamage(7.2);
         shootingModule.setHeadShotDamage(27.4);
+        shootingModule.setUpperLegDamage(6.8);
+        shootingModule.setLowerLegDamage(4.5);
         shootingModule.setRecoil(6.0D);
         shootingModule.setMaxBullet(30);
         shootingModule.setBulletDelay(2);

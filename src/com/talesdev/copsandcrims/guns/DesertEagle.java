@@ -25,6 +25,8 @@ public class DesertEagle extends Weapon {
         DeathMessageModule deathMessageModule = new DeathMessageModule();
         shootingModule.setDamage(13.6);
         shootingModule.setHeadShotDamage(40.8);
+        shootingModule.setUpperLegDamage(11.3);
+        shootingModule.setLowerLegDamage(7.2);
         shootingModule.setRecoil(10.0D);
         shootingModule.setMaxBullet(7);
         shootingModule.setBulletDelay(6);

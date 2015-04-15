@@ -25,7 +25,9 @@ public class P250 extends Weapon {
         DeathMessageModule deathMessageModule = new DeathMessageModule();
         shootingModule.setDamage(7.8);
         shootingModule.setHeadShotDamage(24.2);
-        shootingModule.setRecoil(7.0D);
+        shootingModule.setUpperLegDamage(6.2);
+        shootingModule.setLowerLegDamage(5.1);
+        shootingModule.setRecoil(5.5D);
         shootingModule.setMaxBullet(13);
         shootingModule.setBulletDelay(4);
         shootingModule.setCooldownTime(4);

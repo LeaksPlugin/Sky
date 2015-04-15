@@ -15,19 +15,21 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 /**
- * HK45
+ * USP
  *
  * @author sonSunnoi
  */
- public class HK45 extends Weapon {
+ public class USP extends Weapon {
  
-    public HK45() {
-        super("HK45", ChatColor.GREEN + "HK45", blankAliases(), WeaponType.PISTOL);
+    public USP() {
+        super("USP", ChatColor.GREEN + "USP", blankAliases(), WeaponType.PISTOL);
         ShootingModule shootingModule = new ShootingModule();
         ItemControlModule controlModule = new ItemControlModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
         shootingModule.setDamage(7.6);
         shootingModule.setHeadShotDamage(19.6);
+        shootingModule.setUpperLegDamage(6.7);
+        shootingModule.setLowerLegDamage(4.2);
         shootingModule.setRecoil(5.0D);
         shootingModule.setMaxBullet(13);
         shootingModule.setBulletDelay(4);
