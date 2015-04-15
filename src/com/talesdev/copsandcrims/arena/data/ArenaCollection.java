@@ -1,6 +1,8 @@
-package com.talesdev.copsandcrims.arena;
+package com.talesdev.copsandcrims.arena.data;
 
 import com.talesdev.copsandcrims.ServerCvCArena;
+import com.talesdev.copsandcrims.arena.CvCArena;
+import com.talesdev.copsandcrims.arena.system.CvCArenaController;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -38,6 +40,15 @@ public class ArenaCollection {
             }
         }
         return arenaList;
+    }
+
+    public void saveAll(List<CvCArena> arenaList) {
+        if (arenaList != null && arenaList.size() > 0) {
+            for (CvCArena arena : arenaList) {
+                String baseNode = "Arena" + "." + arena.getArenaName();
+                getConfig().set(baseNode, arena.getArenaController().getArenaType());
+            }
+        }
     }
 
     protected FileConfiguration getConfig() {

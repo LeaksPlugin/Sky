@@ -25,6 +25,12 @@ import org.bukkit.inventory.ItemStack;
  * @author MoKunz
  */
 public class CopsAndCrimsCommand implements CommandExecutor {
+    private CopsAndCrims plugin;
+
+    public CopsAndCrimsCommand(CopsAndCrims plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length > 0) {

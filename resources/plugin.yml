@@ -9,3 +9,8 @@ commands:
       usage: "§e/cvc help"
       permission: cvc.command.cvc;
       permission-message: "§cYou don't have permission"
+    cvcarena:
+      description: "§eCvC commands for arena management"
+      usage: "§e/cvcarena help"
+      permission: cvc.command.cvcarena;
+      permission-message: "§cYou don't have permission"

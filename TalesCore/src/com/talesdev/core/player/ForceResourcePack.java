@@ -10,8 +10,8 @@ import org.bukkit.plugin.Plugin;
  *
  * @author MoKunz
  */
-public class ForceResourcePack extends PacketAdapter {
+public class ForceResourcePack {
     public ForceResourcePack(Plugin plugin) {
-        super(plugin, ListenerPriority.NORMAL, PacketType.Play.Server.RESOURCE_PACK_SEND);
+
     }
 }

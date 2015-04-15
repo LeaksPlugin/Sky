@@ -1,8 +1,8 @@
 package com.talesdev.copsandcrims;
 
-import com.talesdev.copsandcrims.arena.ArenaCollection;
+import com.talesdev.copsandcrims.arena.data.ArenaCollection;
 import com.talesdev.copsandcrims.arena.CvCArena;
-import com.talesdev.copsandcrims.arena.CvCArenaController;
+import com.talesdev.copsandcrims.arena.system.CvCArenaController;
 import com.talesdev.core.config.ConfigFile;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -113,6 +113,23 @@ public class ServerCvCArena {
     }
 
     public void shutDown() {
+        save();
         getArenaList().forEach(CvCArena::shutDown);
+    }
+
+    public void save() {
+        // save individuals arena
+        getArenaList().forEach(CvCArena::save);
+        // write global arena info to config object
+        ArenaCollection collection = new ArenaCollection(this);
+        collection.saveAll(getArenaList());
+        // save global arena info
+        configFile.save();
+    }
+
+    public void load() {
+        // load config
+        configFile.load();
+        getArenaList().forEach(CvCArena::load);
     }
 }

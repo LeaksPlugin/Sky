@@ -1,6 +1,7 @@
-package com.talesdev.copsandcrims.arena;
+package com.talesdev.copsandcrims.arena.system;
 
 import com.talesdev.copsandcrims.CopsAndCrims;
+import com.talesdev.copsandcrims.arena.CvCArena;
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import org.bukkit.event.Listener;
 
@@ -9,9 +10,9 @@ import org.bukkit.event.Listener;
  *
  * @author MoKunz
  */
-public abstract class CvCArenaController implements Listener {
-    private String arenaType;
+public abstract class CvCArenaController implements Listener, ArenaSpawnLocation {
     protected CvCArena arena;
+    private String arenaType;
     private boolean locked = false;
 
     public CvCArenaController(String arenaType) {
@@ -39,11 +40,15 @@ public abstract class CvCArenaController implements Listener {
 
     public abstract void leaveArena(CvCPlayer cPlayer);
 
-    public abstract void arenaLoaded();
+    public void arenaLoaded() {
+    }
 
     public abstract void startArena();
 
     public abstract void endArena();
+
+    public void shutdown() {
+    }
 
     @Override
     public boolean equals(Object obj) {

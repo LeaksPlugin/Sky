@@ -1,8 +1,8 @@
 package com.talesdev.copsandcrims;
 
 import com.comphenix.protocol.ProtocolLibrary;
-import com.talesdev.copsandcrims.arena.DefaultArena;
-import com.talesdev.copsandcrims.arena.TDMArenaController;
+import com.talesdev.copsandcrims.arena.CvCArenaCommand;
+import com.talesdev.copsandcrims.arena.tdm.TDMArenaController;
 import com.talesdev.copsandcrims.guns.*;
 import com.talesdev.copsandcrims.player.PlayerBulletTask;
 import com.talesdev.copsandcrims.player.PlayerEquipmentListener;
@@ -21,6 +21,11 @@ public class CopsAndCrims extends JavaPlugin {
     private WeaponFactory weaponFactory;
     private ServerCvCPlayer serverCvCPlayer;
     private ServerCvCArena serverCvCArena;
+
+    public static CopsAndCrims getPlugin() {
+        return CopsAndCrims.getPlugin(CopsAndCrims.class);
+    }
+
     @Override
     public void onEnable() {
         weaponFactory = new WeaponFactory(this);
@@ -31,7 +36,8 @@ public class CopsAndCrims extends JavaPlugin {
         // listener
         getServer().getPluginManager().registerEvents(new CopsAndCrimsListener(this), this);
         // command
-        getCommand("cvc").setExecutor(new CopsAndCrimsCommand());
+        getCommand("cvc").setExecutor(new CopsAndCrimsCommand(this));
+        getCommand("cvcarena").setExecutor(new CvCArenaCommand(this));
         // item
         getWeaponFactory().addWeapon(new AK47());
         getWeaponFactory().addWeapon(new AWP());
@@ -60,9 +66,6 @@ public class CopsAndCrims extends JavaPlugin {
         getServerCvCArena().shutDown();
         saveConfig();
         getLogger().info("Plugin has been disabled!");
-    }
-    public static CopsAndCrims getPlugin(){
-        return CopsAndCrims.getPlugin(CopsAndCrims.class);
     }
 
     public WeaponFactory getWeaponFactory() {
