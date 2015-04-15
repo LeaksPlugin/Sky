@@ -47,7 +47,7 @@ public class AlternativeFireModule extends WeaponModule {
 
     public DelayedBullet createBurstFireBullet(DelayedBullet oldBullet) {
         DelayedBullet bullet = new DelayedBullet(
-                oldBullet.getPlayer(), oldBullet.getListener(), oldBullet.getDamage(), getBurstFireAccuracy(), 0.0D
+                oldBullet.getPlayer(), oldBullet.getListener(), oldBullet.getDamage(), new BulletAccuracy(getBurstFireAccuracy()), 0.0D
         );
         if (getHeadShotDamage() > -1) {
             bullet.setHeadShotDamage(getHeadShotDamage());

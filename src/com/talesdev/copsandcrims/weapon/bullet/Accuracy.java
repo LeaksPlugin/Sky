@@ -55,4 +55,9 @@ public class Accuracy {
                         getZSpread().getEnd()) / 1000D
         );
     }
+
+    public Accuracy cloneAccuracy() {
+        Range x = getXSpread(), y = getYSpread(), z = getZSpread();
+        return new Accuracy(new Range(x.getStart(), x.getEnd()), new Range(y.getStart(), y.getEnd()), new Range(z.getStart(), z.getEnd()));
+    }
 }

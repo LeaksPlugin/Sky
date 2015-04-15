@@ -71,7 +71,7 @@ public class Bullet {
     private Vector calculateSpreadDirection() {
         BulletAccuracy accuracy = getBulletAccuracy();
         if (accuracy != null) {
-            if (player.isSneaking()) {
+            if (player.isSneaking() && !isOnAir()) {
                 return this.direction.add(accuracy.getSneakingAccuracy().toVector());
             }
             /**
@@ -85,7 +85,7 @@ public class Bullet {
             Accuracy walkFactor = accuracy.getWalkingAccuracy();
             Accuracy sprintFactor = accuracy.getSprintingAccuracy();
             // jumping?
-            if (isJumping()) {
+            if (isOnAir()) {
                 modifyAccuracy(baseAccuracy, jumpFactor);
             }
             if (CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(player).isWalking()) {
@@ -108,8 +108,8 @@ public class Bullet {
         base.setZSpread(new Range(zBase.getStart() + zAdd.getStart(), zBase.getEnd() + zAdd.getEnd()));
     }
 
-    private boolean isJumping() {
-        return player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isSolid();
+    private boolean isOnAir() {
+        return player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isTransparent();
     }
 
     public double getRecoil() {

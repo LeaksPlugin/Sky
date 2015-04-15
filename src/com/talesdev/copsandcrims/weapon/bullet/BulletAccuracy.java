@@ -15,6 +15,13 @@ public class BulletAccuracy {
     private Accuracy sprintingAccuracy;
     private Accuracy jumpingAccuracy;
 
+    public BulletAccuracy(BulletAccuracy accuracy) {
+        this.defaultAccuracy = accuracy.getDefaultAccuracy().cloneAccuracy();
+        this.sneakingAccuracy = accuracy.getSneakingAccuracy().cloneAccuracy();
+        this.walkingAccuracy = accuracy.getWalkingAccuracy().cloneAccuracy();
+        this.sprintingAccuracy = accuracy.getSprintingAccuracy().cloneAccuracy();
+        this.jumpingAccuracy = accuracy.getJumpingAccuracy().cloneAccuracy();
+    }
     public BulletAccuracy(Range xSpread, Range ySpread, Range zSpread) {
         this(new Accuracy(xSpread, ySpread, zSpread));
     }

@@ -12,6 +12,7 @@ import com.talesdev.core.player.UUIDTask;
 import com.talesdev.core.scoreboard.WrappedSidebarObjective;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -80,9 +81,10 @@ public class CopsAndCrimsCommand implements CommandExecutor {
                 }
                 if (player != null) {
                     sender.sendMessage("Player name : " + player.getName());
-                    sender.sendMessage("Display name : " + player.getDisplayName());
                     sender.sendMessage("Location  : " + player.getLocation());
-                    sender.sendMessage("Eye location : " + player.getEyeLocation());
+                    sender.sendMessage("Sneaking : " + player.isSneaking());
+                    sender.sendMessage("Is on ground : " + player.isOnGround());
+                    sender.sendMessage("Jumping : " + player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isTransparent());
                 } else {
                     sender.sendMessage(ChatColor.RED + "Error : player not found!");
                 }

@@ -3,7 +3,9 @@ package com.talesdev.copsandcrims;
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.copsandcrims.player.PlayerLastDamage;
 import com.talesdev.core.player.LastPlayerDamage;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -14,6 +16,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
  * Cops And Crimes Listener
+ *
  * @author MoKunz
  */
 public class CopsAndCrimsListener implements Listener {
@@ -40,8 +43,13 @@ public class CopsAndCrimsListener implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         CvCPlayer player = plugin.getServerCvCPlayer().getPlayer(event.getPlayer());
         if (player != null) {
-            player.setWalking(true);
-            player.updateLastWalkingTime();
+            double dX = Math.abs(event.getTo().getX() - event.getFrom().getX());
+            double dZ = Math.abs(event.getTo().getZ() - event.getFrom().getZ());
+            double xzDistance = dX * dX + dZ * dZ;
+            if (xzDistance > 0) {
+                player.setWalking(true);
+                player.updateLastWalkingTime();
+            }
         }
     }
 
