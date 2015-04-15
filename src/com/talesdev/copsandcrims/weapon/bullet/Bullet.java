@@ -48,6 +48,7 @@ public class Bullet {
     private int maxIteration = 2000;
     private boolean cancel = false;
     private Weapon weapon;
+    private boolean debug = false;
 
     public Bullet(Player player, BulletListener action, double damage, BulletAccuracy accuracy, double recoil) {
         this.player = player;
@@ -189,6 +190,9 @@ public class Bullet {
     }
 
     public void fire() {
+        // check if i should debug
+        if (CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(player) != null)
+            debug = CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(player).isDebug();
         // ray tracing engine
         Location currentLocation;
         Vector currentVector;
@@ -300,11 +304,14 @@ public class Bullet {
                 // leg : [0,0.4] x >= 0 , 0 <= 0.4
                 // upper leg : x > 0.4 , x <= 0.675
                 if ((deltaEH <= 0.4) && (eyeLocation.distanceSquared(currentLocation) <= 0.45)) {
+                    if (debug) player.sendMessage(ChatColor.RED + "HeadShot!");
                     damage = getHeadShotDamage();
                     isHeadShot = true;
                 } else if ((deltaBH >= 0) && (deltaBH <= 0.4)) {
+                    if (debug) player.sendMessage(ChatColor.GREEN + "Lower leg!");
                     damage = getLowerLegDamage();
                 } else if ((deltaBH > 0.4) && (deltaBH <= 0.675)) {
+                    if (debug) player.sendMessage(ChatColor.GREEN + "Upper leg!");
                     damage = getUpperLegDamage();
                 }
                 // end body part detection
@@ -330,6 +337,7 @@ public class Bullet {
                     ((LivingEntity) entity).damage(damage + 1);
                     cancel();
                 }
+                if (debug) player.sendMessage(ChatColor.GREEN + "Total damage : " + ChatColor.BLUE + damage);
                 return false;
             }
         }

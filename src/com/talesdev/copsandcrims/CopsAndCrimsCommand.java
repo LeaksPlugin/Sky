@@ -102,6 +102,12 @@ public class CopsAndCrimsCommand implements CommandExecutor {
                     cPlayer.updateScoreboard();
                     return true;
                 }
+            } else if (args[0].equalsIgnoreCase("debug")) {
+                if (sender instanceof Player) {
+                    CvCPlayer cPlayer = CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer((Player) sender);
+                    cPlayer.setDebug(true);
+                    sender.sendMessage(ChatColor.GREEN + "set your debug state to true!");
+                }
             }
         }
         return false;

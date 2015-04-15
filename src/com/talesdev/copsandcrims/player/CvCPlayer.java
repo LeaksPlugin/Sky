@@ -17,6 +17,7 @@ import org.bukkit.scoreboard.Scoreboard;
 public class CvCPlayer {
     private Scoreboard playerScoreboard;
     private WrappedSidebarObjective sidebarObjective;
+    private boolean debug = false;
     private boolean isWalking = false;
     private boolean isSneaking = false;
     private ItemStack lastHelmet = new ItemStack(Material.AIR);
@@ -47,22 +48,22 @@ public class CvCPlayer {
         return lastWalkingTime;
     }
 
+    public boolean isWalking() {
+        return isWalking;
+    }
+
     public void setWalking(boolean walking) {
         this.isWalking = walking;
     }
 
-    public boolean isWalking() {
-        return isWalking;
+    public double getArmorPoint() {
+        return armorPoint;
     }
 
     public void setArmorPoint(double armorPoint) {
         if (armorPoint > 0) {
             this.armorPoint = armorPoint;
         }
-    }
-
-    public double getArmorPoint() {
-        return armorPoint;
     }
 
     public PlayerRecoil getPlayerRecoil() {
@@ -151,5 +152,13 @@ public class CvCPlayer {
     public void clearScoreboard() {
         getSidebarObjective().reset(getPlayerScoreboard());
         getPlayer().setScoreboard(getPlayerScoreboard());
+    }
+
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 }
