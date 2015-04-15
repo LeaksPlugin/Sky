@@ -26,6 +26,8 @@ public class SSG08 extends Weapon {
         DeathMessageModule deathMessageModule = new DeathMessageModule();
         shootingModule.setDamage(17.6);
         shootingModule.setHeadShotDamage(47.1);
+        shootingModule.setUpperLegDamage(14.2);
+        shootingModule.setLowerLegDamage(11.1);
         shootingModule.setRecoil(15.0D);
         shootingModule.setMaxBullet(10);
         shootingModule.setBulletDelay(16);
