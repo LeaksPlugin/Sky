@@ -32,11 +32,11 @@ public class AWP extends Weapon {
         shootingModule.setCooldownTime(25);
         shootingModule.setReloadTime(72);
         shootingModule.setAccuracy(new BulletAccuracy(
-                new Accuracy(new Range(-200, 200), new Range(-200, 200), new Range(-200, 200)), // default
+                new Accuracy(new Range(-300, 300), new Range(-300, 200), new Range(-300, 300)), // default
                 new Accuracy(new Range(0, 0), new Range(0, 0), new Range(0, 0)), // sneaking
-                new Accuracy(new Range(-20, 20), new Range(-20, 20), new Range(-20, 20)), // walking
-                new Accuracy(new Range(-80, 80), new Range(-80, 80), new Range(-80, 80)), // sprinting
-                new Accuracy(new Range(-100, 100), new Range(-100, 100), new Range(-100, 100)) // jumping
+                new Accuracy(new Range(-500, 500), new Range(-500, 500), new Range(-500, 500)), // walking
+                new Accuracy(new Range(-700, 700), new Range(-700, 700), new Range(-700, 700)), // sprinting
+                new Accuracy(new Range(-700, 700), new Range(-700, 700), new Range(-700, 700)) // jumping
         ));
         shootingModule.setFiringMode(FiringMode.BOLT);
         scopeModule.setZoomLevel(5);
