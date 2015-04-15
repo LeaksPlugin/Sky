@@ -27,7 +27,7 @@ public class GalilAR extends Weapon {
         DeathMessageModule deathMessageModule = new DeathMessageModule();
         shootingModule.setDamage(6);
         shootingModule.setHeadShotDamage(22);
-        shootingModule.setRecoil(5.5D);
+        shootingModule.setRecoil(5.25D);
         shootingModule.setMaxBullet(35);
         shootingModule.setBulletDelay(2);
         shootingModule.setBulletCount(2);
