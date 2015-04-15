@@ -46,9 +46,10 @@ public class CopsAndCrims extends JavaPlugin {
         getWeaponFactory().addWeapon(new GalilAR());
         getWeaponFactory().addWeapon(new Knife());
         getWeaponFactory().addWeapon(new Glock18());
-        getWeaponFactory().addWeapon(new HK45());
+        getWeaponFactory().addWeapon(new USP());
         getWeaponFactory().addWeapon(new M4A1());
         getWeaponFactory().addWeapon(new P250());
+        getWeaponFactory().addWeapon(new SSG08());
         // arena controller
         getServerCvCArena().addController(new TDMArenaController());
         // protocol
