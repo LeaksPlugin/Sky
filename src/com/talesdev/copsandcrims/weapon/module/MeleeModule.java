@@ -3,6 +3,8 @@ package com.talesdev.copsandcrims.weapon.module;
 import com.talesdev.copsandcrims.CvCSound;
 import com.talesdev.copsandcrims.player.PlayerLastDamage;
 import com.talesdev.core.entity.BoundingBox;
+import com.talesdev.core.item.MaterialComparator;
+import com.talesdev.core.item.RightClickable;
 import com.talesdev.core.player.ActionBar;
 import com.talesdev.core.player.ClickingAction;
 import com.talesdev.core.player.LastPlayerDamage;
@@ -16,7 +18,9 @@ import com.talesdev.core.world.Sound;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
@@ -50,11 +54,25 @@ public class MeleeModule extends WeaponModule {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
+        if (event.getClickedBlock() != null) {
+            MaterialComparator comparator = new MaterialComparator(new RightClickable());
+            if (comparator.containThisMaterial(event.getClickedBlock().getType())) {
+                event.setUseItemInHand(Event.Result.DENY);
+                return;
+            }
+        }
         if (ClickingAction.isLeftClick(event.getAction())) {
             if (getWeapon().isWeapon(event.getItem())) {
                 Sound sound = new Sound(CvCSound.MCGO_WEAPONS_KNIFESWING);
                 sound.playSound(event.getPlayer().getLocation());
             }
+        }
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (getWeapon().isWeapon(event.getPlayer().getItemInHand())) {
+            event.setCancelled(true);
         }
     }
 

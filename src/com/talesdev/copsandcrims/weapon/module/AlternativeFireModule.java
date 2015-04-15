@@ -22,6 +22,8 @@ public class AlternativeFireModule extends WeaponModule {
     private double alternativeRecoil = 0.1D;
     private double damage = -1;
     private double headShotDamage = -1;
+    private double lowerLegDamage = -1;
+    private double upperLegDamage = -1;
     private BulletAccuracy burstFireAccuracy;
 
     public AlternativeFireModule() {
@@ -58,6 +60,16 @@ public class AlternativeFireModule extends WeaponModule {
             bullet.setDamage(getDamage());
         } else {
             bullet.setDamage(oldBullet.getDamage());
+        }
+        if (getLowerLegDamage() > -1) {
+            bullet.setLowerLegDamage(getLowerLegDamage());
+        } else {
+            bullet.setLowerLegDamage(oldBullet.getLowerLegDamage());
+        }
+        if (getUpperLegDamage() > -1) {
+            bullet.setUpperLegDamage(getUpperLegDamage());
+        } else {
+            bullet.setUpperLegDamage(oldBullet.getUpperLegDamage());
         }
         bullet.setRayParameter(2000, 0.05, 4);
         bullet.setSpeed(oldBullet.getSpeed());
@@ -130,5 +142,21 @@ public class AlternativeFireModule extends WeaponModule {
 
     public void setHeadShotDamage(double headShotDamage) {
         this.headShotDamage = headShotDamage;
+    }
+
+    public double getLowerLegDamage() {
+        return lowerLegDamage;
+    }
+
+    public void setLowerLegDamage(double lowerLegDamage) {
+        this.lowerLegDamage = lowerLegDamage;
+    }
+
+    public double getUpperLegDamage() {
+        return upperLegDamage;
+    }
+
+    public void setUpperLegDamage(double upperLegDamage) {
+        this.upperLegDamage = upperLegDamage;
     }
 }

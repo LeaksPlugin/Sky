@@ -38,15 +38,18 @@ public class DelayedBullet extends Bullet {
         this.setSpeed(bullet.getSpeed());
         this.setDamage(bullet.getDamage());
         this.setHeadShotDamage(bullet.getHeadShotDamage());
+        this.setUpperLegDamage(bullet.getUpperLegDamage());
+        this.setLowerLegDamage(bullet.getLowerLegDamage());
+    }
+
+    public int getSpeed() {
+        return this.iterationPerTick;
     }
 
     public void setSpeed(int speed) {
         this.iterationPerTick = speed;
     }
 
-    public int getSpeed() {
-        return this.iterationPerTick;
-    }
     @Override
     public void fire() {
         DelayedBulletTask task = new DelayedBulletTask(new DelayedBullet(this));

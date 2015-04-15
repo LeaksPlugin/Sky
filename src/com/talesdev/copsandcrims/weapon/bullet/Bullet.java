@@ -31,19 +31,21 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class Bullet {
     protected RayTrace rayTrace;
-    private World world;
-    private Player player;
     protected BulletListener action;
     protected BulletAccuracy bulletAccuracy;
     protected double recoil = 0.0;
     protected Vector normalizedDirection;
     protected Vector origin;
     protected Vector direction;
-    private int maxIteration = 2000;
     protected double distance = 0.05;
     protected double bias = 3;
     protected double damage = 4;
+    protected double lowerLegDamage = 3;
+    protected double upperLegDamage = 7;
     protected double headShotDamage = 8;
+    private World world;
+    private Player player;
+    private int maxIteration = 2000;
     private boolean cancel = false;
     private Weapon weapon;
 
@@ -136,10 +138,6 @@ public class Bullet {
         return world;
     }
 
-    public void setDamage(double damage) {
-        this.damage = damage;
-    }
-
     public double getHeadShotDamage() {
         return headShotDamage;
     }
@@ -150,6 +148,26 @@ public class Bullet {
 
     public double getDamage() {
         return damage;
+    }
+
+    public void setDamage(double damage) {
+        this.damage = damage;
+    }
+
+    public double getLowerLegDamage() {
+        return lowerLegDamage;
+    }
+
+    public void setLowerLegDamage(double lowerLegDamage) {
+        this.lowerLegDamage = lowerLegDamage;
+    }
+
+    public double getUpperLegDamage() {
+        return upperLegDamage;
+    }
+
+    public void setUpperLegDamage(double upperLegDamage) {
+        this.upperLegDamage = upperLegDamage;
     }
 
     public void setRayParameter(int maxIteration, double distancePerIteration, double rayBias) {
@@ -264,19 +282,32 @@ public class Bullet {
             }
             // damage entity
             if (entity instanceof LivingEntity) {
-                boolean isHeadShot = false;
-                if ((Math.abs(((LivingEntity) entity).getEyeLocation().getY() - currentLocation.getY()) <= 0.5) &&
-                        (((LivingEntity) entity).getEyeLocation().distanceSquared(currentLocation) <= 0.5)
-                        ) {
-                    damage = getHeadShotDamage();
-                    isHeadShot = true;
-                }
+                LivingEntity livingEntity = (LivingEntity) entity;
                 // skip creative gamemode
                 if (entity instanceof Player) {
                     if (((Player) entity).getGameMode().equals(GameMode.CREATIVE)) {
                         return false;
                     }
                 }
+                boolean isHeadShot = false;
+                Location baseLocation = livingEntity.getLocation(), eyeLocation = livingEntity.getEyeLocation();
+                double baseY = baseLocation.getY(),
+                        eyeY = eyeLocation.getY(),
+                        hitY = currentLocation.getY(),
+                        deltaEH = Math.abs(eyeY - hitY),
+                        deltaBH = Math.abs(hitY - baseY);
+                // begin body part detection
+                // leg : [0,0.4] x >= 0 , 0 <= 0.4
+                // upper leg : x > 0.4 , x <= 0.675
+                if ((deltaEH <= 0.4) && (eyeLocation.distanceSquared(currentLocation) <= 0.45)) {
+                    damage = getHeadShotDamage();
+                    isHeadShot = true;
+                } else if ((deltaBH >= 0) && (deltaBH <= 0.4)) {
+                    damage = getLowerLegDamage();
+                } else if ((deltaBH > 0.4) && (deltaBH <= 0.675)) {
+                    damage = getUpperLegDamage();
+                }
+                // end body part detection
                 // damaging
                 PlayerLastDamage lastDamage = new PlayerLastDamage(getPlayer(), getWeapon(), this, isHeadShot);
                 LastPlayerDamage lastPlayerDamage = new LastPlayerDamage(entity, CopsAndCrims.getPlugin());

@@ -27,6 +27,8 @@ public class ShootingModule extends WeaponModule {
     private int cooldownTime = 5;
     private double damage = 4;
     private double headShotDamage = 8;
+    private double lowerLegDamage = 3;
+    private double upperLegDamage = 7;
     private double recoil = 1.0D;
     private int bulletCount = 1;
     private int bulletDelay = 1;
@@ -135,6 +137,8 @@ public class ShootingModule extends WeaponModule {
             );
             bullet.setDamage(getDamage());
             bullet.setHeadShotDamage(getHeadShotDamage());
+            bullet.setLowerLegDamage(getLowerLegDamage());
+            bullet.setUpperLegDamage(getUpperLegDamage());
             bullet.setRayParameter(2000, 0.05, 4);
             bullet.setSpeed(getSpeed());
             // burst fire
@@ -314,5 +318,21 @@ public class ShootingModule extends WeaponModule {
 
     public void setReloadEndSoundEffect(SoundEffectInterface reloadEndSoundEffect) {
         this.reloadEndSoundEffect = reloadEndSoundEffect;
+    }
+
+    public double getLowerLegDamage() {
+        return lowerLegDamage;
+    }
+
+    public void setLowerLegDamage(double lowerLegDamage) {
+        this.lowerLegDamage = lowerLegDamage;
+    }
+
+    public double getUpperLegDamage() {
+        return upperLegDamage;
+    }
+
+    public void setUpperLegDamage(double upperLegDamage) {
+        this.upperLegDamage = upperLegDamage;
     }
 }
