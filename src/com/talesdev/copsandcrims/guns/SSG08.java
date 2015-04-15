@@ -32,11 +32,11 @@ public class SSG08 extends Weapon {
         shootingModule.setCooldownTime(16);
         shootingModule.setReloadTime(74);
         shootingModule.setAccuracy(new BulletAccuracy(
-                new Accuracy(new Range(-80, 80), new Range(-80, 80), new Range(-80, 80)), // default
+                new Accuracy(new Range(-100, 100), new Range(-100, 100), new Range(-100, 100)), // default
                 new Accuracy(new Range(0, 0), new Range(0, 0), new Range(0, 0)), // sneaking
-                new Accuracy(new Range(-20, 20), new Range(-20, 20), new Range(-20, 20)), // walking
-                new Accuracy(new Range(-80, 80), new Range(-80, 80), new Range(-80, 80)), // sprinting
-                new Accuracy(new Range(-100, 100), new Range(-100, 100), new Range(-100, 100)) // jumping
+                new Accuracy(new Range(-150, 150), new Range(-150, 150), new Range(-150, 150)), // walking
+                new Accuracy(new Range(-300, 300), new Range(-300, 300), new Range(-300, 300)), // sprinting
+                new Accuracy(new Range(-100, 100), new Range(-200, 200), new Range(-100, 100)) // jumping
         ));
         shootingModule.setFiringMode(FiringMode.BOLT);
         scopeModule.setZoomLevel(5);
