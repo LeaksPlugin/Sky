@@ -20,6 +20,11 @@ public class NullArenaController extends CvCArenaController {
     }
 
     @Override
+    public CvCArenaController createController() {
+        return new NullArenaController();
+    }
+
+    @Override
     public void startArena() {
         getPlugin().getLogger().log(Level.WARNING, "Attempting to start an arena with NullController");
     }

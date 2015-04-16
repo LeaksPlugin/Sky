@@ -2,7 +2,7 @@ name: CopsAndCrims
 version: 1.5
 author: MoKunz
 main: com.talesdev.copsandcrims.CopsAndCrims
-depend: [TalesCore]
+depend: [TalesCore,ProtocolLib]
 commands:
     cvc:
       description: "§eMain command of this plugin"

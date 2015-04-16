@@ -166,4 +166,8 @@ public class CvCPlayer {
     public void setDebug(boolean debug) {
         this.debug = debug;
     }
+
+    public PlayerArenaData getArenaData() {
+        return playerArenaData;
+    }
 }

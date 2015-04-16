@@ -106,6 +106,7 @@ public class CvCArena {
     }
 
     public void save() {
+        getArenaController().save();
         this.configFile.save();
     }
 

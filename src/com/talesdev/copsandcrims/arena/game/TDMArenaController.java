@@ -1,10 +1,13 @@
 package com.talesdev.copsandcrims.arena.game;
 
 import com.talesdev.copsandcrims.arena.data.CmdResult;
+import com.talesdev.copsandcrims.arena.data.PlayerArenaStatus;
 import com.talesdev.copsandcrims.arena.system.ArenaJoinLeave;
 import com.talesdev.copsandcrims.arena.system.CvCArenaController;
 import com.talesdev.copsandcrims.player.CvCPlayer;
+import com.talesdev.core.world.LocationString;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -23,23 +26,57 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
 
     @Override
     public void arenaLoaded() {
-
+        String lobbyLocation = getConfig().getString("Lobby_Location");
+        if (lobbyLocation != null) {
+            Location location = LocationString.fromString(lobbyLocation).getLocation();
+            setLobbyLocation(location);
+        }
+        String endLocation = getConfig().getString("End_Location");
+        if (endLocation != null) {
+            Location location = LocationString.fromString(endLocation).getLocation();
+            setEndLocation(location);
+        }
     }
 
     @Override
-    public void shutdown() {
+    public CvCArenaController createController() {
+        return new TDMArenaController();
+    }
 
+    @Override
+    public void save() {
+        if (getLobbyLocation() != null)
+            getConfig().set("Lobby_Location", new LocationString(getLobbyLocation()).toString());
+        if (getEndLocation() != null) getConfig().set("End_Location", new LocationString(getEndLocation()).toString());
     }
 
     @Override
     public void joinArena(CvCPlayer cPlayer) {
-        cPlayer.getPlayer().teleport(getLobbyLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
-        cPlayer.getPlayer().sendMessage(ChatColor.GREEN + "You joined " + getArena().getArenaName() + "");
+        if (!getArena().hasPlayer(cPlayer)) {
+            getArena().addPlayer(cPlayer);
+            cPlayer.getArenaData().setLastGameMode(cPlayer.getPlayer().getGameMode());
+            cPlayer.getArenaData().setStatus(PlayerArenaStatus.IN_LOBBY);
+            cPlayer.getArenaData().setPlayingArena(getArena());
+            cPlayer.getPlayer().setGameMode(GameMode.ADVENTURE);
+            cPlayer.getPlayer().teleport(getLobbyLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
+            cPlayer.getPlayer().sendMessage(ChatColor.GREEN + "You joined " + getArena().getArenaName() + "");
+        } else {
+            cPlayer.getPlayer().sendMessage(ChatColor.GREEN + "You're already in this arena!");
+        }
     }
 
     @Override
     public void leaveArena(CvCPlayer cPlayer) {
-        cPlayer.getPlayer().teleport(getEndLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
+        if (cPlayer.getArenaData().getPlayingArena() != null) {
+            if (cPlayer.getArenaData().getPlayingArena().getArenaName().equals(getArena().getArenaName())) {
+                getArena().removePlayer(cPlayer);
+                cPlayer.getArenaData().setStatus(PlayerArenaStatus.NOT_PLAYING);
+                cPlayer.getPlayer().sendMessage(ChatColor.GREEN + "You left arena");
+                cPlayer.getPlayer().teleport(getEndLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
+                cPlayer.getPlayer().setGameMode(cPlayer.getArenaData().getLastGameMode());
+                cPlayer.getArenaData().setPlayingArena(null);
+            }
+        }
     }
 
     @Override
@@ -95,6 +132,7 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
                                     ChatColor.GREEN + " set!"
                     );
                 }
+                getArena().save();
             } else {
                 if (args.length > 1) {
                     Player refPlayer = getPlugin().getServer().getPlayer(args[1]);
@@ -118,6 +156,7 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
                 } else {
                     sender.sendMessage(ChatColor.RED + "Error : please provide a player name when running in console mode!");
                 }
+                getArena().save();
             }
         } else if (args[0].equalsIgnoreCase("set")) {
 

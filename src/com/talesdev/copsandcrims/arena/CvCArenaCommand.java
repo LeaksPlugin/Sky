@@ -1,11 +1,11 @@
 package com.talesdev.copsandcrims.arena;
 
-import com.comphenix.protocol.PacketType;
 import com.talesdev.copsandcrims.CopsAndCrims;
 import com.talesdev.copsandcrims.ServerCvCArena;
-import com.talesdev.copsandcrims.arena.data.CmdArguments;
 import com.talesdev.copsandcrims.arena.data.CmdResult;
+import com.talesdev.copsandcrims.arena.system.ArenaJoinLeave;
 import com.talesdev.copsandcrims.arena.system.CvCArenaController;
+import com.talesdev.copsandcrims.player.CvCPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -42,6 +42,10 @@ public class CvCArenaCommand implements CommandExecutor {
                 } else if (args[0].equalsIgnoreCase("reload")) {
                     plugin.getServerCvCArena().load();
                     return true;
+                } else if (args[0].equalsIgnoreCase("join")) {
+                    return runJoinCommand(sender, args, player);
+                } else if (args[0].equalsIgnoreCase("leave")) {
+                    return runLeaveCommand(sender, args, player);
                 } else if (args[0].equalsIgnoreCase("arena")) {
                     return runArenaCommand(sender, args, player);
                 } else {
@@ -50,6 +54,7 @@ public class CvCArenaCommand implements CommandExecutor {
                 }
             } else {
                 sender.sendMessage(ChatColor.GREEN + "CvC Arena System by " + ChatColor.BLUE + "MoKunz");
+                return true;
             }
         }
         return false;
@@ -61,7 +66,7 @@ public class CvCArenaCommand implements CommandExecutor {
                 if (args.length > 2) {
                     CvCArenaController controller = serverCvCArena.getController(args[2]);
                     if (controller != null) {
-                        CvCArena arena = new CvCArena(serverCvCArena, args[1], controller);
+                        CvCArena arena = new CvCArena(serverCvCArena, args[1], controller.createController());
                         serverCvCArena.addArena(arena);
                         sender.sendMessage(ChatColor.GREEN + "Arena " + ChatColor.BLUE + "\" " + args[1] + "\"" +
                                         ChatColor.GREEN + " created with " + ChatColor.BLUE + controller.getArenaType()
@@ -121,6 +126,69 @@ public class CvCArenaCommand implements CommandExecutor {
             }
         } else {
             sender.sendMessage(ChatColor.RED + "Usage : /cvcarena arena <arenaName>");
+        }
+        return true;
+    }
+
+    private boolean runJoinCommand(CommandSender sender, String[] args, boolean player) {
+        if (args.length > 1) {
+            CvCArena arena = serverCvCArena.getArena(args[1]);
+            if (arena != null) {
+                if (arena.getArenaController() instanceof ArenaJoinLeave) {
+                    if (sender instanceof Player) {
+                        CvCPlayer cPlayer = plugin.getServerCvCPlayer().getPlayer((Player) sender);
+                        if (cPlayer != null) {
+                            ((ArenaJoinLeave) arena.getArenaController()).joinArena(cPlayer);
+                        }
+                    } else {
+                        if (args.length > 2) {
+                            CvCPlayer refPlayer = plugin.getServerCvCPlayer().getPlayer(plugin.getServer().getPlayer(args[2]));
+                            if (refPlayer != null) {
+                                ((ArenaJoinLeave) arena.getArenaController()).joinArena(refPlayer);
+                                sender.sendMessage(ChatColor.GREEN + args[2] + " joined " + arena.getArenaName());
+                            } else {
+                                sender.sendMessage(ChatColor.RED + "Error : player not found!");
+                            }
+                        } else {
+                            sender.sendMessage(ChatColor.RED + "Usage : /cvcarena join " + args[1] + " <player>");
+                        }
+                    }
+                } else {
+                    sender.sendMessage(ChatColor.RED + "Error : You can't join this arena!");
+                }
+            } else {
+                sender.sendMessage(ChatColor.RED + "Error : Arena " + ChatColor.BLUE + "\"" + args[1] + "\" " + ChatColor.RED + "not found!");
+            }
+        } else {
+            sender.sendMessage(ChatColor.RED + "Usage : /cvcarena join <arenaName> [Player]");
+        }
+        return true;
+    }
+
+    private boolean runLeaveCommand(CommandSender sender, String[] args, boolean player) {
+        CvCPlayer cPlayer = null;
+        CvCArena arena;
+        if (!(sender instanceof Player)) {
+            if (args.length > 1) {
+                cPlayer = plugin.getServerCvCPlayer().getPlayer(plugin.getServer().getPlayer(args[1]));
+            }
+        } else {
+            cPlayer = plugin.getServerCvCPlayer().getPlayer(((Player) sender));
+        }
+        if (cPlayer != null) {
+            arena = cPlayer.getArenaData().getPlayingArena();
+            if (arena != null) {
+                arena = cPlayer.getArenaData().getPlayingArena();
+                if (arena.getArenaController() instanceof ArenaJoinLeave) {
+                    ((ArenaJoinLeave) arena.getArenaController()).leaveArena(cPlayer);
+                } else {
+                    sender.sendMessage(ChatColor.RED + "Error : You can't leave that arena!");
+                }
+            } else {
+                sender.sendMessage(ChatColor.RED + "Error : Invalid state!");
+            }
+        } else {
+            sender.sendMessage(ChatColor.RED + "Error : Player not found!");
         }
         return true;
     }

@@ -64,6 +64,9 @@ public class ServerCvCPlayer {
     }
 
     public CvCPlayer getPlayer(Player player) {
+        if (player == null) {
+            return null;
+        }
         for (CvCPlayer cvCPlayer : getPlayerList()) {
             if (cvCPlayer.getPlayerName().equalsIgnoreCase(player.getName())) {
                 return cvCPlayer;
