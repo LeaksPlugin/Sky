@@ -6,6 +6,8 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.talesdev.copsandcrims.CopsAndCrims;
 import com.talesdev.copsandcrims.player.PlayerLastDamage;
 import com.talesdev.copsandcrims.weapon.Weapon;
+import com.talesdev.copsandcrims.weapon.module.FiringMode;
+import com.talesdev.copsandcrims.weapon.module.ShootingModule;
 import com.talesdev.core.entity.BoundingBox;
 import com.talesdev.core.math.Range;
 import com.talesdev.core.player.LastPlayerDamage;
@@ -50,10 +52,11 @@ public class Bullet {
     private Weapon weapon;
     private boolean debug = false;
 
-    public Bullet(Player player, BulletListener action, double damage, BulletAccuracy accuracy, double recoil) {
+    public Bullet(Player player, BulletListener action, double damage, BulletAccuracy accuracy, double recoil, Weapon weapon) {
         this.player = player;
         if (action != null) this.action = action;
         this.world = this.player.getWorld();
+        this.weapon = weapon;
         this.damage = damage;
         this.origin = this.player.getEyeLocation().toVector();
         this.direction = this.player.getEyeLocation().getDirection();
@@ -72,10 +75,16 @@ public class Bullet {
     }
 
     private Vector calculateSpreadDirection() {
-        BulletAccuracy accuracy = getBulletAccuracy();
-        if (accuracy != null) {
-            if (player.isSneaking() && !isOnAir()) {
-                return this.direction.add(accuracy.getSneakingAccuracy().toVector());
+        if (getBulletAccuracy() != null) {
+            BulletAccuracy accuracy = new BulletAccuracy(getBulletAccuracy());
+            if (player.isSneaking() && player.isOnGround()) {
+                if (getWeapon().getModule(ShootingModule.class).getFiringMode().equals(FiringMode.BOLT)) {
+                    if (CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(player).isScoping()) {
+                        return this.direction.add(accuracy.getSneakingAccuracy().toVector());
+                    }
+                } else {
+                    return this.direction.add(accuracy.getSneakingAccuracy().toVector());
+                }
             }
             /**
              * Buggy code
@@ -265,7 +274,7 @@ public class Bullet {
         Block block = location.getBlock();
         if (
                 block.getType().equals(Material.THIN_GLASS) ||
-                block.getType().equals(Material.STAINED_GLASS_PANE)) {
+                        block.getType().equals(Material.STAINED_GLASS_PANE)) {
             getWorld().getBlockAt(location).setType(Material.AIR);
             return true;
         }

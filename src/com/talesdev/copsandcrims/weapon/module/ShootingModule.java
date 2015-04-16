@@ -133,7 +133,7 @@ public class ShootingModule extends WeaponModule {
             recoil = player.getPlayerRecoil().getRecoil(getWeapon());
             // construct
             DelayedBullet bullet = new DelayedBullet(
-                    event.getPlayer(), getListener(), getDamage(), new BulletAccuracy(getAccuracy()), recoil
+                    event.getPlayer(), getListener(), getDamage(), new BulletAccuracy(getAccuracy()), recoil, getWeapon()
             );
             bullet.setDamage(getDamage());
             bullet.setHeadShotDamage(getHeadShotDamage());

@@ -1,6 +1,7 @@
 package com.talesdev.copsandcrims.weapon.bullet;
 
 import com.talesdev.copsandcrims.CopsAndCrims;
+import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.module.FiringMode;
 import com.talesdev.copsandcrims.weapon.module.ScopeModule;
 import com.talesdev.copsandcrims.weapon.module.ShootingModule;
@@ -23,17 +24,17 @@ public class DelayedBullet extends Bullet {
     private int processedIteration = 0;
     private int iterationPerTick = 100;
 
-    public DelayedBullet(Player player, BulletListener action, double damage, BulletAccuracy accuracy, int speed, double recoil) {
-        super(player, action, damage, accuracy, recoil);
+    public DelayedBullet(Player player, BulletListener action, double damage, BulletAccuracy accuracy, int speed, double recoil, Weapon weapon) {
+        super(player, action, damage, accuracy, recoil, weapon);
         setSpeed(speed);
     }
 
-    public DelayedBullet(Player player, BulletListener action, double damage, BulletAccuracy accuracy, double recoil) {
-        super(player, action, damage, accuracy, recoil);
+    public DelayedBullet(Player player, BulletListener action, double damage, BulletAccuracy accuracy, double recoil, Weapon weapon) {
+        super(player, action, damage, accuracy, recoil, weapon);
     }
 
     public DelayedBullet(DelayedBullet bullet) {
-        this(bullet.getPlayer(), bullet.getListener(), bullet.getDamage(), new BulletAccuracy(bullet.getBulletAccuracy()), bullet.getSpeed(), bullet.getRecoil());
+        this(bullet.getPlayer(), bullet.getListener(), bullet.getDamage(), new BulletAccuracy(bullet.getBulletAccuracy()), bullet.getSpeed(), bullet.getRecoil(), bullet.getWeapon());
         this.setWeapon(bullet.getWeapon());
         this.setSpeed(bullet.getSpeed());
         this.setDamage(bullet.getDamage());

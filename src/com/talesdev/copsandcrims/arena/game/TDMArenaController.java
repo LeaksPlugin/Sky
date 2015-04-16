@@ -76,8 +76,10 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
     public CmdResult receiveCommand(CommandSender sender, String[] args) {
         boolean isPlayer = false;
         Player player = null;
-        if (sender instanceof Player) isPlayer = true;
-        player = ((Player) sender);
+        if (sender instanceof Player) {
+            isPlayer = true;
+            player = ((Player) sender);
+        }
         if (args[0].equalsIgnoreCase("setlobby") || args[0].equalsIgnoreCase("setend")) {
             if (isPlayer) {
                 if (args[0].equalsIgnoreCase("setlobby")) {
