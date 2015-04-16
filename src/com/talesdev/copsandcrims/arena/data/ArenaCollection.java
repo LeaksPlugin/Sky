@@ -3,7 +3,7 @@ package com.talesdev.copsandcrims.arena.data;
 import com.talesdev.copsandcrims.ServerCvCArena;
 import com.talesdev.copsandcrims.arena.CvCArena;
 import com.talesdev.copsandcrims.arena.system.CvCArenaController;
-import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
@@ -26,16 +26,13 @@ public class ArenaCollection {
     public List<CvCArena> getAll() {
         List<CvCArena> arenaList = new ArrayList<>();
         if (!getConfig().isSet("Arena")) getConfig().set("Arena", null);
-        ConfigurationSection section = getConfig().getConfigurationSection("Arena");
-        if (section != null) {
-            Set<String> arenas = section.getKeys(false);
-            if (arenas.size() > 0) {
-                for (String arena : arenas) {
-                    String type = getConfig().getString("Arena" + "." + arena);
-                    CvCArenaController arenaController = this.arena.getController(type);
-                    if (arenaController != null) {
-                        arenaList.add(new CvCArena(this.arena, arena, arenaController));
-                    }
+        Object section = getConfig().get("Arena");
+        if (section instanceof MemorySection) {
+            Set<String> arenas = ((MemorySection) section).getKeys(false);
+            for (String arena : arenas) {
+                CvCArenaController arenaController = this.arena.getController(getConfig().getString("Arena." + arena));
+                if (arenaController != null) {
+                    arenaList.add(new CvCArena(this.arena, arena, arenaController));
                 }
             }
         }

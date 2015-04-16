@@ -2,7 +2,7 @@ package com.talesdev.copsandcrims.arena;
 
 import com.talesdev.copsandcrims.CopsAndCrims;
 import com.talesdev.copsandcrims.ServerCvCArena;
-import com.talesdev.copsandcrims.arena.system.ArenaStatus;
+import com.talesdev.copsandcrims.arena.data.ArenaStatus;
 import com.talesdev.copsandcrims.arena.system.CvCArenaController;
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.core.config.ConfigFile;

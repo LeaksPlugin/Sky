@@ -1,4 +1,4 @@
-package com.talesdev.copsandcrims.arena.system;
+package com.talesdev.copsandcrims.arena.data;
 
 /**
  * Enum represent status of arena

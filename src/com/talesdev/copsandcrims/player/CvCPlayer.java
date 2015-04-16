@@ -2,6 +2,8 @@ package com.talesdev.copsandcrims.player;
 
 import com.talesdev.copsandcrims.CopsAndCrims;
 import com.talesdev.copsandcrims.arena.CvCArena;
+import com.talesdev.copsandcrims.arena.data.PlayerArenaData;
+import com.talesdev.copsandcrims.arena.data.PlayerArenaStatus;
 import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.core.scoreboard.WrappedSidebarObjective;
 import org.bukkit.Material;
@@ -15,6 +17,7 @@ import org.bukkit.scoreboard.Scoreboard;
  * @author MoKunz
  */
 public class CvCPlayer {
+    private PlayerArenaData playerArenaData;
     private Scoreboard playerScoreboard;
     private WrappedSidebarObjective sidebarObjective;
     private boolean debug = false;
@@ -30,6 +33,8 @@ public class CvCPlayer {
 
     public CvCPlayer(Player player) {
         this.player = player;
+        this.playerArenaData = new PlayerArenaData(this);
+        this.playerArenaData.setStatus(PlayerArenaStatus.NOT_PLAYING);
         playerScoreboard = CopsAndCrims.getPlugin().getServer().getScoreboardManager().getNewScoreboard();
         sidebarObjective = new WrappedSidebarObjective(player.getName());
         sidebarObjective.applyTo(playerScoreboard);

@@ -31,9 +31,6 @@ public class ServerCvCArena {
         this.configFile = new ConfigFile("plugins/CopsAndCrims/arena.yml");
         this.arenaList = new ArrayList<>();
         this.controllerList = new ArrayList<>();
-        // begin arena loading
-        ArenaCollection collection = new ArenaCollection(this);
-        collection.getAll().forEach(this::addArena);
     }
 
     public List<CvCArenaController> getControllerList() {
@@ -42,6 +39,12 @@ public class ServerCvCArena {
 
     public void addController(CvCArenaController controller) {
         if (!containsController(controller)) getControllerList().add(controller);
+    }
+
+    public void loadArenaInfo() {
+        // begin arena loading
+        ArenaCollection collection = new ArenaCollection(this);
+        collection.getAll().forEach(this::addArena);
     }
 
     public CvCArenaController getController(String type) {

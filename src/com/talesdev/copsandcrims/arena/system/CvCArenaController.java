@@ -2,7 +2,9 @@ package com.talesdev.copsandcrims.arena.system;
 
 import com.talesdev.copsandcrims.CopsAndCrims;
 import com.talesdev.copsandcrims.arena.CvCArena;
+import com.talesdev.copsandcrims.arena.data.ArenaCommandProtocol;
 import com.talesdev.copsandcrims.player.CvCPlayer;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 
 /**
@@ -10,7 +12,7 @@ import org.bukkit.event.Listener;
  *
  * @author MoKunz
  */
-public abstract class CvCArenaController implements Listener, ArenaSpawnLocation {
+public abstract class CvCArenaController implements Listener, ArenaSpawnLocation, ArenaCommandProtocol {
     protected CvCArena arena;
     private String arenaType;
     private boolean locked = false;
@@ -36,9 +38,9 @@ public abstract class CvCArenaController implements Listener, ArenaSpawnLocation
         return CopsAndCrims.getPlugin();
     }
 
-    public abstract void joinArena(CvCPlayer cPlayer);
-
-    public abstract void leaveArena(CvCPlayer cPlayer);
+    protected FileConfiguration getConfig() {
+        return getArena().getConfig();
+    }
 
     public void arenaLoaded() {
     }

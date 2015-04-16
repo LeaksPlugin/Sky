@@ -88,7 +88,7 @@ public class Bullet {
             Accuracy walkFactor = accuracy.getWalkingAccuracy();
             Accuracy sprintFactor = accuracy.getSprintingAccuracy();
             // jumping?
-            if (isOnAir()) {
+            if (!player.isOnGround()) {
                 modifyAccuracy(baseAccuracy, jumpFactor);
             }
             if (CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(player).isWalking()) {

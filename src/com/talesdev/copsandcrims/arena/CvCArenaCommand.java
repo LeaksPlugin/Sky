@@ -1,7 +1,10 @@
 package com.talesdev.copsandcrims.arena;
 
+import com.comphenix.protocol.PacketType;
 import com.talesdev.copsandcrims.CopsAndCrims;
 import com.talesdev.copsandcrims.ServerCvCArena;
+import com.talesdev.copsandcrims.arena.data.CmdArguments;
+import com.talesdev.copsandcrims.arena.data.CmdResult;
 import com.talesdev.copsandcrims.arena.system.CvCArenaController;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -100,10 +103,24 @@ public class CvCArenaCommand implements CommandExecutor {
     }
 
     private boolean runArenaCommand(CommandSender sender, String[] args, boolean player) {
-        if (serverCvCArena.getArena(args[1]) != null) {
-            sender.sendMessage(ChatColor.BLUE + "Implementing in process");
+        if (args.length > 1) {
+            if (serverCvCArena.getArena(args[1]) != null) {
+                CvCArena arena = serverCvCArena.getArena(args[1]);
+                if (args.length > 2) {
+                    String[] newArgs = new String[args.length - 2];
+                    System.arraycopy(args, 2, newArgs, 0, newArgs.length);
+                    // send arena command
+                    CmdResult result = arena.getArenaController().receiveCommand(sender, newArgs);
+                    if (result.getResultMessage() != null) sender.sendMessage(result.getResultMessage());
+                    return result.isSuccess();
+                } else {
+                    sender.sendMessage(ChatColor.RED + "Usage : /cvcarena arena " + args[1] + " " + "<operation>");
+                }
+            } else {
+                sender.sendMessage(ChatColor.RED + "Error : Arena " + ChatColor.BLUE + "\"" + args[1] + "\" " + ChatColor.RED + "not found!");
+            }
         } else {
-            sender.sendMessage(ChatColor.RED + "Error : Arena " + ChatColor.BLUE + "\"" + args[1] + "\" " + ChatColor.RED + "not found!");
+            sender.sendMessage(ChatColor.RED + "Usage : /cvcarena arena <arenaName>");
         }
         return true;
     }

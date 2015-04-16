@@ -2,7 +2,8 @@ package com.talesdev.copsandcrims;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.talesdev.copsandcrims.arena.CvCArenaCommand;
-import com.talesdev.copsandcrims.arena.tdm.TDMArenaController;
+import com.talesdev.copsandcrims.arena.game.NullArenaController;
+import com.talesdev.copsandcrims.arena.game.TDMArenaController;
 import com.talesdev.copsandcrims.guns.*;
 import com.talesdev.copsandcrims.player.PlayerBulletTask;
 import com.talesdev.copsandcrims.player.PlayerEquipmentListener;
@@ -52,6 +53,8 @@ public class CopsAndCrims extends JavaPlugin {
         getWeaponFactory().addWeapon(new SSG08());
         // arena controller
         getServerCvCArena().addController(new TDMArenaController());
+        getServerCvCArena().addController(new NullArenaController());
+        getServerCvCArena().loadArenaInfo();
         // protocol
         ProtocolLibrary.getProtocolManager().addPacketListener(new PlayerEquipmentListener(this));
         // task
