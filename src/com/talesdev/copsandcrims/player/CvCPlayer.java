@@ -36,9 +36,8 @@ public class CvCPlayer {
         this.playerArenaData = new PlayerArenaData(this);
         this.playerArenaData.setStatus(PlayerArenaStatus.NOT_PLAYING);
         playerScoreboard = CopsAndCrims.getPlugin().getServer().getScoreboardManager().getNewScoreboard();
-        sidebarObjective = new WrappedSidebarObjective(player.getName());
-        sidebarObjective.applyTo(playerScoreboard);
-        getPlayer().setScoreboard(playerScoreboard);
+        sidebarObjective = new WrappedSidebarObjective(player.getName(), playerScoreboard);
+        updateScoreboard();
         this.playerBullet = new PlayerBullet(this);
         this.playerRecoil = new PlayerRecoil(this);
         this.isWalking = false;
@@ -149,13 +148,12 @@ public class CvCPlayer {
     }
 
     public void updateScoreboard() {
-        getSidebarObjective().reset(getPlayerScoreboard());
-        getSidebarObjective().applyTo(getPlayerScoreboard());
+        getSidebarObjective().update();
         getPlayer().setScoreboard(getPlayerScoreboard());
     }
 
     public void clearScoreboard() {
-        getSidebarObjective().reset(getPlayerScoreboard());
+        getSidebarObjective().reset();
         getPlayer().setScoreboard(getPlayerScoreboard());
     }
 
@@ -169,5 +167,9 @@ public class CvCPlayer {
 
     public PlayerArenaData getArenaData() {
         return playerArenaData;
+    }
+
+    public void clearArenaData() {
+        playerArenaData = new PlayerArenaData(this);
     }
 }

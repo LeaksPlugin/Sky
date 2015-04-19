@@ -23,7 +23,6 @@ public abstract class CvCArenaController implements Listener, ArenaSpawnLocation
 
     public CvCArenaController(CvCArenaController cvCArenaController) {
         this(cvCArenaController.getArenaType());
-        cvCArenaController.setControlledArena(cvCArenaController.getArena());
     }
     public void setControlledArena(CvCArena arena) {
         if (!locked) this.arena = arena;

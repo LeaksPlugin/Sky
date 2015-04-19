@@ -4,6 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.talesdev.copsandcrims.CopsAndCrims;
+import com.talesdev.copsandcrims.event.EntityDamageByWeaponEvent;
 import com.talesdev.copsandcrims.player.PlayerLastDamage;
 import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.module.FiringMode;
@@ -324,29 +325,35 @@ public class Bullet {
                     damage = getUpperLegDamage();
                 }
                 // end body part detection
-                // damaging
-                PlayerLastDamage lastDamage = new PlayerLastDamage(getPlayer(), getWeapon(), this, isHeadShot);
-                LastPlayerDamage lastPlayerDamage = new LastPlayerDamage(entity, CopsAndCrims.getPlugin());
-                lastPlayerDamage.setLastDamage(lastDamage);
-                if (((LivingEntity) entity).getHealth() - damage > 0) {
-                    // damage packet
-                    PacketContainer entityStatus = new PacketContainer(PacketType.Play.Server.ENTITY_STATUS);
-                    entityStatus.getIntegers().write(0, entity.getEntityId());
-                    entityStatus.getBytes().write(0, (byte) 2);
-                    try {
-                        for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-                            ProtocolLibrary.getProtocolManager().sendServerPacket(p, entityStatus);
+                // event
+                EntityDamageByWeaponEvent damageByWeaponEvent = new EntityDamageByWeaponEvent(player, getWeapon(), livingEntity, damage, isHeadShot);
+                CopsAndCrims.getPlugin().getServer().getPluginManager().callEvent(damageByWeaponEvent);
+                if (!damageByWeaponEvent.isCancelled()) {
+                    // damaging
+                    damage = damageByWeaponEvent.getDamage();
+                    PlayerLastDamage lastDamage = new PlayerLastDamage(getPlayer(), getWeapon(), this, damageByWeaponEvent.isHeadShot());
+                    LastPlayerDamage lastPlayerDamage = new LastPlayerDamage(entity, CopsAndCrims.getPlugin());
+                    lastPlayerDamage.setLastDamage(lastDamage);
+                    if (((LivingEntity) entity).getHealth() - damage > 0) {
+                        // damage packet
+                        PacketContainer entityStatus = new PacketContainer(PacketType.Play.Server.ENTITY_STATUS);
+                        entityStatus.getIntegers().write(0, entity.getEntityId());
+                        entityStatus.getBytes().write(0, (byte) 2);
+                        try {
+                            for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+                                ProtocolLibrary.getProtocolManager().sendServerPacket(p, entityStatus);
+                            }
+                        } catch (InvocationTargetException e) {
+                            e.printStackTrace();
                         }
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
+                        ((LivingEntity) entity).setHealth(((LivingEntity) entity).getHealth() - damage);
+                        SoundEffect.getMobHurtSound(entity).playSound(currentLocation);
+                    } else {
+                        ((LivingEntity) entity).damage(damage + 1);
+                        cancel();
                     }
-                    ((LivingEntity) entity).setHealth(((LivingEntity) entity).getHealth() - damage);
-                    SoundEffect.getMobHurtSound(entity).playSound(currentLocation);
-                } else {
-                    ((LivingEntity) entity).damage(damage + 1);
-                    cancel();
+                    if (debug) player.sendMessage(ChatColor.GREEN + "Total damage : " + ChatColor.BLUE + damage);
                 }
-                if (debug) player.sendMessage(ChatColor.GREEN + "Total damage : " + ChatColor.BLUE + damage);
                 return false;
             }
         }

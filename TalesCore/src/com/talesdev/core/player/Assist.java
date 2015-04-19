@@ -22,6 +22,9 @@ public class Assist {
     public Assist(Player player, Plugin plugin) {
         this.player = player;
         this.metaData = new MetaData(player, plugin);
+        if (metaData.getMetadata("PlayerAssist") != null) {
+
+        }
     }
 
     public void assist(Player player) {

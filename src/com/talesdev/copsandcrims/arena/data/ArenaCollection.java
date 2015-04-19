@@ -32,7 +32,8 @@ public class ArenaCollection {
             for (String arena : arenas) {
                 CvCArenaController arenaController = this.arena.getController(getConfig().getString("Arena." + arena));
                 if (arenaController != null) {
-                    arenaList.add(new CvCArena(this.arena, arena, arenaController.createController()));
+                    CvCArenaController newController = arenaController.createController();
+                    arenaList.add(new CvCArena(this.arena, arena, newController));
                 }
             }
         }

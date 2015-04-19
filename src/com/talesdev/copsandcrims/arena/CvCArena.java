@@ -6,12 +6,14 @@ import com.talesdev.copsandcrims.arena.data.ArenaStatus;
 import com.talesdev.copsandcrims.arena.system.CvCArenaController;
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.core.config.ConfigFile;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * CvC Arena
@@ -26,7 +28,7 @@ public class CvCArena {
     // Plugin reference
     private CopsAndCrims plugin;
     // Current arena status
-    private ArenaStatus status;
+    private ArenaStatus status = ArenaStatus.WAITING;
     // Arena name
     private String arenaName;
     // Reference to host (server) of this arena
@@ -45,6 +47,7 @@ public class CvCArena {
         this.arenaName = arenaName;
         this.arenaController = controller;
         this.arenaController.setControlledArena(this);
+        this.arenaController.arenaLoaded();
         plugin.getServer().getPluginManager().registerEvents(controller, plugin);
     }
 
@@ -79,6 +82,14 @@ public class CvCArena {
 
     public List<CvCPlayer> getPlayers() {
         return players;
+    }
+
+    public int getTotalPlayers() {
+        return getPlayers().size();
+    }
+
+    public List<Player> getBukkitPlayer() {
+        return getPlayers().stream().map(CvCPlayer::getPlayer).collect(Collectors.toList());
     }
 
     public ArenaStatus getStatus() {
@@ -124,5 +135,11 @@ public class CvCArena {
 
     public void setEndLocation(Location endLocation) {
         this.endLocation = endLocation;
+    }
+
+    public void broadcastMessage(String message) {
+        for (CvCPlayer cPlayer : getPlayers()) {
+            cPlayer.getPlayer().sendMessage(ChatColor.RED + "[" + getArenaController().getArenaType() + "] " + ChatColor.YELLOW + message);
+        }
     }
 }

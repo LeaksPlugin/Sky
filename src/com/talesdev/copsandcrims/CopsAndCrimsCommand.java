@@ -101,10 +101,12 @@ public class CopsAndCrimsCommand implements CommandExecutor {
                     CvCPlayer cPlayer = CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(player);
                     WrappedSidebarObjective objective = cPlayer.getSidebarObjective();
                     objective.setTitle(ChatColor.GREEN + "Your stats");
+                    objective.setMaxLine(15);
                     objective.setLine(14, ChatColor.BLUE + "Kills");
                     objective.setLine(13, ChatColor.GRAY + " " + Integer.toString(MathRandom.randomRange(5, 10)));
                     objective.setLine(11, ChatColor.RED + "Deaths");
                     objective.setLine(10, ChatColor.GRAY + " " + Integer.toString(MathRandom.randomRange(10, 20)));
+                    objective.fillBlankLines();
                     cPlayer.updateScoreboard();
                     return true;
                 }

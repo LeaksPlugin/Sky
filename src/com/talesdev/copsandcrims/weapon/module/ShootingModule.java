@@ -84,7 +84,7 @@ public class ShootingModule extends WeaponModule {
         if (event.getItem() != null) {
             // is weapon
             if (getWeapon().isWeapon(event.getItem())) {
-                // update inv
+                // updateLobby inv
                 if (getWeapon().containsModule(ItemControlModule.class)) {
                     getWeapon().getModule(ItemControlModule.class).doUpdateInventory(event.getPlayer());
                 }
@@ -175,7 +175,7 @@ public class ShootingModule extends WeaponModule {
             // check if player is not null
             // add recoil
             player.getPlayerRecoil().addRecoil(getWeapon(), getRecoil());
-            // update bullet
+            // updateLobby bullet
             updateBulletCount(player);/*
             // reload if run out of bullet
             if (player.getPlayerBullet().getBullet(getWeapon().getName()).getBulletCount() <= 0) {

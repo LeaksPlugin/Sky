@@ -103,6 +103,10 @@ public class ReflectionUtils {
     public static class RefClass {
         private final Class<?> clazz;
 
+        private RefClass(Class<?> clazz) {
+            this.clazz = clazz;
+        }
+
         /**
          * get passed class
          *
@@ -110,10 +114,6 @@ public class ReflectionUtils {
          */
         public Class<?> getRealClass() {
             return clazz;
-        }
-
-        private RefClass(Class<?> clazz) {
-            this.clazz = clazz;
         }
 
         /**
@@ -337,6 +337,11 @@ public class ReflectionUtils {
     public static class RefMethod {
         private final Method method;
 
+        private RefMethod(Method method) {
+            this.method = method;
+            method.setAccessible(true);
+        }
+
         /**
          * @return passed method
          */
@@ -358,13 +363,8 @@ public class ReflectionUtils {
             return new RefClass(method.getReturnType());
         }
 
-        private RefMethod(Method method) {
-            this.method = method;
-            method.setAccessible(true);
-        }
-
         /**
-         * apply method to object
+         * update method to object
          *
          * @param e object to which the method is applied
          * @return RefExecutor with method call(...)
@@ -395,7 +395,7 @@ public class ReflectionUtils {
             }
 
             /**
-             * apply method for selected object
+             * update method for selected object
              *
              * @param params sent parameters
              * @return return value
@@ -417,6 +417,11 @@ public class ReflectionUtils {
     public static class RefConstructor {
         private final Constructor constructor;
 
+        private RefConstructor(Constructor constructor) {
+            this.constructor = constructor;
+            constructor.setAccessible(true);
+        }
+
         /**
          * @return passed constructor
          */
@@ -429,11 +434,6 @@ public class ReflectionUtils {
          */
         public RefClass getRefClass() {
             return new RefClass(constructor.getDeclaringClass());
-        }
-
-        private RefConstructor(Constructor constructor) {
-            this.constructor = constructor;
-            constructor.setAccessible(true);
         }
 
         /**
@@ -454,6 +454,11 @@ public class ReflectionUtils {
 
     public static class RefField {
         private Field field;
+
+        private RefField(Field field) {
+            this.field = field;
+            field.setAccessible(true);
+        }
 
         /**
          * @return passed field
@@ -476,13 +481,8 @@ public class ReflectionUtils {
             return new RefClass(field.getType());
         }
 
-        private RefField(Field field) {
-            this.field = field;
-            field.setAccessible(true);
-        }
-
         /**
-         * apply fiend for object
+         * update fiend for object
          *
          * @param e applied object
          * @return RefExecutor with getter and setter

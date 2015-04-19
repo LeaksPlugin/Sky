@@ -80,4 +80,8 @@ public class Sound {
         }
     }
 
+    public void playSound(Player player) {
+        playSound(player, player.getLocation());
+    }
+
 }

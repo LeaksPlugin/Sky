@@ -8,7 +8,17 @@ import com.talesdev.copsandcrims.player.CvCPlayer;
  * @author MoKunz
  */
 public interface ArenaJoinLeave {
+    public void joinArena(CvCPlayer player, boolean showMessage);
+
     public void joinArena(CvCPlayer player);
 
+    public void leaveArena(CvCPlayer player, boolean showMessage, boolean removePlayer);
+
+    public void leaveArena(CvCPlayer player, boolean showMessage);
+
     public void leaveArena(CvCPlayer player);
+
+    public int getMaxPlayers();
+
+    public void setMaxPlayers(int maxPlayers);
 }

@@ -3,13 +3,14 @@ package com.talesdev.copsandcrims;
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.copsandcrims.player.PlayerLastDamage;
 import com.talesdev.core.player.LastPlayerDamage;
-import org.bukkit.block.BlockFace;
+import org.bukkit.Art;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.Painting;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -26,13 +27,13 @@ public class CopsAndCrimsListener implements Listener {
         this.plugin = copsAndCrims;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
         plugin.getServerCvCPlayer().addNewPlayer(plugin.getServerCvCPlayer().loadUserData(event.getPlayer()));
         // DEBUG
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
         plugin.getServerCvCPlayer().saveUserData(plugin.getServerCvCPlayer().getPlayer(event.getPlayer()));
         plugin.getServerCvCPlayer().removePlayer(plugin.getServerCvCPlayer().getPlayer(event.getPlayer()));
@@ -64,6 +65,17 @@ public class CopsAndCrimsListener implements Listener {
             lastDamage.addAttachment("Bullet", null);
             lastDamage.addAttachment("HeadShot", false);
             damage.setLastDamage(lastDamage);
+        }
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEntityEvent event) {
+        if (event.getRightClicked() instanceof Painting) {
+            Painting painting = ((Painting) event.getRightClicked());
+            int id = painting.getArt().getId();
+            id++;
+            if (id > 25) id = 0;
+            painting.setArt(Art.getById(id));
         }
     }
 }

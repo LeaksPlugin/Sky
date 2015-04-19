@@ -49,14 +49,14 @@ public class LocationString {
             }
             if (split.length > 4) {
                 try {
-                    pitch = Float.parseFloat(split[3]);
+                    pitch = Float.parseFloat(split[4]);
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
             }
             if (split.length > 5) {
                 try {
-                    yaw = Float.parseFloat(split[4]);
+                    yaw = Float.parseFloat(split[5]);
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }

@@ -20,14 +20,16 @@ public class WrappedSidebarObjective {
     private String name;
     private Map<Integer, String> scoreMap = new HashMap<>();
     private int maxLine = 15;
+    private DoubleBufferObjective objective;
 
-    public WrappedSidebarObjective(String name) {
-        this(name, 15);
+    public WrappedSidebarObjective(String name, Scoreboard scoreboard) {
+        this(name, 15, scoreboard);
     }
 
-    public WrappedSidebarObjective(String name, int maxLine) {
+    public WrappedSidebarObjective(String name, int maxLine, Scoreboard scoreboard) {
         this.name = name;
         this.maxLine = maxLine;
+        this.objective = new DoubleBufferObjective(this.name, scoreboard);
     }
 
     public void setLine(int line, String message) {
@@ -63,32 +65,32 @@ public class WrappedSidebarObjective {
         return -1;
     }
 
-    public void applyTo(Objective objective) {
-        objective.setDisplayName(getTitle());
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+    public void update() {
+        objective.startWriting();
+        objective.writeTitle(getTitle());
         for (Map.Entry<Integer, String> scoreEntry : prePassMap(getScoreMap()).entrySet()) {
-            objective.getScore(scoreEntry.getValue()).setScore(scoreEntry.getKey());
+            objective.write(scoreEntry.getKey(), scoreEntry.getValue());
         }
+        objective.endWriting();
     }
 
-    public void applyTo(Scoreboard scoreboard) {
-        Objective objective = scoreboard.registerNewObjective(getName(), "dummy");
-        objective.setDisplayName(getTitle());
-        applyTo(objective);
+    public void reset() {
+        objective.reset();
+        getScoreMap().clear();
     }
 
-    public void reset(Objective objective) {
-        objective.unregister();
-    }
-
-    public void reset(Scoreboard scoreboard) {
-        scoreboard.getObjective(getName()).unregister();
+    public void fillBlankLines() {
+        for (int i = 1; i <= getMaxLine(); i++) {
+            if (getScoreMap().get(i) == null) {
+                getScoreMap().put(i, ChatColor.RESET + new InvisibleCharacter(i).asString());
+            }
+        }
     }
 
     private Map<Integer, String> prePassMap(Map<Integer, String> map) {
         Map<Integer, String> prePassedMap = new HashMap<>();
         if (map.size() > 0) {
-            for (int i = 0; i <= getMaxLine(); i++) {
+            for (int i = 1; i <= getMaxLine(); i++) {
                 if (map.get(i) != null) {
                     prePassedMap.put(i, ChatColor.RESET + new InvisibleCharacter(i).asString() + map.get(i));
                 } else {

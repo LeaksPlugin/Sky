@@ -124,7 +124,7 @@ public class MeleeModule extends WeaponModule {
                 }
                 ActionBar actionBar = new ActionBar(message);
                 actionBar.send(player);
-                // apply
+                // updateLobby
                 event.setDamage(damage);
                 // last damage cause
                 LastPlayerDamage lastPlayerDamage = new LastPlayerDamage(event.getEntity(), getPlugin());

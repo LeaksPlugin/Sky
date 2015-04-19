@@ -13,8 +13,12 @@ import org.bukkit.GameMode;
 public class PlayerArenaData {
     private CvCPlayer player;
     private String playingArena;
-    private GameMode lastGameMode = player.getPlayer().getServer().getDefaultGameMode();
+    private GameMode lastGameMode = GameMode.ADVENTURE;
     private PlayerArenaStatus status = PlayerArenaStatus.NOT_PLAYING;
+    private int kills = 0;
+    private int deaths = 0;
+    private int assist = 0;
+    private boolean isSpectator = false;
 
     public PlayerArenaData(CvCPlayer player) {
         this.player = player;
@@ -45,6 +49,38 @@ public class PlayerArenaData {
     }
 
     public void setPlayingArena(CvCArena arena) {
-        this.playingArena = arena.getArenaName();
+        this.playingArena = arena != null ? arena.getArenaName() : null;
+    }
+
+    public boolean isSpectator() {
+        return isSpectator;
+    }
+
+    public void setSpectator(boolean isSpectator) {
+        this.isSpectator = isSpectator;
+    }
+
+    public void addKill() {
+        kills++;
+    }
+
+    public void addDeath() {
+        deaths++;
+    }
+
+    public int getKills() {
+        return kills;
+    }
+
+    public int getDeaths() {
+        return deaths;
+    }
+
+    public int getAssist() {
+        return assist;
+    }
+
+    public void addAssist() {
+        assist++;
     }
 }
