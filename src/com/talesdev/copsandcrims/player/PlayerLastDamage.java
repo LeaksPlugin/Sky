@@ -9,8 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Player last damage
@@ -19,6 +19,8 @@ import java.util.Map;
  */
 public class PlayerLastDamage implements LastDamageCause {
     private Map<String, Object> objectMap = new HashMap<>();
+    private Set<Entity> damagerList;
+    private Entity lastDamager;
     private EntityDamageEvent.DamageCause damageCause;
     private Weapon weapon;
     private Bullet bullet;
@@ -33,16 +35,17 @@ public class PlayerLastDamage implements LastDamageCause {
     }
 
     public PlayerLastDamage(Entity entity) {
-        this.damageCause = EntityDamageEvent.DamageCause.ENTITY_ATTACK;
-        addAttachment("Entity", entity);
+        this(EntityDamageEvent.DamageCause.ENTITY_ATTACK);
+        damage(entity);
     }
 
     public PlayerLastDamage(EntityDamageEvent.DamageCause damageCause) {
+        this();
         this.damageCause = damageCause;
     }
 
-    public void setDamageCause(EntityDamageEvent.DamageCause damageCause) {
-        this.damageCause = damageCause;
+    public PlayerLastDamage() {
+        damagerList = new HashSet<>();
     }
 
     @Override
@@ -55,9 +58,35 @@ public class PlayerLastDamage implements LastDamageCause {
         return damageCause;
     }
 
+    public void setDamageCause(EntityDamageEvent.DamageCause damageCause) {
+        this.damageCause = damageCause;
+    }
+
     @Override
     public Entity getEntity() {
-        return getAttachment("Entity", Entity.class);
+        return lastDamager;
+    }
+
+    @Override
+    public void damage(Entity entity) {
+        damagerList.add(entity);
+        lastDamager = entity;
+    }
+
+    @Override
+    public void assist(Entity entity) {
+        damagerList.add(entity);
+    }
+
+    @Override
+    public Set<Entity> getAssist() {
+        return damagerList.stream().filter(entity -> !entity.equals(lastDamager)).collect(Collectors.toSet());
+    }
+
+    @Override
+    public void clearDamager() {
+        lastDamager = null;
+        damagerList.clear();
     }
 
     @SuppressWarnings("unchecked")

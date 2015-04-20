@@ -5,6 +5,8 @@ import com.talesdev.copsandcrims.arena.CvCArena;
 import com.talesdev.copsandcrims.arena.data.PlayerArenaData;
 import com.talesdev.copsandcrims.arena.data.PlayerArenaStatus;
 import com.talesdev.copsandcrims.weapon.Weapon;
+import com.talesdev.core.scoreboard.BelowNameObjective;
+import com.talesdev.core.scoreboard.HealthBar;
 import com.talesdev.core.scoreboard.WrappedSidebarObjective;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -20,6 +22,8 @@ public class CvCPlayer {
     private PlayerArenaData playerArenaData;
     private Scoreboard playerScoreboard;
     private WrappedSidebarObjective sidebarObjective;
+    private BelowNameObjective belowNameObjective;
+    private HealthBar healthBar;
     private boolean debug = false;
     private boolean isWalking = false;
     private boolean isSneaking = false;
@@ -37,6 +41,8 @@ public class CvCPlayer {
         this.playerArenaData.setStatus(PlayerArenaStatus.NOT_PLAYING);
         playerScoreboard = CopsAndCrims.getPlugin().getServer().getScoreboardManager().getNewScoreboard();
         sidebarObjective = new WrappedSidebarObjective(player.getName(), playerScoreboard);
+        healthBar = new HealthBar(playerScoreboard);
+        sidebarObjective.update();
         updateScoreboard();
         this.playerBullet = new PlayerBullet(this);
         this.playerRecoil = new PlayerRecoil(this);
@@ -171,5 +177,17 @@ public class CvCPlayer {
 
     public void clearArenaData() {
         playerArenaData = new PlayerArenaData(this);
+    }
+
+    public BelowNameObjective getBelowNameObjective() {
+        return belowNameObjective;
+    }
+
+    public void setBelowNameObjective(BelowNameObjective belowNameObjective) {
+        this.belowNameObjective = belowNameObjective;
+    }
+
+    public HealthBar getHealthBar() {
+        return healthBar;
     }
 }

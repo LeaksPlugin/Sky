@@ -4,12 +4,12 @@ import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.copsandcrims.player.PlayerLastDamage;
 import com.talesdev.core.player.LastPlayerDamage;
 import org.bukkit.Art;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Painting;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -30,7 +30,10 @@ public class CopsAndCrimsListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
         plugin.getServerCvCPlayer().addNewPlayer(plugin.getServerCvCPlayer().loadUserData(event.getPlayer()));
-        // DEBUG
+        // update health
+        plugin.getServer().getScheduler().runTaskLater(plugin, () ->
+                plugin.getServer().getOnlinePlayers().forEach(player -> player.setHealth(player.getHealth()))
+                , 1);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -54,18 +57,24 @@ public class CopsAndCrimsListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onEntityDamage(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof LivingEntity) {
-            LivingEntity damager = ((LivingEntity) event.getDamager());
-            LastPlayerDamage damage = new LastPlayerDamage(event.getEntity(), plugin);
-            PlayerLastDamage lastDamage = new PlayerLastDamage(damager);
-            lastDamage.setDamageCause(event.getCause());
-            lastDamage.addAttachment("Weapon", null);
-            lastDamage.addAttachment("Bullet", null);
-            lastDamage.addAttachment("HeadShot", false);
-            damage.setLastDamage(lastDamage);
-        }
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        LastPlayerDamage damage = new LastPlayerDamage(event.getEntity(), plugin);
+        PlayerLastDamage lastDamage = new PlayerLastDamage(event.getCause());
+        lastDamage.addAttachment("Weapon", null);
+        lastDamage.addAttachment("Bullet", null);
+        lastDamage.addAttachment("HeadShot", false);
+        damage.setLastDamage(lastDamage);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onEntityDamage(EntityDamageEvent event) {
+        LastPlayerDamage damage = new LastPlayerDamage(event.getEntity(), plugin);
+        PlayerLastDamage lastDamage = new PlayerLastDamage(event.getCause());
+        lastDamage.addAttachment("Weapon", null);
+        lastDamage.addAttachment("Bullet", null);
+        lastDamage.addAttachment("HeadShot", false);
+        damage.setLastDamage(lastDamage);
     }
 
     @EventHandler

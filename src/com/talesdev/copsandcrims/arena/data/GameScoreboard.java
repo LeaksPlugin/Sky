@@ -77,7 +77,7 @@ public class GameScoreboard {
         }
         objective.setTitle("   " + ChatColor.BLUE + tkills + "  and  " + ChatColor.RED + ctkills + "   ");
         objective.setLine(14, ChatColor.GREEN + "[Objective]");
-        objective.setLine(13, "Get 25 team kills");
+        objective.setLine(13, "Get 50 team kills");
         objective.setLine(12, "5:00");
         objective.setLine(10, ChatColor.YELLOW + "[Stats]");
         objective.setLine(9, "Kills : " + ChatColor.RED + player.getArenaData().getKills());
@@ -92,6 +92,19 @@ public class GameScoreboard {
         WrappedSidebarObjective objective = player.getSidebarObjective();
         objective.setLine(12, timer.digitalTime());
         objective.update();
+    }
+
+    public void updateStats(CvCPlayer player) {
+        WrappedSidebarObjective objective = player.getSidebarObjective();
+        objective.setLine(9, "Kills : " + ChatColor.RED + player.getArenaData().getKills());
+        objective.setLine(8, "Deaths : " + ChatColor.RED + player.getArenaData().getDeaths());
+        objective.setLine(7, "Assists : " + ChatColor.RED + player.getArenaData().getAssist());
+        objective.update();
+    }
+
+    public void updateTeamStats(CvCPlayer player, int tkills, int ctkills) {
+        WrappedSidebarObjective objective = player.getSidebarObjective();
+        objective.setTitle("   " + ChatColor.BLUE + tkills + "  and  " + ChatColor.RED + ctkills + "   ");
     }
 
     public void gameEndApply(CvCPlayer player) {

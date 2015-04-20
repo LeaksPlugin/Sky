@@ -22,6 +22,10 @@ public class GameTicking extends BukkitRunnable {
     @Override
     public void run() {
         timer.oneSecond();
+        if (controller.getArenaStatus().equals(ArenaStatus.END)) {
+            this.cancel();
+            return;
+        }
         for (CvCPlayer player : controller.getAllPlayers()) {
             controller.getGameScoreboard().updateGame(player, timer);
         }

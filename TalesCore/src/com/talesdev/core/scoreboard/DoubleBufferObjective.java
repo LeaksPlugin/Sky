@@ -1,5 +1,6 @@
 package com.talesdev.core.scoreboard;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -13,15 +14,17 @@ public class DoubleBufferObjective {
     private Objective primary;
     private Objective secondary;
     private String name;
+    private String uName = "sidebar-obj";
     private Scoreboard scoreboard;
     private boolean writing = false;
     private Pos writingPos = Pos.PRIMARY;
+    private DisplaySlot displaySlot = DisplaySlot.SIDEBAR;
 
     public DoubleBufferObjective(String name, Scoreboard scoreboard) {
         this.scoreboard = scoreboard;
         this.name = name;
-        this.primary = scoreboard.registerNewObjective(name + "", "dummy");
-        this.secondary = scoreboard.registerNewObjective(name + "-", "dummy");
+        this.primary = scoreboard.registerNewObjective(uName + "", "dummy");
+        this.secondary = scoreboard.registerNewObjective(uName + "-", "dummy");
         this.writingPos = Pos.PRIMARY;
         //System.out.println("DoubleBufferObjective constructed");
         //System.out.println("primary var : " + primary.getName());
@@ -36,7 +39,6 @@ public class DoubleBufferObjective {
     public void startWriting() {
         //System.out.println("Now starting writing in " + primary.getName() + " buffer");
         writing = true;
-        String objectiveName = getObjective().getName();
         //System.out.println("Debugging info (Current objective buffer) : " + objectiveName);
     }
 
@@ -58,7 +60,7 @@ public class DoubleBufferObjective {
 
     public void endWriting() {
         //System.out.println("Sending " + getObjective().getName() + "buffer to player");
-        getObjective().setDisplaySlot(DisplaySlot.SIDEBAR);
+        getObjective().setDisplaySlot(getDisplaySlot());
         // writing in MoKunz-primary
         // obj primary = MoKunz-primary , obj secondary = MoKunz-secondary;
         swapBuffer();
@@ -66,9 +68,9 @@ public class DoubleBufferObjective {
         // obj primary = MoKunz-secondary , obj secondary = MoKunz-primary;
         primary.unregister();
         if (writingPos.equals(Pos.PRIMARY)) {
-            primary = scoreboard.registerNewObjective(name + "", "dummy");
+            primary = scoreboard.registerNewObjective(uName + "", "dummy");
         } else if (writingPos.equals(Pos.SECONDARY)) {
-            primary = scoreboard.registerNewObjective(name + "-", "dummy");
+            primary = scoreboard.registerNewObjective(uName + "-", "dummy");
         }
         //System.out.println("Buffer swapped");
         //System.out.println("primary var : " + primary.getName());
@@ -98,9 +100,17 @@ public class DoubleBufferObjective {
         }
         secondary.unregister();
         primary.unregister();
-        this.primary = scoreboard.registerNewObjective(name, "dummy");
-        this.secondary = scoreboard.registerNewObjective(name + "-", "dummy");
+        this.primary = scoreboard.registerNewObjective(uName, "dummy");
+        this.secondary = scoreboard.registerNewObjective(uName + "-", "dummy");
         this.writingPos = Pos.PRIMARY;
+    }
+
+    public DisplaySlot getDisplaySlot() {
+        return displaySlot;
+    }
+
+    public void setDisplaySlot(DisplaySlot displaySlot) {
+        this.displaySlot = displaySlot;
     }
 
     enum Pos {

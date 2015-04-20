@@ -4,7 +4,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Interface represent a last damage cause
@@ -24,6 +26,14 @@ public interface LastDamageCause {
     public void setDamageCause(EntityDamageEvent.DamageCause damageCause);
 
     public Entity getEntity();
+
+    public void damage(Entity entity);
+
+    public void assist(Entity entity);
+
+    public Set<Entity> getAssist();
+
+    public void clearDamager();
 
     public <T> T getAttachment(String key, Class<T> attachmentClass);
 

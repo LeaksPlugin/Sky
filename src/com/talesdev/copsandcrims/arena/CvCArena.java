@@ -138,8 +138,19 @@ public class CvCArena {
     }
 
     public void broadcastMessage(String message) {
+        broadcastMessage(message, true);
+    }
+
+    public void broadcastMessage(String message, boolean showHead) {
+        String head = ChatColor.RED + "[" + getArenaController().getArenaType() + "] " + ChatColor.YELLOW;
+        String text = "";
+        if (showHead) {
+            text = head + message;
+        } else {
+            text = message;
+        }
         for (CvCPlayer cPlayer : getPlayers()) {
-            cPlayer.getPlayer().sendMessage(ChatColor.RED + "[" + getArenaController().getArenaType() + "] " + ChatColor.YELLOW + message);
+            cPlayer.getPlayer().sendMessage(text);
         }
     }
 }

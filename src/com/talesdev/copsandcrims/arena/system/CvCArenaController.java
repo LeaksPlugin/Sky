@@ -3,6 +3,7 @@ package com.talesdev.copsandcrims.arena.system;
 import com.talesdev.copsandcrims.CopsAndCrims;
 import com.talesdev.copsandcrims.arena.CvCArena;
 import com.talesdev.copsandcrims.arena.data.ArenaCommandProtocol;
+import com.talesdev.copsandcrims.arena.data.ArenaStatus;
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
@@ -60,6 +61,10 @@ public abstract class CvCArenaController implements Listener, ArenaSpawnLocation
 
     public void save() {
 
+    }
+
+    public ArenaStatus getArenaStatus() {
+        return getArena().getStatus();
     }
 
     @Override

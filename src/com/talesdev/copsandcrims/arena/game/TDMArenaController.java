@@ -9,17 +9,30 @@ import com.talesdev.copsandcrims.arena.system.ArenaJoinLeave;
 import com.talesdev.copsandcrims.arena.system.CountdownSystem;
 import com.talesdev.copsandcrims.arena.system.CvCArenaController;
 import com.talesdev.copsandcrims.event.EntityDamageByWeaponEvent;
+import com.talesdev.copsandcrims.guns.Glock18;
+import com.talesdev.copsandcrims.guns.Knife;
+import com.talesdev.copsandcrims.guns.USP;
 import com.talesdev.copsandcrims.player.CvCPlayer;
+import com.talesdev.copsandcrims.weapon.RandomWeapon;
+import com.talesdev.copsandcrims.weapon.Weapon;
+import com.talesdev.copsandcrims.weapon.WeaponSlot;
+import com.talesdev.core.player.LastDamageCause;
+import com.talesdev.core.player.LastPlayerDamage;
+import com.talesdev.core.text.AlignedMessage;
 import com.talesdev.core.world.LocationString;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -29,7 +42,9 @@ import org.bukkit.scoreboard.Team;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 
 /**
@@ -224,6 +239,7 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
             player.getArenaData().setStatus(PlayerArenaStatus.PLAYING);
             gameScoreboard.gameStartApply(player);
         }
+        getArena().getBukkitPlayer().forEach(this::giveWeapon);
         getArena().broadcastMessage("The game is now started!");
         gameTicking.runTaskTimer(getPlugin(), 0, 20);
     }
@@ -278,6 +294,9 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
 
     @EventHandler
     public void onTeamDamage(EntityDamageByWeaponEvent event) {
+        if (getArenaStatus().equals(ArenaStatus.END)) {
+            event.setCancelled(true);
+        }
         if (event.getEntity() instanceof Player) {
             Player player = ((Player) event.getEntity());
             // find team
@@ -287,6 +306,39 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
                 }
             } else if (terroristTeam.hasPlayer(player)) {
                 if (terroristTeam.hasPlayer(event.getPlayer())) {
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onChat(AsyncPlayerChatEvent event) {
+        CvCPlayer sender = getPlugin().getServerCvCPlayer().getPlayer(event.getPlayer());
+        if (getArena().hasPlayer(sender)) {
+            try {
+                for (Iterator<Player> it = event.getRecipients().iterator(); it.hasNext(); ) {
+                    Player player = it.next();
+                    CvCPlayer cvCPlayer = getPlugin().getServerCvCPlayer().getPlayer(player);
+                    if (!getArena().hasPlayer(cvCPlayer)) {
+                        it.remove();
+                    }
+                }
+            } catch (UnsupportedOperationException e) {
+                getPlugin().getLogger().log(Level.WARNING, "Unable to modify chat recipients!");
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onDamage(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof Player) {
+            Player player = ((Player) event.getDamager());
+            CvCPlayer cPlayer = getPlugin().getServerCvCPlayer().getPlayer(player);
+            if (getArena().hasPlayer(cPlayer)) {
+                if (!getArena().getStatus().equals(ArenaStatus.RUNNING)) {
                     event.setCancelled(true);
                 }
             }
@@ -317,6 +369,35 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
             // spectator
             CvCPlayer cPlayer = getPlugin().getServerCvCPlayer().getPlayer(event.getEntity());
             cPlayer.getArenaData().setSpectator(true);
+            cPlayer.getArenaData().addDeath();
+            // add kill to killer
+            LastPlayerDamage lastDamage = new LastPlayerDamage(event.getEntity(), getPlugin());
+            if (lastDamage.getLastDamage() != null) {
+                LastDamageCause lastDamageCause = lastDamage.getLastDamage();
+                if (lastDamageCause.getDamageCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK) &&
+                        lastDamageCause.getAttachment("Weapon", Weapon.class) != null
+                        ) {
+                    if (lastDamageCause.getEntity() instanceof Player) {
+                        Player lastDamager = ((Player) lastDamageCause.getEntity());
+                        if (getPlugin().getServerCvCPlayer().getPlayer(lastDamager) != null) {
+                            CvCPlayer cvCPlayer = getPlugin().getServerCvCPlayer().getPlayer(lastDamager);
+                            cvCPlayer.getArenaData().addKill();
+                            if (getCounterTerroristTeam().hasPlayer(lastDamager)) {
+                                addCounterTerroristKill();
+                            } else if (getTerroristTeam().hasPlayer(lastDamager)) {
+                                addTerroristKill();
+                            }
+                        }
+                    }
+                }
+                lastDamageCause.clearDamager();
+                fillAssist(lastDamageCause);
+            }
+            getArena().getPlayers().forEach(gameScoreboard::updateStats);
+            getArena().getPlayers().forEach(player -> gameScoreboard.updateTeamStats(player, terroristKills, counterTerroristKills));
+            if (getArenaStatus().equals(ArenaStatus.RUNNING)) {
+                checkTeamStats();
+            }
             // force respawn
             PacketContainer packetContainer = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Client.CLIENT_COMMAND);
             packetContainer.getClientCommands().write(0, EnumWrappers.ClientCommand.PERFORM_RESPAWN);
@@ -326,6 +407,45 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
                 e.printStackTrace();
             }
         }
+    }
+
+    public void fillAssist(LastDamageCause lastDamageCause) {
+        Set<Entity> assistSet = lastDamageCause.getAssist();
+        if (assistSet != null) {
+            for (Entity entity : assistSet) {
+                if (entity instanceof Player) {
+                    Player player = ((Player) entity);
+                    if (getPlugin().getServerCvCPlayer().getPlayer(player) != null) {
+                        CvCPlayer cPlayer = getPlugin().getServerCvCPlayer().getPlayer(player);
+                        cPlayer.getArenaData().addAssist();
+                    }
+                }
+            }
+        }
+    }
+
+    public void giveWeapon(Player player) {
+        RandomWeapon randomWeapon = new RandomWeapon(getPlugin().getWeaponFactory());
+        Weapon firstWeapon = randomWeapon.randomWeapon();
+        int firstSlot = 0;
+        Weapon secondWeapon = null;
+        int secondSlot = 1;
+        Weapon melee = getPlugin().getWeaponFactory().getWeapon(Knife.class);
+        int meleeSlot = 2;
+        if (WeaponSlot.getSlot(firstWeapon).equals(WeaponSlot.PRIMARY)) {
+            if (getCounterTerroristTeam().hasPlayer(player)) {
+                secondWeapon = getPlugin().getWeaponFactory().getWeapon(USP.class);
+            } else if (getTerroristTeam().hasPlayer(player)) {
+                secondWeapon = getPlugin().getWeaponFactory().getWeapon(Glock18.class);
+            }
+        } else {
+            firstSlot = 1;
+        }
+        player.getInventory().setItem(firstSlot, getPlugin().getWeaponFactory().createWeaponItem(firstWeapon.getClass()));
+        if (secondWeapon != null) {
+            player.getInventory().setItem(secondSlot, getPlugin().getWeaponFactory().createWeaponItem(secondWeapon.getClass()));
+        }
+        player.getInventory().setItem(meleeSlot, getPlugin().getWeaponFactory().createWeaponItem(melee.getClass()));
     }
 
     public void tpToTeamSpawn(Player player) {
@@ -345,6 +465,13 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
         if (!getArena().getStatus().equals(ArenaStatus.RUNNING)) {
             return;
         }
+        if (getCounterTerroristKills() > getTerroristKills()) {
+            broadcastWinner(ChatColor.RED + "Counter Terrorist");
+        } else if (getTerroristKills() > getCounterTerroristKills()) {
+            broadcastWinner(ChatColor.BLUE + "Terrorist");
+        } else {
+            broadcastWinner(ChatColor.GREEN + "Draw");
+        }
         getArena().setStatus(ArenaStatus.END);
         getArena().getPlayers().forEach(gameScoreboard::gameEndApply);
         getArena().broadcastMessage("The game is now ended!");
@@ -358,6 +485,7 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
                     player.clearArenaData();
                     getArena().removePlayer(player);
                 }
+                clearData();
             }
         }, 100);
     }
@@ -474,9 +602,41 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
         task.runTaskTimer(getPlugin(), 0, 20);
     }
 
+    public void checkTeamStats() {
+        if (getTerroristKills() >= 50 || getCounterTerroristKills() >= 50) {
+            endArena();
+        }
+    }
+
+    public void broadcastWinner(String winnerName) {
+        getArena().broadcastMessage(new AlignedMessage("").center(), false);
+        getArena().broadcastMessage(new AlignedMessage("").center(), false);
+        getArena().broadcastMessage(new AlignedMessage(ChatColor.BOLD + "CopsAndCrims - TDM").center(), false);
+        getArena().broadcastMessage(new AlignedMessage("").center(), false);
+        getArena().broadcastMessage(new AlignedMessage(
+                ChatColor.YELLOW + "Winner" + ChatColor.GRAY + " - " + winnerName
+        ).center(), false);
+        getArena().broadcastMessage(new AlignedMessage("").center(), false);
+        getArena().broadcastMessage(new AlignedMessage("").center(), false);
+        getArena().broadcastMessage(new AlignedMessage("").center(), false);
+    }
+
+
     @Override
     public void countdownFinished() {
         startArena();
+    }
+
+    public void clearData() {
+        gameScoreboard = new GameScoreboard(getArena(), ChatColor.RED + "CopsAndCrims - TDM");
+        arenaScoreboard = getPlugin().getServer().getScoreboardManager().getNewScoreboard();
+        terroristTeam = arenaScoreboard.registerNewTeam("Terrorist");
+        setUpTeam(terroristTeam);
+        counterTerroristTeam = arenaScoreboard.registerNewTeam("CounterTerrorist");
+        setUpTeam(counterTerroristTeam);
+        gameTicking = new GameTicking(this);
+        counterTerroristKills = 0;
+        terroristKills = 0;
     }
 
     public GameScoreboard getGameScoreboard() {

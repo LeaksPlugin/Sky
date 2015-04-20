@@ -4,6 +4,7 @@ import com.talesdev.copsandcrims.CopsAndCrims;
 import com.talesdev.copsandcrims.event.PlayerDropWeaponEvent;
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.copsandcrims.weapon.Weapon;
+import com.talesdev.copsandcrims.weapon.WeaponSlot;
 import com.talesdev.core.entity.MetaData;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -102,6 +103,12 @@ public class ItemControlModule extends WeaponModule {
             player.getPlayerBullet().getBullet(getWeapon().getName()).setBulletCount(bulletAmount);
             player.getWeapon(getWeapon().getClass()).setAmount(bulletAmount);
             ItemStack itemStack = event.getItem().getItemStack();
+            int slot = player.getPlayer().getInventory().first(itemStack);
+            if (slot != -1) {
+                player.getPlayer().getInventory().getItem(slot).setType(Material.AIR);
+                int weaponSlot = WeaponSlot.getSlot(getWeapon()).getInventorySlot();
+                player.getPlayer().getInventory().setItem(weaponSlot, itemStack);
+            }
             getPlugin().getServer().getScheduler().runTaskLater(getPlugin(), new Runnable() {
                 @Override
                 public void run() {
