@@ -12,6 +12,7 @@ import com.talesdev.core.player.UUIDTask;
 import com.talesdev.core.scoreboard.WrappedSidebarObjective;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -115,6 +116,10 @@ public class CopsAndCrimsCommand implements CommandExecutor {
                     CvCPlayer cPlayer = CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer((Player) sender);
                     cPlayer.setDebug(true);
                     sender.sendMessage(ChatColor.GREEN + "set your debug state to true!");
+                }
+            } else if (args[0].equalsIgnoreCase("compass")) {
+                if (sender instanceof Player) {
+                    ItemStack itemStack = new ItemStack(Material.COMPASS);
                 }
             }
         }

@@ -34,6 +34,7 @@ public class CopsAndCrimsListener implements Listener {
         plugin.getServer().getScheduler().runTaskLater(plugin, () ->
                 plugin.getServer().getOnlinePlayers().forEach(player -> player.setHealth(player.getHealth()))
                 , 1);
+        event.getPlayer().teleport(event.getPlayer().getWorld().getSpawnLocation());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

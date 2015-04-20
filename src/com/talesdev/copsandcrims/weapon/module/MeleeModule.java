@@ -20,6 +20,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -76,7 +77,7 @@ public class MeleeModule extends WeaponModule {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player && event.getEntity() instanceof LivingEntity) {
             // type casting
@@ -122,7 +123,7 @@ public class MeleeModule extends WeaponModule {
                         message = "Headshot!";
                     }
                 }
-                ActionBar actionBar = new ActionBar(message);
+                ActionBar actionBar = new ActionBar(ChatColor.RED + message);
                 actionBar.send(player);
                 // updateLobby
                 event.setDamage(damage);
