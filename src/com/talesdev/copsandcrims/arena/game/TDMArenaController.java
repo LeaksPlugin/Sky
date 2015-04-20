@@ -16,21 +16,21 @@ import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.copsandcrims.weapon.RandomWeapon;
 import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.WeaponSlot;
+import com.talesdev.copsandcrims.weapon.module.ShootingModule;
 import com.talesdev.core.player.LastDamageCause;
 import com.talesdev.core.player.LastPlayerDamage;
 import com.talesdev.core.text.AlignedMessage;
 import com.talesdev.core.world.LocationString;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -141,6 +141,9 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
                 if (removePlayer) getArena().removePlayer(cPlayer);
                 destroyTeam(cPlayer);
                 removeFromTeam(cPlayer.getPlayer());
+                cPlayer.getPlayer().getInventory().clear();
+                cPlayer.getPlayer().setHealth(cPlayer.getPlayer().getMaxHealth());
+                cPlayer.getPlayer().setFoodLevel(20);
                 cPlayer.getArenaData().setStatus(PlayerArenaStatus.NOT_PLAYING);
                 if (showMessage) cPlayer.getPlayer().sendMessage(ChatColor.GREEN + "You left arena");
                 cPlayer.getPlayer().teleport(getEndLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
@@ -168,6 +171,9 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
                 if (!getArena().hasPlayer(cPlayer)) {
                     getArena().addPlayer(cPlayer);
                     initTeam(cPlayer);
+                    cPlayer.getPlayer().getInventory().clear();
+                    cPlayer.getPlayer().setHealth(cPlayer.getPlayer().getMaxHealth());
+                    cPlayer.getPlayer().setFoodLevel(20);
                     cPlayer.getArenaData().setLastGameMode(cPlayer.getPlayer().getGameMode());
                     cPlayer.getArenaData().setStatus(PlayerArenaStatus.IN_LOBBY);
                     cPlayer.getArenaData().setPlayingArena(getArena());
@@ -364,12 +370,29 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
     }
 
     @EventHandler
+    public void onHunger(FoodLevelChangeEvent event) {
+        CvCPlayer cPlayer = getPlugin().getServerCvCPlayer().getPlayer(Bukkit.getPlayer(event.getEntity().getName()));
+        if (getArena().hasPlayer(cPlayer)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        CvCPlayer cPlayer = getPlugin().getServerCvCPlayer().getPlayer(event.getPlayer());
+        if (getArena().hasPlayer(cPlayer)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
     public void onDeath(PlayerDeathEvent event) {
         if (getArena().getBukkitPlayer().contains(event.getEntity())) {
             // spectator
             CvCPlayer cPlayer = getPlugin().getServerCvCPlayer().getPlayer(event.getEntity());
             cPlayer.getArenaData().setSpectator(true);
             cPlayer.getArenaData().addDeath();
+            event.getDrops().clear();
             // add kill to killer
             LastPlayerDamage lastDamage = new LastPlayerDamage(event.getEntity(), getPlugin());
             if (lastDamage.getLastDamage() != null) {
@@ -406,6 +429,8 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
             } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
+            // give item
+            getPlugin().getServer().getScheduler().runTaskLater(getPlugin(), () -> giveWeapon(event.getEntity()), 1);
         }
     }
 
@@ -441,11 +466,22 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
         } else {
             firstSlot = 1;
         }
+        CvCPlayer cPlayer = getPlugin().getServerCvCPlayer().getPlayer(player);
+        fillBullet(cPlayer, firstWeapon);
         player.getInventory().setItem(firstSlot, getPlugin().getWeaponFactory().createWeaponItem(firstWeapon.getClass()));
         if (secondWeapon != null) {
             player.getInventory().setItem(secondSlot, getPlugin().getWeaponFactory().createWeaponItem(secondWeapon.getClass()));
+            fillBullet(cPlayer, secondWeapon);
         }
         player.getInventory().setItem(meleeSlot, getPlugin().getWeaponFactory().createWeaponItem(melee.getClass()));
+    }
+
+    public void fillBullet(CvCPlayer cPlayer, Weapon weapon) {
+        if (weapon.containsModule(ShootingModule.class)) {
+            cPlayer.getPlayerBullet().getBullet(weapon.getName()).setBulletCount(
+                    weapon.getModule(ShootingModule.class).getMaxBullet()
+            );
+        }
     }
 
     public void tpToTeamSpawn(Player player) {

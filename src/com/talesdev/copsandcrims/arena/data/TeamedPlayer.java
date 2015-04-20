@@ -23,13 +23,13 @@ public class TeamedPlayer {
     }
 
     public void team(List<Player> players) {
-        int max = players.size() - 1;
+        int max = teamList.size() - 1;
         for (Player player : players) {
-            teamList.get(pos).addPlayer(player);
-            pos++;
             if (pos > max) {
                 pos = 0;
             }
+            teamList.get(pos).addPlayer(player);
+            pos++;
         }
         pos = 0;
     }
