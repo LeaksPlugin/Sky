@@ -1,5 +1,7 @@
 package com.talesdev.copsandcrims.player;
 
+import com.talesdev.core.world.NearbyEntity;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -8,6 +10,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -33,7 +36,17 @@ public class CompassTrackingSystem extends BukkitRunnable {
     @Override
     public void run() {
         for (Player player : useTrackingPlayer) {
-
+            ItemStack itemStack = getCompassItem(player);
+            NearbyEntity<Player> nearbyEntity = new NearbyEntity<>(player.getLocation(), Player.class);
+            Player nearestPlayer = nearbyEntity.findNearestInRadius(128, true);
+            if (nearestPlayer != null) {
+                player.setCompassTarget(nearestPlayer.getLocation());
+                ItemMeta meta = itemStack.getItemMeta();
+                meta.setDisplayName(
+                        ChatColor.GREEN + nearestPlayer.getName() + " : " + ChatColor.RED
+                                + ((int) Math.round(nearestPlayer.getLocation().distance(player.getLocation()))) + " M "
+                );
+            }
         }
     }
 
@@ -43,6 +56,14 @@ public class CompassTrackingSystem extends BukkitRunnable {
             if (itemStack != null) {
                 if (itemStack.getType().equals(Material.COMPASS) && itemStack.hasItemMeta()) {
                     ItemMeta meta = itemStack.getItemMeta();
+                    if (meta.hasLore()) {
+                        List<String> lore = meta.getLore();
+                        if (lore.size() > 0) {
+                            if (lore.get(0).equalsIgnoreCase(ChatColor.GRAY + "TrackingCompass")) {
+                                return itemStack;
+                            }
+                        }
+                    }
                 }
             }
         }

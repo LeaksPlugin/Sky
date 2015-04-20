@@ -129,7 +129,9 @@ public class MeleeModule extends WeaponModule {
                 event.setDamage(damage);
                 // last damage cause
                 LastPlayerDamage lastPlayerDamage = new LastPlayerDamage(event.getEntity(), getPlugin());
-                lastPlayerDamage.setLastDamage(new PlayerLastDamage(player, getWeapon(), null, headShot));
+                PlayerLastDamage cause = new PlayerLastDamage(player, getWeapon(), null, headShot);
+                cause.addAttachment("Knife", true);
+                lastPlayerDamage.setLastDamage(cause);
             }
         }
     }

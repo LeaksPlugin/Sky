@@ -31,6 +31,7 @@ public class CvCPlayer {
     private long lastWalkingTime;
     private double armorPoint;
     private boolean isScoping = false;
+    private boolean resistWeapon = false;
     private Player player;
     private PlayerRecoil playerRecoil;
     private PlayerBullet playerBullet;
@@ -189,5 +190,13 @@ public class CvCPlayer {
 
     public HealthBar getHealthBar() {
         return healthBar;
+    }
+
+    public boolean isResistWeapon() {
+        return resistWeapon;
+    }
+
+    public void setResistWeapon(boolean resistWeapon) {
+        this.resistWeapon = resistWeapon;
     }
 }

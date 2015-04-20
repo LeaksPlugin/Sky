@@ -351,7 +351,7 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onRespawn(PlayerRespawnEvent event) {
         if (getArena().getBukkitPlayer().contains(event.getPlayer())) {
             CvCPlayer cPlayer = getPlugin().getServerCvCPlayer().getPlayer(event.getPlayer());
@@ -502,9 +502,9 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
             return;
         }
         if (getCounterTerroristKills() > getTerroristKills()) {
-            broadcastWinner(ChatColor.RED + "Counter Terrorist");
+            broadcastWinner(ChatColor.BLUE + "Counter Terrorist");
         } else if (getTerroristKills() > getCounterTerroristKills()) {
-            broadcastWinner(ChatColor.BLUE + "Terrorist");
+            broadcastWinner(ChatColor.RED + "Terrorist");
         } else {
             broadcastWinner(ChatColor.GREEN + "Draw");
         }

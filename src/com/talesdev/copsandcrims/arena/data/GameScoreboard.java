@@ -83,7 +83,7 @@ public class GameScoreboard {
         objective.setLine(9, "Kills : " + ChatColor.RED + player.getArenaData().getKills());
         objective.setLine(8, "Deaths : " + ChatColor.RED + player.getArenaData().getDeaths());
         objective.setLine(7, "Assists : " + ChatColor.RED + player.getArenaData().getAssist());
-        objective.setLine(5, "Team : " + (team.equalsIgnoreCase("CT") ? (ChatColor.RED + "CT") : (ChatColor.BLUE + "T")));
+        objective.setLine(5, "Team : " + (team.equalsIgnoreCase("CT") ? (ChatColor.BLUE + "CT") : (ChatColor.RED + "TR")));
         objective.fillBlankLines();
         objective.update();
     }

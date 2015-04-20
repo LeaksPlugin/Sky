@@ -58,17 +58,12 @@ public class CopsAndCrimsListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        LastPlayerDamage damage = new LastPlayerDamage(event.getEntity(), plugin);
-        PlayerLastDamage lastDamage = new PlayerLastDamage(event.getCause());
-        lastDamage.addAttachment("Weapon", null);
-        lastDamage.addAttachment("Bullet", null);
-        lastDamage.addAttachment("HeadShot", false);
-        damage.setLastDamage(lastDamage);
+        // maybe work or not, idk
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDamage(EntityDamageEvent event) {
         LastPlayerDamage damage = new LastPlayerDamage(event.getEntity(), plugin);
         PlayerLastDamage lastDamage = new PlayerLastDamage(event.getCause());
