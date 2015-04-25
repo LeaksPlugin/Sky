@@ -15,7 +15,7 @@ import com.talesdev.core.player.LastPlayerDamage;
 import com.talesdev.core.world.NMSRayTrace;
 import com.talesdev.core.world.NearbyEntity;
 import com.talesdev.core.world.RayTrace;
-import com.talesdev.core.world.SoundEffect;
+import com.talesdev.core.world.sound.SoundEffect;
 import com.talesdev.core.world.particle.ParticleEffect;
 import org.bukkit.*;
 import org.bukkit.block.Block;

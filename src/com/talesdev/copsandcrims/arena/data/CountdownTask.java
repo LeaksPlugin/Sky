@@ -3,8 +3,8 @@ package com.talesdev.copsandcrims.arena.data;
 import com.talesdev.copsandcrims.arena.CvCArena;
 import com.talesdev.copsandcrims.arena.system.CountdownSystem;
 import com.talesdev.copsandcrims.player.CvCPlayer;
-import com.talesdev.core.world.Sound;
-import com.talesdev.core.world.SoundEffect;
+import com.talesdev.core.world.sound.Sound;
+import com.talesdev.core.world.sound.SoundEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**

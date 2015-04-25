@@ -1,4 +1,4 @@
-package com.talesdev.core.world;
+package com.talesdev.core.world.sound;
 
 /**
  * Represent a custom sound from resource pack

@@ -1,14 +1,11 @@
 package com.talesdev.copsandcrims;
 
-import com.comphenix.protocol.utility.MinecraftReflection;
-import com.comphenix.protocol.wrappers.nbt.NbtCompound;
-import com.comphenix.protocol.wrappers.nbt.NbtFactory;
 import com.talesdev.copsandcrims.guns.DesertEagle;
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.module.ShootingModule;
 import com.talesdev.core.math.MathRandom;
-import com.talesdev.core.player.UUIDTask;
+import com.talesdev.core.player.uuid.UUIDTask;
 import com.talesdev.core.scoreboard.WrappedSidebarObjective;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,7 +15,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 /**
  * Main plugin command executor
@@ -107,8 +107,18 @@ public class CopsAndCrimsCommand implements CommandExecutor {
                     objective.setLine(13, ChatColor.GRAY + " " + Integer.toString(MathRandom.randomRange(5, 10)));
                     objective.setLine(11, ChatColor.RED + "Deaths");
                     objective.setLine(10, ChatColor.GRAY + " " + Integer.toString(MathRandom.randomRange(10, 20)));
-                    objective.fillBlankLines();
+                    objective.setBlankLine(12, 9, 8, 7, 6, 5, 4, 3, 2);
                     cPlayer.updateScoreboard();
+                    Inventory inventory = Bukkit.createInventory(player, 54, "Test");
+                    inventory.setItem(0, new ItemStack(Material.COMPASS));
+                    inventory.setItem(1, new ItemStack(Material.DIAMOND));
+                    ItemStack playerHead = new ItemStack(Material.SKULL_ITEM);
+                    ItemMeta itemMeta = playerHead.getItemMeta();
+                    ((SkullMeta) itemMeta).setOwner(player.getName());
+                    playerHead.setItemMeta(itemMeta);
+                    inventory.setItem(2, playerHead);
+                    inventory.setItem(3, new ItemStack(Material.BOOK));
+                    player.openInventory(inventory);
                     return true;
                 }
             } else if (args[0].equalsIgnoreCase("debug")) {

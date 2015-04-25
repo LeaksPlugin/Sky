@@ -57,6 +57,7 @@ public class CopsAndCrims extends JavaPlugin {
         getServerCvCArena().loadArenaInfo();
         // protocol
         ProtocolLibrary.getProtocolManager().addPacketListener(new PlayerEquipmentListener(this));
+        ProtocolLibrary.getProtocolManager().addPacketListener(new MyPacketAdapter(this));
         // task
         recoilTask = getServer().getScheduler().runTaskTimerAsynchronously(this, new PlayerBulletTask(this), 0, 1);
     }

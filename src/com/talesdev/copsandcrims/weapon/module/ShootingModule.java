@@ -10,8 +10,8 @@ import com.talesdev.core.item.MaterialComparator;
 import com.talesdev.core.item.RightClickable;
 import com.talesdev.core.math.Range;
 import com.talesdev.core.player.ClickingAction;
-import com.talesdev.core.world.Sound;
-import com.talesdev.core.world.SoundEffectInterface;
+import com.talesdev.core.world.sound.Sound;
+import com.talesdev.core.world.sound.SoundEffectInterface;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -139,7 +139,7 @@ public class ShootingModule extends WeaponModule {
             bullet.setHeadShotDamage(getHeadShotDamage());
             bullet.setLowerLegDamage(getLowerLegDamage());
             bullet.setUpperLegDamage(getUpperLegDamage());
-            bullet.setRayParameter(2000, 0.05, 4);
+            bullet.setRayParameter(3000, 0.05, 6);
             bullet.setSpeed(getSpeed());
             // burst fire
             AlternativeFireModule alternativeFireModule = getWeapon().getModule(AlternativeFireModule.class);
@@ -179,7 +179,7 @@ public class ShootingModule extends WeaponModule {
             updateBulletCount(player);/*
             // reload if run out of bullet
             if (player.getPlayerBullet().getBullet(getWeapon().getName()).getBulletCount() <= 0) {
-                (new BulletReloadTask(player, getWeapon(), event.getItem(), getReloadTime())).runTaskTimer(getPlugin(), 0, 1);
+                (new BulletReloadTask(player, getWeapon(), event.getItem(), getReloadTime())).runTaskTimer(getCorePlayer(), 0, 1);
             }*/
             // add cooldown
             tag.attach();

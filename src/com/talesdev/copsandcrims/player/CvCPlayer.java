@@ -41,9 +41,8 @@ public class CvCPlayer {
         this.playerArenaData = new PlayerArenaData(this);
         this.playerArenaData.setStatus(PlayerArenaStatus.NOT_PLAYING);
         playerScoreboard = CopsAndCrims.getPlugin().getServer().getScoreboardManager().getNewScoreboard();
-        sidebarObjective = new WrappedSidebarObjective(player.getName(), playerScoreboard);
+        sidebarObjective = new WrappedSidebarObjective(playerScoreboard);
         healthBar = new HealthBar(playerScoreboard);
-        sidebarObjective.update();
         updateScoreboard();
         this.playerBullet = new PlayerBullet(this);
         this.playerRecoil = new PlayerRecoil(this);

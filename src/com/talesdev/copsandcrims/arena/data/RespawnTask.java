@@ -2,7 +2,7 @@ package com.talesdev.copsandcrims.arena.data;
 
 import com.talesdev.copsandcrims.arena.game.TDMArenaController;
 import com.talesdev.copsandcrims.player.CvCPlayer;
-import com.talesdev.core.player.ActionBar;
+import com.talesdev.core.player.message.ActionBar;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.scheduler.BukkitRunnable;

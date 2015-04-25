@@ -30,12 +30,12 @@ public class GameScoreboard {
     public void firstJoinApply(CvCPlayer player) {
         WrappedSidebarObjective objective = player.getSidebarObjective();
         objective.setTitle(gameTitle);
-        objective.setMaxLine(7);
+        objective.reset();
         objective.setLine(6, "Map : " + ChatColor.GREEN + arena.getArenaName());
         objective.setLine(5, "Players : " + ChatColor.GREEN + arena.getTotalPlayers() + maxPlayers);
         objective.setLine(3, "Status : " + ChatColor.GREEN + "Waiting...");
         objective.setLine(1, "mc.talesdev.com");
-        objective.fillBlankLines();
+        objective.setBlankLine(7, 4, 2);
         objective.update();
     }
 
@@ -75,6 +75,7 @@ public class GameScoreboard {
                 team = "T";
             }
         }
+        objective.reset();
         objective.setTitle(" " + ChatColor.BLUE + "CT" + ctkills + ChatColor.GOLD + "  and  " + ChatColor.RED + tkills + "TR ");
         objective.setLine(14, ChatColor.GREEN + "[Objective]");
         objective.setLine(13, "Get 50 team kills");
@@ -84,7 +85,7 @@ public class GameScoreboard {
         objective.setLine(8, "Deaths : " + ChatColor.RED + player.getArenaData().getDeaths());
         objective.setLine(7, "Assists : " + ChatColor.RED + player.getArenaData().getAssist());
         objective.setLine(5, "Team : " + (team.equalsIgnoreCase("CT") ? (ChatColor.BLUE + "CT") : (ChatColor.RED + "TR")));
-        objective.fillBlankLines();
+        objective.setBlankLine(15, 11, 6, 4, 3, 2, 1);
         objective.update();
     }
 
@@ -104,7 +105,7 @@ public class GameScoreboard {
 
     public void updateTeamStats(CvCPlayer player, int tkills, int ctkills) {
         WrappedSidebarObjective objective = player.getSidebarObjective();
-        objective.setTitle("   " + ChatColor.BLUE + tkills + "  and  " + ChatColor.RED + ctkills + "   ");
+        objective.setTitle(" " + ChatColor.BLUE + "CT" + ctkills + ChatColor.GOLD + "  and  " + ChatColor.RED + tkills + "TR ");
     }
 
     public void gameEndApply(CvCPlayer player) {

@@ -1,7 +1,11 @@
 name: TalesCore
 version: 1.0
 author: MoKunz
-main: com.talesdev.core.TalesCore
+main: com.talesdev.corePlayer.TalesCore
 commands:
     unicode:
       description: Show the unicode string from unicode point
+      usage: /unicode <unicode>
+    uuid:
+      description: Get Mojang UUID of player, if player is not premium then offline uuid will be used.
+      usage: /uuid <get|update> [player]

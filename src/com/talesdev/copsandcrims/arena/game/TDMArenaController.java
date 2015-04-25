@@ -24,18 +24,15 @@ import com.talesdev.core.world.LocationString;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.entity.*;
+import org.bukkit.event.player.*;
 import org.bukkit.scoreboard.NameTagVisibility;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -378,6 +375,26 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
     }
 
     @EventHandler
+    public void regenEvent(EntityRegainHealthEvent event) {
+        if (event.getEntityType().equals(EntityType.PLAYER)) {
+            CvCPlayer cPlayer = getPlugin().getServerCvCPlayer().getPlayer(((Player) event.getEntity()));
+            if (getArena().hasPlayer(cPlayer)) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void interactEvent(BlockFromToEvent event) {
+        if (event.getBlock() != null && event.getToBlock() != null) {
+            if (event.getBlock().getType().equals(Material.SOIL)) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+
+    @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         CvCPlayer cPlayer = getPlugin().getServerCvCPlayer().getPlayer(event.getPlayer());
         if (getArena().hasPlayer(cPlayer)) {
@@ -393,6 +410,7 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
             cPlayer.getArenaData().setSpectator(true);
             cPlayer.getArenaData().addDeath();
             event.getDrops().clear();
+            event.getEntity().getInventory().clear();
             // add kill to killer
             LastPlayerDamage lastDamage = new LastPlayerDamage(event.getEntity(), getPlugin());
             if (lastDamage.getLastDamage() != null) {
@@ -451,6 +469,7 @@ public class TDMArenaController extends CvCArenaController implements ArenaJoinL
 
     public void giveWeapon(Player player) {
         RandomWeapon randomWeapon = new RandomWeapon(getPlugin().getWeaponFactory());
+        randomWeapon.filter(Knife.class, Glock18.class, USP.class);
         Weapon firstWeapon = randomWeapon.randomWeapon();
         int firstSlot = 0;
         Weapon secondWeapon = null;

@@ -1,4 +1,4 @@
-package com.talesdev.core.player;
+package com.talesdev.core.player.data;
 
 import com.talesdev.core.TalesCore;
 import org.bukkit.Bukkit;

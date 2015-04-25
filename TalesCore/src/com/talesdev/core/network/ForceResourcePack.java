@@ -1,4 +1,4 @@
-package com.talesdev.core.player;
+package com.talesdev.core.network;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;

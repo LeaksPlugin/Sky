@@ -1,4 +1,4 @@
-package com.talesdev.core.world;
+package com.talesdev.core.world.sound;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;

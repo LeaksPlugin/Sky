@@ -1,4 +1,4 @@
-package com.talesdev.core.world;
+package com.talesdev.core.world.sound;
 
 import org.bukkit.entity.*;
 
@@ -295,29 +295,6 @@ public enum SoundEffect implements SoundEffectInterface {
     MUSIC_GAME_NETHER,
     BLANK;
 
-    public enum Pitch {
-        BABY(1.5F);
-
-        private float pitch;
-
-        Pitch(float pitch) {
-            this.pitch = pitch;
-        }
-
-        public float getPitch() {
-            return pitch;
-        }
-    }
-
-    @Override
-    public String asString() {
-        return toString();
-    }
-
-    public String toString() {
-        return super.toString().replaceAll("_", "\\.").toLowerCase();
-    }
-
     public static Sound getMobHurtSound(Entity entity) {
         EntityType type = entity.getType();
         SoundEffect soundEffect = SoundEffect.BLANK;
@@ -470,5 +447,28 @@ public enum SoundEffect implements SoundEffectInterface {
         sound.setSoundEffect(soundEffect);
         if (isBaby) sound.setPitch(1.5F);
         return sound;
+    }
+
+    @Override
+    public String asString() {
+        return toString();
+    }
+
+    public String toString() {
+        return super.toString().replaceAll("_", "\\.").toLowerCase();
+    }
+
+    public enum Pitch {
+        BABY(1.5F);
+
+        private float pitch;
+
+        Pitch(float pitch) {
+            this.pitch = pitch;
+        }
+
+        public float getPitch() {
+            return pitch;
+        }
     }
 }

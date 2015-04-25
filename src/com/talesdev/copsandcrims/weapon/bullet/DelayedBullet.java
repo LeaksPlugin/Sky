@@ -41,6 +41,7 @@ public class DelayedBullet extends Bullet {
         this.setHeadShotDamage(bullet.getHeadShotDamage());
         this.setUpperLegDamage(bullet.getUpperLegDamage());
         this.setLowerLegDamage(bullet.getLowerLegDamage());
+        this.setRayParameter(3000, 0.05, 6);
     }
 
     public int getSpeed() {

@@ -1,4 +1,4 @@
-package com.talesdev.core.player;
+package com.talesdev.core.player.uuid;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;

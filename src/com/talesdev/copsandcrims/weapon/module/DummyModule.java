@@ -9,8 +9,8 @@ import com.talesdev.copsandcrims.weapon.bullet.BulletTask;
 import com.talesdev.copsandcrims.weapon.bullet.DelayedBullet;
 import com.talesdev.core.math.Range;
 import com.talesdev.core.player.ClickingAction;
-import com.talesdev.core.world.Sound;
-import com.talesdev.core.world.SoundEffect;
+import com.talesdev.core.world.sound.Sound;
+import com.talesdev.core.world.sound.SoundEffect;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerInteractEvent;
 

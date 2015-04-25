@@ -21,6 +21,14 @@ public class HealthBar {
         objective.setDisplayName(ChatColor.RED + "\u2764");
     }
 
+    public HealthBar(Player player) {
+        if (player.getScoreboard() != null) {
+            objective = player.getScoreboard().registerNewObjective("healthbar", Criterias.HEALTH);
+            objective.setDisplaySlot(DisplaySlot.BELOW_NAME);
+            objective.setDisplayName(ChatColor.RED + "\u2764");
+        }
+    }
+
     public Objective getObjective() {
         return objective;
     }

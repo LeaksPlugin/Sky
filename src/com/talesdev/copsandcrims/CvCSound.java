@@ -1,6 +1,6 @@
 package com.talesdev.copsandcrims;
 
-import com.talesdev.core.world.SoundEffectInterface;
+import com.talesdev.core.world.sound.SoundEffectInterface;
 
 /**
  * CVC Sound

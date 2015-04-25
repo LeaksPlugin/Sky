@@ -1,4 +1,4 @@
-package com.talesdev.core.player;
+package com.talesdev.core.player.message;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -6,9 +6,11 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers.TitleAction;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import com.talesdev.core.network.SendablePlayerMessage;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -16,7 +18,7 @@ import java.util.Collection;
  *
  * @author MoKunz
  */
-public class Title {
+public class Title implements SendablePlayerMessage {
     private ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
     private String title;
     private String subtitle;
@@ -45,6 +47,7 @@ public class Title {
     }
 
     public void send(Player player) {
+        if (player == null) return;
         try {
             sendTitle(player);
             sendSubtitle(player);
@@ -127,5 +130,10 @@ public class Title {
 
     public void setFadeOut(int fadeOut) {
         this.fadeOut = fadeOut;
+    }
+
+    @Override
+    public void send(Player... player) {
+        Arrays.asList(player).forEach(this::send);
     }
 }
