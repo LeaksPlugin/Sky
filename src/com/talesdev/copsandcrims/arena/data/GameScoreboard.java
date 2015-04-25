@@ -77,6 +77,7 @@ public class GameScoreboard {
         }
         objective.reset();
         objective.setTitle(" " + ChatColor.BLUE + "CT" + ctkills + ChatColor.GOLD + "  and  " + ChatColor.RED + tkills + "TR ");
+        objective.setTitle(" " + ChatColor.BLUE + "CT" + ctkills + ChatColor.GRAY + "  and  " + ChatColor.RED + tkills + "TR ");
         objective.setLine(14, ChatColor.GREEN + "[Objective]");
         objective.setLine(13, "Get 50 team kills");
         objective.setLine(12, "5:00");
