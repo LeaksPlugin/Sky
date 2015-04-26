@@ -1,5 +1,6 @@
 package com.talesdev.core;
 
+import com.talesdev.core.event.PlayerListener;
 import com.talesdev.core.player.CorePlayer;
 import com.talesdev.core.player.uuid.UUIDMap;
 import com.talesdev.core.player.uuid.UUIDSystem;
@@ -36,6 +37,7 @@ public class TalesCore extends JavaPlugin {
         UUIDSystem uuidSystem = new UUIDSystem(this);
         getCommand("uuid").setExecutor(uuidSystem);
         getServer().getPluginManager().registerEvents(uuidSystem, this);
+        getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         getLogger().info("TalesCore has been enabled!");
     }
 

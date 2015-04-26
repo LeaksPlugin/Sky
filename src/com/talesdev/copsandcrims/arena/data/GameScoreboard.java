@@ -5,7 +5,7 @@ import com.talesdev.copsandcrims.arena.game.TDMArenaController;
 import com.talesdev.copsandcrims.arena.system.ArenaJoinLeave;
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.core.math.DigitalTimer;
-import com.talesdev.core.scoreboard.WrappedSidebarObjective;
+import com.talesdev.core.scoreboard.WrappedScoreboard;
 import org.bukkit.ChatColor;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class GameScoreboard {
     }
 
     public void firstJoinApply(CvCPlayer player) {
-        WrappedSidebarObjective objective = player.getSidebarObjective();
+        WrappedScoreboard objective = player.getSidebarObjective();
         objective.setTitle(gameTitle);
         objective.reset();
         objective.setLine(6, "Map : " + ChatColor.GREEN + arena.getArenaName());
@@ -40,7 +40,7 @@ public class GameScoreboard {
     }
 
     public void updateLobby(CvCPlayer player) {
-        WrappedSidebarObjective objective = player.getSidebarObjective();
+        WrappedScoreboard objective = player.getSidebarObjective();
         objective.setLine(5, "Players : " + ChatColor.GREEN.toString() + arena.getTotalPlayers() + maxPlayers);
         objective.update();
     }
@@ -50,7 +50,7 @@ public class GameScoreboard {
     }
 
     public void updateCountdown(CvCPlayer player, int countdown) {
-        WrappedSidebarObjective objective = player.getSidebarObjective();
+        WrappedScoreboard objective = player.getSidebarObjective();
         objective.setLine(3, "Status : " + ChatColor.GREEN + "Starting in " + countdown);
         objective.update();
     }
@@ -60,7 +60,7 @@ public class GameScoreboard {
     }
 
     public void gameStartApply(CvCPlayer player) {
-        WrappedSidebarObjective objective = player.getSidebarObjective();
+        WrappedScoreboard objective = player.getSidebarObjective();
         objective.reset();
         objective.setMaxLine(15);
         int tkills = 0, ctkills = 0;
@@ -91,13 +91,13 @@ public class GameScoreboard {
     }
 
     public void updateGame(CvCPlayer player, DigitalTimer timer) {
-        WrappedSidebarObjective objective = player.getSidebarObjective();
+        WrappedScoreboard objective = player.getSidebarObjective();
         objective.setLine(12, timer.digitalTime());
         objective.update();
     }
 
     public void updateStats(CvCPlayer player) {
-        WrappedSidebarObjective objective = player.getSidebarObjective();
+        WrappedScoreboard objective = player.getSidebarObjective();
         objective.setLine(9, "Kills : " + ChatColor.RED + player.getArenaData().getKills());
         objective.setLine(8, "Deaths : " + ChatColor.RED + player.getArenaData().getDeaths());
         objective.setLine(7, "Assists : " + ChatColor.RED + player.getArenaData().getAssist());
@@ -105,12 +105,12 @@ public class GameScoreboard {
     }
 
     public void updateTeamStats(CvCPlayer player, int tkills, int ctkills) {
-        WrappedSidebarObjective objective = player.getSidebarObjective();
+        WrappedScoreboard objective = player.getSidebarObjective();
         objective.setTitle(" " + ChatColor.BLUE + "CT" + ctkills + ChatColor.GOLD + "  and  " + ChatColor.RED + tkills + "TR ");
     }
 
     public void gameEndApply(CvCPlayer player) {
-        WrappedSidebarObjective objective = player.getSidebarObjective();
+        WrappedScoreboard objective = player.getSidebarObjective();
         objective.setLine(3, "Status : " + ChatColor.GREEN + "Game ended!");
         objective.update();
     }

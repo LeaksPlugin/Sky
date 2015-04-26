@@ -1,7 +1,7 @@
 package com.talesdev.copsandcrims.weapon.bullet;
 
 /**
- * Bullet loop listener
+ * Bullet loop event
  * @author MoKunz
  */
 public interface BulletLoopListener {

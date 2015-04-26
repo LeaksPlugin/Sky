@@ -1,7 +1,7 @@
 name: TalesCore
 version: 1.0
 author: MoKunz
-main: com.talesdev.corePlayer.TalesCore
+main: com.talesdev.core.TalesCore
 commands:
     unicode:
       description: Show the unicode string from unicode point

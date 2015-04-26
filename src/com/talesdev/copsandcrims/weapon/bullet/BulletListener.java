@@ -1,7 +1,7 @@
 package com.talesdev.copsandcrims.weapon.bullet;
 
 /**
- * Bullet listener
+ * Bullet event
  *
  * @author MoKunz
  */

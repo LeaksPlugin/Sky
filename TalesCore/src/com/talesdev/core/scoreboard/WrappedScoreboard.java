@@ -2,24 +2,20 @@ package com.talesdev.core.scoreboard;
 
 import com.talesdev.core.text.InvisibleCharacter;
 import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A class represent an wrapped simpleScoreboard
  *
  * @author MoKunz
  */
-public class WrappedSidebarObjective {
+public class WrappedScoreboard {
     private String title = "";
     private int maxLine;
     private Scoreboard scoreboard;
     private SimpleScoreboard simpleScoreboard;
 
-    public WrappedSidebarObjective(Scoreboard scoreboard) {
+    public WrappedScoreboard(Scoreboard scoreboard) {
         this.scoreboard = scoreboard;
         simpleScoreboard = new SimpleScoreboard(this.title, this.scoreboard);
     }

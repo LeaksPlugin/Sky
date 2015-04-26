@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.io.File;
@@ -69,8 +70,19 @@ public class ServerCorePlayer implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onQuit(PlayerQuitEvent event) {
-        if (containsPlayer(event.getPlayer())) {
-            CorePlayer corePlayer = getCorePlayer(event.getPlayer());
+        playerQuit(event.getPlayer());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onKick(PlayerKickEvent event) {
+        if (!event.isCancelled()) {
+            playerQuit(event.getPlayer());
+        }
+    }
+
+    private void playerQuit(Player player) {
+        if (containsPlayer(player)) {
+            CorePlayer corePlayer = getCorePlayer(player);
             corePlayer.destroy();
             corePlayerList.remove(corePlayer);
         } else {

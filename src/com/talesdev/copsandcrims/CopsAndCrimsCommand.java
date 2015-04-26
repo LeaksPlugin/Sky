@@ -6,7 +6,7 @@ import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.module.ShootingModule;
 import com.talesdev.core.math.MathRandom;
 import com.talesdev.core.player.uuid.UUIDTask;
-import com.talesdev.core.scoreboard.WrappedSidebarObjective;
+import com.talesdev.core.scoreboard.WrappedScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -100,7 +100,7 @@ public class CopsAndCrimsCommand implements CommandExecutor {
                 if (sender instanceof Player) {
                     Player player = (Player) sender;
                     CvCPlayer cPlayer = CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(player);
-                    WrappedSidebarObjective objective = cPlayer.getSidebarObjective();
+                    WrappedScoreboard objective = cPlayer.getSidebarObjective();
                     objective.setTitle(ChatColor.GREEN + "Your stats");
                     objective.setMaxLine(15);
                     objective.setLine(14, ChatColor.BLUE + "Kills");

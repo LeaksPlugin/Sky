@@ -7,7 +7,7 @@ import com.talesdev.copsandcrims.arena.data.PlayerArenaStatus;
 import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.core.scoreboard.BelowNameObjective;
 import com.talesdev.core.scoreboard.HealthBar;
-import com.talesdev.core.scoreboard.WrappedSidebarObjective;
+import com.talesdev.core.scoreboard.WrappedScoreboard;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -21,7 +21,7 @@ import org.bukkit.scoreboard.Scoreboard;
 public class CvCPlayer {
     private PlayerArenaData playerArenaData;
     private Scoreboard playerScoreboard;
-    private WrappedSidebarObjective sidebarObjective;
+    private WrappedScoreboard sidebarObjective;
     private BelowNameObjective belowNameObjective;
     private HealthBar healthBar;
     private boolean debug = false;
@@ -41,7 +41,7 @@ public class CvCPlayer {
         this.playerArenaData = new PlayerArenaData(this);
         this.playerArenaData.setStatus(PlayerArenaStatus.NOT_PLAYING);
         playerScoreboard = CopsAndCrims.getPlugin().getServer().getScoreboardManager().getNewScoreboard();
-        sidebarObjective = new WrappedSidebarObjective(playerScoreboard);
+        sidebarObjective = new WrappedScoreboard(playerScoreboard);
         healthBar = new HealthBar(playerScoreboard);
         updateScoreboard();
         this.playerBullet = new PlayerBullet(this);
@@ -149,7 +149,7 @@ public class CvCPlayer {
         return playerScoreboard;
     }
 
-    public WrappedSidebarObjective getSidebarObjective() {
+    public WrappedScoreboard getSidebarObjective() {
         return sidebarObjective;
     }
 

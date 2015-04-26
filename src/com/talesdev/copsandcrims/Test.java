@@ -1,42 +1,44 @@
 package com.talesdev.copsandcrims;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import com.talesdev.core.config.Savable;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import java.util.Random;
 
 public class Test {
 
     public static void main(String[] args) {
-        boolean useArrayList = true;
+        Test test = new Test();
+        for (int i = 0; i < 1000; i++) {
+            System.out.println(test.sectionOf(new TestSavable(), "node"));
+        }
+    }
 
-        List<String> list = useArrayList ? new ArrayList<String>() : new LinkedList<String>();
-        for (int i = 0; i < 100000; i++) {
-            list.add(UUID.randomUUID().toString());
+    public String sectionOf(Savable savable, String node) {
+        return (savable.getName() != null ? (savable.getName().length() > 0 ? savable.getName() + "." : "") : "") + node;
+    }
+
+    static class TestSavable implements Savable {
+        int random = new Random().nextInt(10);
+
+        public TestSavable() {
+            System.out.println("length : " + random);
         }
 
-        int sum = 0;
+        @Override
+        public void loadFrom(FileConfiguration config) {
 
-        long start = System.currentTimeMillis();
-        Iterator<String> iter = list.iterator();
-        while (iter.hasNext()) {
-            String s = iter.next();
-            sum += s.length();
-        }
-        System.out.println(System.currentTimeMillis() - start);
+    }
 
-        start = System.currentTimeMillis();
-        for (String s : list) {
-            sum += s.length();
-        }
-        System.out.println(System.currentTimeMillis() - start);
+        @Override
+        public void saveTo(FileConfiguration config) {
 
-        start = System.currentTimeMillis();
-        for (int i = 0; i < list.size(); i++) {
-            String s = list.get(i);
-            sum += s.length();
         }
-        System.out.println(System.currentTimeMillis() - start);
+
+        @Override
+        public String getName() {
+            return RandomStringUtils.randomAlphanumeric(random);
+        }
     }
 }

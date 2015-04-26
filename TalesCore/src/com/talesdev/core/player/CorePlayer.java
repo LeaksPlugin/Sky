@@ -5,15 +5,24 @@ import com.talesdev.core.config.ConfigFile;
 import com.talesdev.core.config.Savable;
 import com.talesdev.core.network.SendablePlayerMessage;
 import com.talesdev.core.player.data.EquipmentCache;
+import com.talesdev.core.player.data.PlayerDamage;
 import com.talesdev.core.player.data.PlayerLocation;
+import com.talesdev.core.scoreboard.HealthBar;
+import com.talesdev.core.scoreboard.WrappedScoreboard;
+import com.talesdev.core.system.Destroyable;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Core Player
@@ -23,10 +32,15 @@ import java.util.Set;
 public class CorePlayer {
     private ConfigFile playerConfig;
     private Set<Savable> autoSave;
+    private Set<Destroyable> autoDestroy;
     private TalesCore core;
     private PlayerTask playerTask;
     private EquipmentCache equipmentCache;
     private PlayerLocation playerLocation;
+    private Scoreboard playerScoreboard;
+    private WrappedScoreboard wrappedScoreboard;
+    private HealthBar healthBar;
+    private PlayerDamage playerDamage;
     private Player player;
 
     public CorePlayer(Player player, TalesCore core) {
@@ -35,9 +49,14 @@ public class CorePlayer {
         this.playerConfig = new ConfigFile(playerFileLocation());
         this.playerConfig.load();
         this.autoSave = new HashSet<>();
+        this.autoDestroy = new HashSet<>();
         this.playerTask = new PlayerTask(this);
         this.equipmentCache = new EquipmentCache(this);
         this.playerLocation = new PlayerLocation(this);
+        this.playerDamage = new PlayerDamage(this);
+        this.playerScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        this.healthBar = new HealthBar(playerScoreboard);
+        this.wrappedScoreboard = new WrappedScoreboard(playerScoreboard);
         // load
         this.load();
     }
@@ -71,6 +90,10 @@ public class CorePlayer {
         autoSave.add(savable);
     }
 
+    public void autoDestroy(Destroyable destroyable) {
+        autoDestroy.add(destroyable);
+    }
+
     public void listen(Listener listener) {
         core.getServer().getPluginManager().registerEvents(listener, core);
     }
@@ -85,12 +108,38 @@ public class CorePlayer {
 
     public void destroy() {
         save();
-        playerTask.destroy();
+        autoDestroy.forEach(Destroyable::destroy);
         playerConfig.save();
+    }
+
+    public String sectionOf(Savable savable, String node) {
+        return (savable.getName() != null ? (savable.getName().length() > 0 ? savable.getName() + "." : "") : "") + node;
+    }
+
+    public void updateScoreboard() {
+        wrappedScoreboard.update();
+        getPlayer().setScoreboard(getPlayerScoreboard());
+    }
+
+    public void clearScoreboard() {
+        wrappedScoreboard.reset();
+        getPlayer().setScoreboard(getPlayerScoreboard());
     }
 
     public TalesCore getCore() {
         return core;
+    }
+
+    public Server getServer() {
+        return core.getServer();
+    }
+
+    public Logger getLogger() {
+        return Logger.getLogger("[CorePlayer][" + player.getName() + "]");
+    }
+
+    public BukkitScheduler getScheduler() {
+        return core.getServer().getScheduler();
     }
 
     public EquipmentCache getEquipmentCache() {
@@ -107,5 +156,21 @@ public class CorePlayer {
 
     public PlayerTask getPlayerTask() {
         return playerTask;
+    }
+
+    public HealthBar getHealthBar() {
+        return healthBar;
+    }
+
+    public Scoreboard getPlayerScoreboard() {
+        return playerScoreboard;
+    }
+
+    public WrappedScoreboard getWrappedScoreboard() {
+        return wrappedScoreboard;
+    }
+
+    public PlayerDamage getPlayerDamage() {
+        return playerDamage;
     }
 }

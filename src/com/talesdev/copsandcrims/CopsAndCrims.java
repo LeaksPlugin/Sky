@@ -8,6 +8,7 @@ import com.talesdev.copsandcrims.guns.*;
 import com.talesdev.copsandcrims.player.PlayerBulletTask;
 import com.talesdev.copsandcrims.player.PlayerEquipmentListener;
 import com.talesdev.copsandcrims.weapon.WeaponFactory;
+import com.talesdev.core.player.HealthBarMultiplier;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -34,7 +35,7 @@ public class CopsAndCrims extends JavaPlugin {
         serverCvCArena = new ServerCvCArena(this);
         // save config
         saveDefaultConfig();
-        // listener
+        // event
         getServer().getPluginManager().registerEvents(new CopsAndCrimsListener(this), this);
         // command
         getCommand("cvc").setExecutor(new CopsAndCrimsCommand(this));
@@ -57,7 +58,7 @@ public class CopsAndCrims extends JavaPlugin {
         getServerCvCArena().loadArenaInfo();
         // protocol
         ProtocolLibrary.getProtocolManager().addPacketListener(new PlayerEquipmentListener(this));
-        ProtocolLibrary.getProtocolManager().addPacketListener(new MyPacketAdapter(this));
+        ProtocolLibrary.getProtocolManager().addPacketListener(new HealthBarMultiplier(this));
         // task
         recoilTask = getServer().getScheduler().runTaskTimerAsynchronously(this, new PlayerBulletTask(this), 0, 1);
     }
