@@ -15,11 +15,9 @@ import java.util.Map;
  */
 public class PlayerBullet {
     private Map<String, WeaponBullet> bulletAmount;
-    private CvCPlayer player;
 
-    public PlayerBullet(CvCPlayer player) {
+    public PlayerBullet() {
         this.bulletAmount = new HashMap<>();
-        this.player = player;
         init();
     }
 

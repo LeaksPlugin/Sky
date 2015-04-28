@@ -33,6 +33,7 @@ public class TalesCore extends JavaPlugin {
         checkupFileSystem();
         uuidMap = new UUIDMap(this);
         corePlayer = new ServerCorePlayer(this);
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         getCommand("unicode").setExecutor(new UnicodeCommandExecutor());
         UUIDSystem uuidSystem = new UUIDSystem(this);
         getCommand("uuid").setExecutor(uuidSystem);

@@ -36,6 +36,7 @@ public class CopsAndCrims extends JavaPlugin {
         // save config
         saveDefaultConfig();
         // event
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         getServer().getPluginManager().registerEvents(new CopsAndCrimsListener(this), this);
         // command
         getCommand("cvc").setExecutor(new CopsAndCrimsCommand(this));

@@ -1,10 +1,10 @@
 package com.talesdev.copsandcrims;
 
-import com.talesdev.copsandcrims.guns.DesertEagle;
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.module.ShootingModule;
 import com.talesdev.core.math.MathRandom;
+import com.talesdev.core.network.BungeeServer;
 import com.talesdev.core.player.uuid.UUIDTask;
 import com.talesdev.core.scoreboard.WrappedScoreboard;
 import org.bukkit.Bukkit;
@@ -44,12 +44,8 @@ public class CopsAndCrimsCommand implements CommandExecutor {
                 }
             } else if (args[0].equalsIgnoreCase("test")) {
                 if (sender instanceof Player) {
-                    Weapon weapon = CopsAndCrims.getPlugin().getWeaponFactory().getWeapon(DesertEagle.class);
-                    ((Player) sender).getInventory().addItem(CopsAndCrims.getPlugin().getWeaponFactory().createWeaponItem(DesertEagle.class));
-                    CvCPlayer cvCPlayer = CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer((Player) sender);
-                    cvCPlayer.getPlayerBullet().getBullet(weapon.getName()).setBulletCount(
-                            cvCPlayer.getPlayerBullet().getBullet(weapon.getName()).getMaxBullet()
-                    );
+                    BungeeServer bungeeServer = new BungeeServer(plugin, "lobby");
+                    bungeeServer.send(((Player) sender));
                     return true;
                 }
             } else if (args[0].equalsIgnoreCase("getweapon")) {

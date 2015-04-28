@@ -44,7 +44,7 @@ public class CvCPlayer {
         sidebarObjective = new WrappedScoreboard(playerScoreboard);
         healthBar = new HealthBar(playerScoreboard);
         updateScoreboard();
-        this.playerBullet = new PlayerBullet(this);
+        this.playerBullet = new PlayerBullet();
         this.playerRecoil = new PlayerRecoil(this);
         this.isWalking = false;
         this.lastWalkingTime = System.currentTimeMillis();

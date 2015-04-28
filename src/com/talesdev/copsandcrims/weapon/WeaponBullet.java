@@ -1,11 +1,14 @@
 package com.talesdev.copsandcrims.weapon;
 
+import com.talesdev.core.player.data.HashItemData;
+import com.talesdev.core.player.data.ItemData;
+
 /**
  * Weapon bullet
  *
  * @author MoKunz
  */
-public class WeaponBullet {
+public class WeaponBullet extends HashItemData {
     private String weaponName = "";
     private int bulletCount;
     private int maxBullet;
@@ -72,5 +75,20 @@ public class WeaponBullet {
 
     public void respondCancel() {
         this.cancel = false;
+    }
+
+    @Override
+    public String forItem() {
+        return weaponName;
+    }
+
+    @Override
+    public String dataType() {
+        return "WeaponBullet";
+    }
+
+    @Override
+    public Class<? extends ItemData> getClassType() {
+        return getClass();
     }
 }

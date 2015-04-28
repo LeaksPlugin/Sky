@@ -5,6 +5,7 @@ import com.talesdev.core.config.ConfigFile;
 import com.talesdev.core.config.Savable;
 import com.talesdev.core.network.SendablePlayerMessage;
 import com.talesdev.core.player.data.EquipmentCache;
+import com.talesdev.core.player.data.ItemDataSet;
 import com.talesdev.core.player.data.PlayerDamage;
 import com.talesdev.core.player.data.PlayerLocation;
 import com.talesdev.core.scoreboard.HealthBar;
@@ -21,6 +22,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import java.io.File;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -33,6 +35,7 @@ public class CorePlayer {
     private ConfigFile playerConfig;
     private Set<Savable> autoSave;
     private Set<Destroyable> autoDestroy;
+    private Set<ItemDataSet> itemDataSet;
     private TalesCore core;
     private PlayerTask playerTask;
     private EquipmentCache equipmentCache;
@@ -50,6 +53,7 @@ public class CorePlayer {
         this.playerConfig.load();
         this.autoSave = new HashSet<>();
         this.autoDestroy = new HashSet<>();
+        this.itemDataSet = new HashSet<>();
         this.playerTask = new PlayerTask(this);
         this.equipmentCache = new EquipmentCache(this);
         this.playerLocation = new PlayerLocation(this);
@@ -124,6 +128,41 @@ public class CorePlayer {
     public void clearScoreboard() {
         wrappedScoreboard.reset();
         getPlayer().setScoreboard(getPlayerScoreboard());
+    }
+
+    public Set<ItemDataSet> getItemDataSet() {
+        return new HashSet<>(itemDataSet);
+    }
+
+    public void add(ItemDataSet itemDataSet) {
+        this.itemDataSet.add(itemDataSet);
+    }
+
+    public ItemDataSet get(String itemName) {
+        for (ItemDataSet itemDataSet : this.itemDataSet) {
+            if (itemDataSet.getItemName().equalsIgnoreCase(itemName)) {
+                return itemDataSet;
+            }
+        }
+        return null;
+    }
+
+    public boolean contains(String itemName) {
+        for (ItemDataSet itemDataSet : this.itemDataSet) {
+            if (itemDataSet.getItemName().equalsIgnoreCase(itemName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void remove(String itemName) {
+        for (Iterator<ItemDataSet> dataListIterator = itemDataSet.iterator(); dataListIterator.hasNext(); ) {
+            ItemDataSet itemDataSet = dataListIterator.next();
+            if (itemDataSet.getItemName().equalsIgnoreCase(itemName)) {
+                dataListIterator.remove();
+            }
+        }
     }
 
     public TalesCore getCore() {
