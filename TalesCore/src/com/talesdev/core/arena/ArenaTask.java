@@ -1,55 +1,57 @@
-package com.talesdev.core.player;
+package com.talesdev.core.arena;
 
 import com.talesdev.core.server.ManagedTask;
-import com.talesdev.core.system.Destroyable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Player task manager
+ * Arena managed task
  *
  * @author MoKunz
  */
-public class PlayerTask implements Destroyable, ManagedTask {
-    private final CorePlayer corePlayer;
+public class ArenaTask implements ManagedTask {
     private Map<String, BukkitTask> taskMap;
+    private GameArena gameArena;
 
-    public PlayerTask(CorePlayer corePlayer) {
-        this.corePlayer = corePlayer;
-        this.corePlayer.autoDestroy(this);
-        taskMap = new HashMap<>();
+    public ArenaTask(GameArena gameArena) {
+        this.gameArena = gameArena;
+        this.taskMap = new HashMap<>();
     }
 
+    @Override
     public void store(String nameRef, BukkitTask bukkitTask) {
-        taskMap.putIfAbsent(nameRef, bukkitTask);
+        if (!contains(nameRef)) {
+            taskMap.put(nameRef, bukkitTask);
+        }
     }
 
+    @Override
     public BukkitTask get(String nameRef) {
         return taskMap.get(nameRef);
     }
 
+    @Override
     public void cancel(String nameRef) {
         if (contains(nameRef)) {
             get(nameRef).cancel();
+            taskMap.remove(nameRef);
         }
     }
 
+    @Override
     public void cancelAll() {
         taskMap.keySet().forEach(this::cancel);
+        taskMap.clear();
     }
 
+    @Override
     public boolean contains(String nameRef) {
         return taskMap.containsKey(nameRef);
     }
 
-    public void destroy() {
-        cancelAll();
-        taskMap.clear();
-    }
-
-    public CorePlayer getCorePlayer() {
-        return corePlayer;
+    public GameArena getGameArena() {
+        return gameArena;
     }
 }

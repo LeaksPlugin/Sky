@@ -13,9 +13,11 @@ import org.bukkit.event.HandlerList;
 public class PlayerJoinArenaEvent extends PlayerArenaEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private boolean cancel = false;
+    private int oldPlayerCount;
 
-    public PlayerJoinArenaEvent(GameArena gameArena, Player player) {
+    public PlayerJoinArenaEvent(GameArena gameArena, Player player, int oldPlayerCount) {
         super(gameArena, player);
+        this.oldPlayerCount = oldPlayerCount;
     }
 
     public static HandlerList getHandlerList() {
@@ -33,5 +35,13 @@ public class PlayerJoinArenaEvent extends PlayerArenaEvent implements Cancellabl
     @Override
     public HandlerList getHandlers() {
         return handlers;
+    }
+
+    public int getOldPlayerCount() {
+        return oldPlayerCount;
+    }
+
+    public int getNewPlayerCount() {
+        return oldPlayerCount + 1;
     }
 }

@@ -1,10 +1,11 @@
 package com.talesdev.core.arena.team;
 
 import com.talesdev.core.arena.GameArena;
+import com.talesdev.core.arena.Joinable;
 import com.talesdev.core.arena.scoreboard.DisplayScoreboard;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,52 +15,25 @@ import java.util.Set;
  *
  * @author MoKunz
  */
-public class GlobalScoreboard {
+public class GlobalScoreboard implements Joinable {
     private DisplayScoreboard displayScoreboard;
     private Scoreboard globalScoreboard;
-    private Set<Team> teamSet;
     private GameArena gameArena;
+    private GlobalTeam team;
+    private Set<LocalTeam> localTeamSet;
 
     public GlobalScoreboard(GameArena gameArena) {
         this.gameArena = gameArena;
         this.globalScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        this.teamSet = new HashSet<>();
-    }
-
-    public boolean addTeam(Team team) {
-        return teamSet.add(team);
-    }
-
-    public boolean containsTeam(Team team) {
-        return teamSet.contains(team);
-    }
-
-    public boolean containsTeam(String name) {
-        for (Team team : teamSet) {
-            if (team.getName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean removeTeam(Team team) {
-        return teamSet.remove(team);
-    }
-
-    public void clear() {
-        teamSet.clear();
-    }
-
-    public Set<Team> getAllTeam() {
-        return new HashSet<>(teamSet);
+        this.team = new GlobalTeam(gameArena);
+        this.localTeamSet = new HashSet<>();
     }
 
     public GameArena getGameArena() {
         return gameArena;
     }
 
-    public Scoreboard getGlobalScoreboard() {
+    public Scoreboard getScoreboard() {
         return globalScoreboard;
     }
 
@@ -72,7 +46,65 @@ public class GlobalScoreboard {
         getGameArena().getPlayerSet().forEach(displayScoreboard::start);
     }
 
+    public <T extends DisplayScoreboard> T getDisplayScoreboard(Class<T> scoreboardClass) {
+        return scoreboardClass.cast(displayScoreboard);
+    }
+
+    public <T extends DisplayScoreboard> boolean displaying(Class<T> scoreboardClass) {
+        return displayScoreboard.getClass().getName().equals(scoreboardClass.getName());
+    }
+
+    public void updateLocalTeam() {
+        localTeamSet.forEach(LocalTeam::update);
+    }
+
     public void updateDisplayScoreboard() {
         getGameArena().getPlayerSet().forEach(displayScoreboard::update);
+    }
+
+    public GlobalTeam getTeam() {
+        return team;
+    }
+
+    public Set<LocalTeam> getLocalTeamSet() {
+        return new HashSet<>(localTeamSet);
+    }
+
+    public void addLocalTeam(Player player) {
+        localTeamSet.add(new LocalTeam(player, this));
+    }
+
+    public LocalTeam getLocalTeam(Player player) {
+        for (LocalTeam localTeam : localTeamSet) {
+            if (localTeam.getPlayer().equals(player)) {
+                return localTeam;
+            }
+        }
+        return null;
+    }
+
+    public boolean containsLocalTeam(Player player) {
+        for (LocalTeam localTeam : localTeamSet) {
+            if (localTeam.getPlayer().equals(player)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void removeLocalTeam(Player player) {
+        localTeamSet.remove(getLocalTeam(player));
+    }
+
+    @Override
+    public boolean join(Player player) {
+        addLocalTeam(player);
+        return true;
+    }
+
+    @Override
+    public boolean leave(Player player) {
+        removeLocalTeam(player);
+        return true;
     }
 }

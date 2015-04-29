@@ -1,4 +1,6 @@
-package com.talesdev.core.arena;
+package com.talesdev.core.arena.phase;
+
+import com.talesdev.core.arena.GameArena;
 
 /**
  * Game phase

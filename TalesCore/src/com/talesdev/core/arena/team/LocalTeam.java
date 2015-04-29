@@ -34,7 +34,7 @@ public class LocalTeam {
         CorePlayer corePlayer = getCorePlayer(player);
         Scoreboard localScoreboard = corePlayer.getPlayerScoreboard();
         // all teams in scoreboard
-        for (Team globalTeam : getScoreboard().getAllTeam()) {
+        for (Team globalTeam : getScoreboard().getGameArena().getTeam().getTeamList()) {
             Team localTeam = localScoreboard.getTeam(globalTeam.getName());
             // create if not exists
             if (localTeam == null) {
@@ -90,5 +90,15 @@ public class LocalTeam {
      */
     public CorePlayer getCorePlayer(Player player) {
         return TalesCore.getPlugin().getCorePlayer(player);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return player.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return player.hashCode();
     }
 }
