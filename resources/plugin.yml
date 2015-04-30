@@ -14,3 +14,7 @@ commands:
       usage: "§e/cvcarena help"
       permission: cvc.command.cvcarena;
       permission-message: "§cYou don't have permission"
+    tdm:
+      description: "TDM Arena command"
+      permission: tdm.command
+      permission-message: "§cYou don't have permission"

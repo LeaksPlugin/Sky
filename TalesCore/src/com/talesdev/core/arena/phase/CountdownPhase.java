@@ -13,8 +13,12 @@ public class CountdownPhase implements GamePhase {
 
     @Override
     public void dispatch(GameArena arena) {
-        arena.setGameState(GameState.COUNTDOWN);
-        Countdown countdown = new Countdown(arena);
-        countdown.start();
+        if (arena.isLocked()) return;
+        if (arena.getGameState().equals(GameState.WAITING)) {
+            arena.setGameState(GameState.COUNTDOWN);
+            Countdown countdown = new Countdown(arena, 30);
+            countdown.onFinish(() -> arena.dispatchPhase(new StartGamePhase()));
+            countdown.start();
+        }
     }
 }

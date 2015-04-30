@@ -1,6 +1,5 @@
 package com.talesdev.copsandcrims.dedicated;
 
-import com.talesdev.core.arena.GameArena;
 import com.talesdev.core.arena.world.ArenaWorld;
 import org.bukkit.util.Vector;
 
@@ -9,13 +8,13 @@ import org.bukkit.util.Vector;
  *
  * @author MoKunz
  */
-public class TDMArenaWorld implements ArenaWorld {
+public class TDMArenaWorld implements ArenaWorld<TDMGameArena> {
     private String mapName = "";
     private Vector minBound;
     private Vector maxBound;
-    private GameArena gameArena;
+    private TDMGameArena gameArena;
 
-    public TDMArenaWorld(GameArena gameArena) {
+    public TDMArenaWorld(TDMGameArena gameArena) {
         this.gameArena = gameArena;
     }
 
@@ -44,7 +43,7 @@ public class TDMArenaWorld implements ArenaWorld {
     }
 
     @Override
-    public GameArena getArena() {
+    public TDMGameArena getArena() {
         return gameArena;
     }
 

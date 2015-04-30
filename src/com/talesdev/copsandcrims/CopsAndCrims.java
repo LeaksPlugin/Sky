@@ -1,13 +1,12 @@
 package com.talesdev.copsandcrims;
 
 import com.comphenix.protocol.ProtocolLibrary;
-import com.talesdev.copsandcrims.arena.CvCArenaCommand;
-import com.talesdev.copsandcrims.arena.game.NullArenaController;
-import com.talesdev.copsandcrims.arena.game.TDMArenaController;
+import com.talesdev.copsandcrims.dedicated.TDMGameArena;
 import com.talesdev.copsandcrims.guns.*;
 import com.talesdev.copsandcrims.player.PlayerBulletTask;
 import com.talesdev.copsandcrims.player.PlayerEquipmentListener;
 import com.talesdev.copsandcrims.weapon.WeaponFactory;
+import com.talesdev.core.arena.DedicatedArenaCommand;
 import com.talesdev.core.player.HealthBarMultiplier;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -23,6 +22,7 @@ public class CopsAndCrims extends JavaPlugin {
     private WeaponFactory weaponFactory;
     private ServerCvCPlayer serverCvCPlayer;
     private ServerCvCArena serverCvCArena;
+    private TDMGameArena tdmGameArena;
 
     public static CopsAndCrims getPlugin() {
         return CopsAndCrims.getPlugin(CopsAndCrims.class);
@@ -40,7 +40,6 @@ public class CopsAndCrims extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CopsAndCrimsListener(this), this);
         // command
         getCommand("cvc").setExecutor(new CopsAndCrimsCommand(this));
-        getCommand("cvcarena").setExecutor(new CvCArenaCommand(this));
         // item
         getWeaponFactory().addWeapon(new AK47());
         getWeaponFactory().addWeapon(new AWP());
@@ -53,10 +52,9 @@ public class CopsAndCrims extends JavaPlugin {
         getWeaponFactory().addWeapon(new M4A1());
         getWeaponFactory().addWeapon(new P250());
         getWeaponFactory().addWeapon(new SSG08());
-        // arena controller
-        getServerCvCArena().addController(new TDMArenaController());
-        getServerCvCArena().addController(new NullArenaController());
-        getServerCvCArena().loadArenaInfo();
+        // new Arena
+        tdmGameArena = new TDMGameArena();
+        getCommand("tdm").setExecutor(new DedicatedArenaCommand(tdmGameArena, "tdm"));
         // protocol
         ProtocolLibrary.getProtocolManager().addPacketListener(new PlayerEquipmentListener(this));
         ProtocolLibrary.getProtocolManager().addPacketListener(new HealthBarMultiplier(this));
@@ -71,6 +69,7 @@ public class CopsAndCrims extends JavaPlugin {
         // shutdown system
         getServerCvCPlayer().shutdown();
         getServerCvCArena().shutDown();
+        tdmGameArena.destroy();
         saveConfig();
         getLogger().info("Plugin has been disabled!");
     }
@@ -85,5 +84,9 @@ public class CopsAndCrims extends JavaPlugin {
 
     public ServerCvCArena getServerCvCArena() {
         return serverCvCArena;
+    }
+
+    public TDMGameArena getTdmGameArena() {
+        return tdmGameArena;
     }
 }

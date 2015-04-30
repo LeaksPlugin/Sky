@@ -1,2 +1,6 @@
 debug: false
 strict-inventory-check: false
+arena-locked: true
+spawn:
+    Terrorist: []
+    CounterTerrorist: []

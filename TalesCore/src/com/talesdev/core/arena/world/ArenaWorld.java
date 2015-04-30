@@ -8,7 +8,7 @@ import org.bukkit.util.Vector;
  *
  * @author MoKunz
  */
-public interface ArenaWorld {
+public interface ArenaWorld<T extends GameArena> {
     /**
      * Get the name of this arena
      *
@@ -43,5 +43,5 @@ public interface ArenaWorld {
      *
      * @return the GameArena of this map
      */
-    GameArena getArena();
+    T getArena();
 }

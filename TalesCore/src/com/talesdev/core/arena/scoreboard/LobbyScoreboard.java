@@ -1,6 +1,7 @@
 package com.talesdev.core.arena.scoreboard;
 
 import com.talesdev.core.TalesCore;
+import com.talesdev.core.arena.GameArena;
 import com.talesdev.core.player.CorePlayer;
 import com.talesdev.core.scoreboard.WrappedScoreboard;
 import org.bukkit.ChatColor;
@@ -37,12 +38,21 @@ public class LobbyScoreboard implements DisplayScoreboard {
     public void update(Player player) {
         if (getCorePlayer(player) != null) {
             WrappedScoreboard scoreboard = getCorePlayer(player).getWrappedScoreboard();
+            scoreboard.setTitle(title);
+            scoreboard.setLine(5, "Players : " + ChatColor.GREEN + getPlayers() + "/" + getMaxPlayers());
+            scoreboard.setLine(3, "Status : " + ChatColor.GREEN + generateStatus());
+            scoreboard.update();
         }
     }
 
     @Override
     public Class<? extends LobbyScoreboard> getType() {
         return getClass();
+    }
+
+    @Override
+    public GameArena getGameArena() {
+        return null;
     }
 
     private String generateStatus() {

@@ -34,9 +34,9 @@ public class GlobalTeam {
         return new ArrayList<>(teamList);
     }
 
-    public boolean containsTeam(Team t) {
+    public boolean containsTeam(String name) {
         for (Team team : teamList) {
-            if (team.getName().equals(t.getName())) {
+            if (team.getName().equals(name)) {
                 return true;
             }
         }
@@ -44,7 +44,7 @@ public class GlobalTeam {
     }
 
     public void newTeam(Team team) {
-        if (!containsTeam(team)) {
+        if (!containsTeam(team.getName())) {
             teamList.add(team);
         }
     }
@@ -71,7 +71,7 @@ public class GlobalTeam {
     }
 
     public void removeTeam(Team team, boolean unregister) {
-        if (!containsTeam(team)) {
+        if (!containsTeam(team.getName())) {
             if (unregister) team.unregister();
             teamList.remove(team);
         }

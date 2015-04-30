@@ -8,15 +8,15 @@ import com.talesdev.core.arena.GameArenaListener;
  *
  * @author MoKunz
  */
-public abstract class GeneralArenaListener implements GameArenaListener {
+public abstract class GeneralArenaListener<T extends GameArena> implements GameArenaListener {
 
-    private GameArena gameArena;
+    private T gameArena;
 
-    public GeneralArenaListener(GameArena gameArena) {
+    public GeneralArenaListener(T gameArena) {
         this.gameArena = gameArena;
     }
 
-    public GameArena getGameArena() {
+    public T getGameArena() {
         return gameArena;
     }
 

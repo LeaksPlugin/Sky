@@ -12,18 +12,27 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class Countdown extends BukkitRunnable {
     private GameArena gameArena;
-    private int currentCountDown;
+    private int currentCountDown = 30;
+    private Runnable onFinish;
 
-    public Countdown(GameArena gameArena) {
+    public Countdown(GameArena gameArena, int countdown) {
         this.gameArena = gameArena;
+        if (countdown > 2) {
+            this.currentCountDown = countdown;
+        }
     }
 
     public void start() {
-        gameArena.getTask().store("countdown", runTaskTimer(gameArena.getPlugin(), 0, 1));
+        gameArena.getTask().store("countdown", runTaskTimer(gameArena.getPlugin(), 0, 20));
+        gameArena.systemMessage("The game will be started in " + currentCountDown + " seconds!");
     }
 
     public void stop() {
         cancel();
+    }
+
+    public void onFinish(Runnable runnable) {
+        this.onFinish = runnable;
     }
 
     @Override
@@ -34,10 +43,15 @@ public class Countdown extends BukkitRunnable {
             return;
         }
         if (event.isFinished()) {
+            gameArena.setGameState(GameState.STARTED);
+            gameArena.getScheduler().runTask(gameArena.getPlugin(), onFinish);
             cancel();
             return;
         }
         updateScoreboard();
+        if (currentCountDown <= 10) {
+            gameArena.systemMessage("The game will be started in " + currentCountDown + " seconds!");
+        }
         currentCountDown--;
     }
 

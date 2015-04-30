@@ -16,6 +16,9 @@ public class LobbyPhase implements GamePhase {
         arena.setGameState(GameState.WAITING);
         LobbyScoreboard lobbyScoreboard = new LobbyScoreboard();
         lobbyScoreboard.setTitle(ChatColor.GREEN + "");
+        lobbyScoreboard.setCountdown(-1);
+        lobbyScoreboard.setMaxPlayers(arena.getMaxPlayers());
+        lobbyScoreboard.setPlayers(arena.playing());
         arena.applyScoreboard(new LobbyScoreboard());
     }
 }

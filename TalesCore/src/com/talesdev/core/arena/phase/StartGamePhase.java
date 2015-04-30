@@ -11,6 +11,7 @@ import com.talesdev.core.arena.GameState;
 public class StartGamePhase implements GamePhase {
     @Override
     public void dispatch(GameArena arena) {
+        if (arena.isLocked()) return;
         arena.setGameState(GameState.STARTED);
         arena.startGame();
     }

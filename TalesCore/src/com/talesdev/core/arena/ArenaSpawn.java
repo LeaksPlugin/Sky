@@ -8,5 +8,7 @@ import org.bukkit.entity.Player;
  * @author MoKunz
  */
 public interface ArenaSpawn {
-    public void spawn(GameArena gameArena, Player player);
+    public void spawn(GameArena gameArena);
+
+    public void spawn(Player player);
 }

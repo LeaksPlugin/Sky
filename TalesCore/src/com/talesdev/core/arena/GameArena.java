@@ -3,6 +3,7 @@ package com.talesdev.core.arena;
 import com.talesdev.core.TalesCore;
 import com.talesdev.core.arena.event.PlayerJoinArenaEvent;
 import com.talesdev.core.arena.event.PlayerLeaveArenaEvent;
+import com.talesdev.core.arena.phase.CountdownPhase;
 import com.talesdev.core.arena.phase.GamePhase;
 import com.talesdev.core.arena.scoreboard.DisplayScoreboard;
 import com.talesdev.core.arena.team.GlobalScoreboard;
@@ -13,6 +14,7 @@ import com.talesdev.core.config.Savable;
 import com.talesdev.core.player.CorePlayer;
 import com.talesdev.core.server.ManagedTask;
 import com.talesdev.core.system.Destroyable;
+import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -23,6 +25,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Represent an arena
@@ -30,6 +33,8 @@ import java.util.Set;
  * @author MoKunz
  */
 public class GameArena implements Joinable {
+    protected boolean locked;
+    private int maxPlayers;
     private Plugin plugin;
     private ConfigFile configFile;
     private ArenaWorld arenaWorld;
@@ -39,23 +44,25 @@ public class GameArena implements Joinable {
     private Set<Savable> autoSave;
     private Set<Destroyable> destroyableSet;
     private Set<Player> playerSet;
+    private ArenaSpawn arenaSpawn;
     private GameArenaListener listener;
+    private String headMessage;
 
     public GameArena(Plugin plugin, ConfigFile configFile, ArenaWorld arenaWorld, GameArenaListener listener) {
         this.plugin = plugin;
-        this.configFile = configFile;
-        this.configFile.load();
-        load();
         this.playerSet = new HashSet<>();
         this.autoSave = new HashSet<>();
         this.destroyableSet = new HashSet<>();
+        this.configFile = configFile;
+        load();
+        headMessage = ChatColor.RED + "[CVC]";
         this.globalScoreboard = new GlobalScoreboard(this);
         this.task = new ArenaTask(this);
         this.arenaWorld = arenaWorld;
+        this.arenaSpawn = new TeamGameSpawn(this);
         this.gameState = GameState.WAITING;
         this.listener = listener;
         init();
-        listen(this.listener);
     }
 
     protected void init() {
@@ -66,12 +73,25 @@ public class GameArena implements Joinable {
 
     }
 
+    public void stopGame() {
+
+    }
+
     protected void setArenaWorld(ArenaWorld arenaWorld) {
         this.arenaWorld = arenaWorld;
     }
 
     protected void setGameArenaListener(GameArenaListener listener) {
         this.listener = listener;
+        listen(this.listener);
+    }
+
+    public ArenaSpawn getArenaSpawn() {
+        return arenaSpawn;
+    }
+
+    protected void setArenaSpawn(ArenaSpawn arenaSpawn) {
+        this.arenaSpawn = arenaSpawn;
     }
 
     public void listen(Listener listener) {
@@ -154,23 +174,37 @@ public class GameArena implements Joinable {
         return getServer().getScheduler();
     }
 
+    public Logger getLogger() {
+        return getPlugin().getLogger();
+    }
+
     public void destroy() {
         save();
         destroyableSet.forEach(Destroyable::destroy);
         configFile.save();
     }
 
-    public void broadcastMessage(String message) {
+    public void systemMessage(String message) {
+        playerSet.forEach(player -> player.sendMessage(headMessage + ChatColor.YELLOW + message));
+    }
+
+    public void sendMessage(String message) {
         playerSet.forEach(player -> player.sendMessage(message));
     }
 
     @Override
     public boolean join(Player player) {
+        if (!getGameState().canJoin()) {
+            return false;
+        }
         PlayerJoinArenaEvent event = new PlayerJoinArenaEvent(this, player, playerSet.size());
         plugin.getServer().getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
             addPlayer(player);
             getGlobalScoreboard().join(player);
+            if (playing() >= getMaxPlayers() / 2.0 && getGameState().equals(GameState.WAITING)) {
+                dispatchPhase(new CountdownPhase());
+            }
             return true;
         }
         return false;
@@ -210,5 +244,17 @@ public class GameArena implements Joinable {
 
     public ManagedTask getTask() {
         return task;
+    }
+
+    public int getMaxPlayers() {
+        return maxPlayers;
+    }
+
+    public void setMaxPlayers(int maxPlayers) {
+        this.maxPlayers = maxPlayers;
+    }
+
+    public boolean isLocked() {
+        return locked;
     }
 }
