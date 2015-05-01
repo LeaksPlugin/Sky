@@ -47,6 +47,7 @@ public class DedicatedArenaCommand implements CommandExecutor {
                             } else {
                                 if (!gameArena.containsPlayer(((Player) sender))) {
                                     gameArena.join(((Player) sender));
+                                    sender.sendMessage(ChatColor.GREEN + "You joined arena!");
                                 } else {
                                     sender.sendMessage(ChatColor.YELLOW + "Already in this arena!");
                                 }
@@ -117,6 +118,7 @@ public class DedicatedArenaCommand implements CommandExecutor {
                     if (sender.hasPermission(perm("command.start"))) {
                         if (gameArena.getGameState().equals(GameState.WAITING)) {
                             gameArena.dispatchPhase(new CountdownPhase());
+                            sender.sendMessage(ChatColor.GREEN + "Force starting arena!");
                         } else {
                             sender.sendMessage(ChatColor.RED + "Invalid arena state!");
                         }
@@ -127,6 +129,7 @@ public class DedicatedArenaCommand implements CommandExecutor {
                     if (sender.hasPermission(perm("command.end"))) {
                         if (gameArena.getGameState().equals(GameState.STARTED)) {
                             gameArena.dispatchPhase(new EndPhase("Draw"));
+                            sender.sendMessage(ChatColor.GREEN + "Force ending arena!");
                         } else {
                             sender.sendMessage(ChatColor.RED + "Invalid arena state!");
                         }
@@ -141,10 +144,8 @@ public class DedicatedArenaCommand implements CommandExecutor {
                                 Location location = player.getLocation();
                                 FileConfiguration config = getGameArena().getConfig();
                                 List<String> locationList = config.getStringList("spawn." + args[1]);
-                                System.out.println("Before : " + locationList);
                                 locationList.add(new LocationString(location).toString());
                                 config.set("spawn." + args[1], locationList);
-                                System.out.println("After : " + config.getStringList("spawn." + args[1]));
                                 sender.sendMessage(ChatColor.GREEN + "Added spawn location of " + args[1]);
                             } else {
                                 sender.sendMessage(ChatColor.RED + "Team " + args[1] + " not found!");

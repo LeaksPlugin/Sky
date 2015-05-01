@@ -23,11 +23,11 @@ public class LobbyScoreboard implements DisplayScoreboard {
     public void start(Player player) {
         if (getCorePlayer(player) != null) {
             WrappedScoreboard scoreboard = getCorePlayer(player).getWrappedScoreboard();
-            scoreboard.reset();
             scoreboard.setTitle(title);
+            scoreboard.setMaxLine(7);
             scoreboard.setLine(6, "Map : " + ChatColor.GREEN + getMapName());
             scoreboard.setLine(5, "Players : " + ChatColor.GREEN + getPlayers() + "/" + getMaxPlayers());
-            scoreboard.setLine(3, "Status : " + ChatColor.GREEN + generateStatus());
+            scoreboard.setLine(3, "Status : " + ChatColor.GREEN + generateStatus(scoreboard));
             scoreboard.setLine(1, "mc.talesdev.com");
             scoreboard.setBlankLine(7, 4, 2);
             scoreboard.update();
@@ -40,7 +40,7 @@ public class LobbyScoreboard implements DisplayScoreboard {
             WrappedScoreboard scoreboard = getCorePlayer(player).getWrappedScoreboard();
             scoreboard.setTitle(title);
             scoreboard.setLine(5, "Players : " + ChatColor.GREEN + getPlayers() + "/" + getMaxPlayers());
-            scoreboard.setLine(3, "Status : " + ChatColor.GREEN + generateStatus());
+            scoreboard.setLine(3, "Status : " + ChatColor.GREEN + generateStatus(scoreboard));
             scoreboard.update();
         }
     }
@@ -55,9 +55,10 @@ public class LobbyScoreboard implements DisplayScoreboard {
         return null;
     }
 
-    private String generateStatus() {
+    private String generateStatus(WrappedScoreboard scoreboard) {
         if (countdown > 0) {
-            return "Starting in " + countdown + " " + (countdown == 1 ? "second" : "seconds");
+            scoreboard.setLine(2, "          " + ChatColor.GREEN + countdown + " " + (countdown == 1 ? "second" : "seconds"));
+            return "Starting in ";
         } else {
             return "Waiting...";
         }

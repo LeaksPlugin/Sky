@@ -9,20 +9,24 @@ import com.talesdev.copsandcrims.player.PlayerLastDamage;
 import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.module.FiringMode;
 import com.talesdev.copsandcrims.weapon.module.ShootingModule;
+import com.talesdev.core.TalesCore;
 import com.talesdev.core.entity.BoundingBox;
+import com.talesdev.core.entity.DamageData;
 import com.talesdev.core.math.Range;
+import com.talesdev.core.player.CorePlayer;
 import com.talesdev.core.player.LastPlayerDamage;
 import com.talesdev.core.world.NMSRayTrace;
 import com.talesdev.core.world.NearbyEntity;
 import com.talesdev.core.world.RayTrace;
-import com.talesdev.core.world.sound.SoundEffect;
 import com.talesdev.core.world.particle.ParticleEffect;
+import com.talesdev.core.world.sound.SoundEffect;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.util.Vector;
 
 import java.lang.reflect.InvocationTargetException;
@@ -334,6 +338,15 @@ public class Bullet {
                     PlayerLastDamage lastDamage = new PlayerLastDamage(getPlayer(), getWeapon(), this, damageByWeaponEvent.isHeadShot());
                     LastPlayerDamage lastPlayerDamage = new LastPlayerDamage(entity, CopsAndCrims.getPlugin());
                     lastPlayerDamage.setLastDamage(lastDamage);
+                    // new
+                    if (livingEntity instanceof Player) {
+                        CorePlayer corePlayer = TalesCore.getPlugin().getCorePlayer(((Player) livingEntity));
+                        DamageData data = new DamageData(damage, EntityDamageEvent.DamageCause.ENTITY_ATTACK, player);
+                        data.addAttachment("Bullet", this);
+                        data.addAttachment("Weapon", getWeapon());
+                        data.addAttachment("HeadShot", isHeadShot);
+                        corePlayer.getPlayerDamage().damage(data);
+                    }
                     if (((LivingEntity) entity).getHealth() - damage > 0) {
                         // damage packet
                         PacketContainer entityStatus = new PacketContainer(PacketType.Play.Server.ENTITY_STATUS);

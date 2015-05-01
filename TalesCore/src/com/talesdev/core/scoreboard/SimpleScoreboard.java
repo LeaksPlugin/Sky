@@ -133,6 +133,7 @@ public class SimpleScoreboard {
             obj.setDisplaySlot(DisplaySlot.SIDEBAR);
         }
 
+
         removed.stream().forEach((remove) -> {
             for (String s : scoreboard.getEntries()) {
                 Score score = obj.getScore(s);

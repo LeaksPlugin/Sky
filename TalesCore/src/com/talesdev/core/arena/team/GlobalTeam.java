@@ -1,6 +1,7 @@
 package com.talesdev.core.arena.team;
 
 import com.talesdev.core.arena.GameArena;
+import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.NameTagVisibility;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -60,6 +61,15 @@ public class GlobalTeam {
     public Team getTeam(String name) {
         for (Team team : teamList) {
             if (team.getName().equals(name)) {
+                return team;
+            }
+        }
+        return null;
+    }
+
+    public Team getTeam(Player player) {
+        for (Team team : teamList) {
+            if (team.hasPlayer(player)) {
                 return team;
             }
         }

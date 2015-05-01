@@ -104,6 +104,7 @@ public class CopsAndCrimsCommand implements CommandExecutor {
                     objective.setLine(11, ChatColor.RED + "Deaths");
                     objective.setLine(10, ChatColor.GRAY + " " + Integer.toString(MathRandom.randomRange(10, 20)));
                     objective.setBlankLine(12, 9, 8, 7, 6, 5, 4, 3, 2);
+                    objective.update();
                     cPlayer.updateScoreboard();
                     Inventory inventory = Bukkit.createInventory(player, 54, "Test");
                     inventory.setItem(0, new ItemStack(Material.COMPASS));

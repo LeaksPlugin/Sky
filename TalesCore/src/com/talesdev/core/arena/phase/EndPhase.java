@@ -18,7 +18,11 @@ public class EndPhase implements GamePhase {
 
     @Override
     public void dispatch(GameArena arena) {
+        if (arena.getGameState().equals(GameState.END)) {
+            return;
+        }
         arena.setGameState(GameState.END);
+        arena.stopGame();
         arena.getScheduler().runTaskLater(arena.getPlugin(), () -> {
             BungeeServer server = new BungeeServer(arena.getPlugin(), "lobby");
             arena.getPlayerSet().forEach(server::send);

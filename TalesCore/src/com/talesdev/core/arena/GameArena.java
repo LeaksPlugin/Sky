@@ -50,6 +50,7 @@ public class GameArena implements Joinable {
 
     public GameArena(Plugin plugin, ConfigFile configFile, ArenaWorld arenaWorld, GameArenaListener listener) {
         this.plugin = plugin;
+        getLogger().info("Preparing " + getClass().getSimpleName() + "...");
         this.playerSet = new HashSet<>();
         this.autoSave = new HashSet<>();
         this.destroyableSet = new HashSet<>();
@@ -62,7 +63,13 @@ public class GameArena implements Joinable {
         this.arenaSpawn = new TeamGameSpawn(this);
         this.gameState = GameState.WAITING;
         this.listener = listener;
+        locked = getConfig().getBoolean("arena-locked", true);
+        if (locked) {
+            getLogger().info("Arena is locked!");
+            getLogger().info("Set arena-locked to false if you want to open arena for joining!");
+        }
         init();
+        getLogger().info("Preparing completed!");
     }
 
     protected void init() {
@@ -75,6 +82,14 @@ public class GameArena implements Joinable {
 
     public void stopGame() {
 
+    }
+
+    public void updateDisplay(DisplayScoreboard displayScoreboard) {
+        getPlayerSet().forEach(displayScoreboard::update);
+    }
+
+    public void initDisplay(Player player, DisplayScoreboard displayScoreboard) {
+        displayScoreboard.start(player);
     }
 
     protected void setArenaWorld(ArenaWorld arenaWorld) {
@@ -100,10 +115,6 @@ public class GameArena implements Joinable {
 
     public void dispatchPhase(GamePhase gamePhase) {
         gamePhase.dispatch(this);
-    }
-
-    public void applyScoreboard(DisplayScoreboard displayScoreboard) {
-        globalScoreboard.setDisplayScoreboard(displayScoreboard);
     }
 
     public void autoSave(Savable savable) {
@@ -202,6 +213,8 @@ public class GameArena implements Joinable {
         if (!event.isCancelled()) {
             addPlayer(player);
             getGlobalScoreboard().join(player);
+            systemMessage(ChatColor.BLUE + player.getName() + ChatColor.YELLOW + " joined! (" + playing() + "/" + getMaxPlayers() + ")");
+            if (event.getAfterRun() != null) event.getAfterRun().run();
             if (playing() >= getMaxPlayers() / 2.0 && getGameState().equals(GameState.WAITING)) {
                 dispatchPhase(new CountdownPhase());
             }
@@ -216,6 +229,7 @@ public class GameArena implements Joinable {
         plugin.getServer().getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
             removePlayer(player);
+            TalesCore.getPlugin().getCorePlayer(player).getWrappedScoreboard().reset();
             getGlobalScoreboard().leave(player);
             return true;
         }

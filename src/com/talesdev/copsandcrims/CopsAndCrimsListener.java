@@ -2,9 +2,13 @@ package com.talesdev.copsandcrims;
 
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.copsandcrims.player.PlayerLastDamage;
+import com.talesdev.core.TalesCore;
+import com.talesdev.core.entity.DamageData;
+import com.talesdev.core.player.CorePlayer;
 import com.talesdev.core.player.LastPlayerDamage;
 import org.bukkit.Art;
 import org.bukkit.entity.Painting;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -35,12 +39,16 @@ public class CopsAndCrimsListener implements Listener {
                 plugin.getServer().getOnlinePlayers().forEach(player -> player.setHealth(player.getHealth()))
                 , 1);
         event.getPlayer().teleport(event.getPlayer().getWorld().getSpawnLocation());
+        if (!plugin.getTdmGameArena().isLocked()) {
+            plugin.getTdmGameArena().join(event.getPlayer());
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
         plugin.getServerCvCPlayer().saveUserData(plugin.getServerCvCPlayer().getPlayer(event.getPlayer()));
         plugin.getServerCvCPlayer().removePlayer(plugin.getServerCvCPlayer().getPlayer(event.getPlayer()));
+        plugin.getTdmGameArena().leave(event.getPlayer());
         // DEBUG
     }
 
@@ -71,6 +79,14 @@ public class CopsAndCrimsListener implements Listener {
         lastDamage.addAttachment("Bullet", null);
         lastDamage.addAttachment("HeadShot", false);
         damage.setLastDamage(lastDamage);
+        if (event.getEntity() instanceof Player) {
+            CorePlayer player = TalesCore.getPlugin().getCorePlayer((Player) event.getEntity());
+            DamageData damageData = new DamageData(event);
+            damageData.addAttachment("Weapon", null);
+            damageData.addAttachment("Bullet", null);
+            damageData.addAttachment("HeadShot", null);
+            player.getPlayerDamage().damage(damageData);
+        }
     }
 
     @EventHandler

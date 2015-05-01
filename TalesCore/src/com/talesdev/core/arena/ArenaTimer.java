@@ -17,6 +17,7 @@ public class ArenaTimer extends BukkitRunnable {
     private boolean increment = false;
     private volatile boolean pause = false;
     private Runnable update;
+    private Runnable stop;
 
     public ArenaTimer(GameArena gameArena, int initialTime, boolean increment) {
         this.gameArena = gameArena;
@@ -29,6 +30,10 @@ public class ArenaTimer extends BukkitRunnable {
         this.update = runnable;
     }
 
+    public void onStop(Runnable runnable) {
+        this.stop = runnable;
+    }
+
     public void start() {
         if (!taskStarted) {
             taskStarted = true;
@@ -39,6 +44,7 @@ public class ArenaTimer extends BukkitRunnable {
     }
 
     public void stop() {
+        stop.run();
         cancel();
     }
 
@@ -56,7 +62,9 @@ public class ArenaTimer extends BukkitRunnable {
         if (increment) {
             atomicInteger.incrementAndGet();
         } else {
-            atomicInteger.decrementAndGet();
+            if (atomicInteger.decrementAndGet() <= 0) {
+                stop();
+            }
         }
         if (update != null) update.run();
     }

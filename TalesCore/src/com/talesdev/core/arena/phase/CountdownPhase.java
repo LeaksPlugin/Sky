@@ -10,10 +10,9 @@ import com.talesdev.core.arena.GameState;
  * @author MoKunz
  */
 public class CountdownPhase implements GamePhase {
-
     @Override
     public void dispatch(GameArena arena) {
-        if (arena.isLocked()) return;
+        if (arena.isLocked()) arena.systemMessage("You can't start locked arena!");
         if (arena.getGameState().equals(GameState.WAITING)) {
             arena.setGameState(GameState.COUNTDOWN);
             Countdown countdown = new Countdown(arena, 30);

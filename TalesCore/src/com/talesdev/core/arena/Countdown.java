@@ -1,8 +1,6 @@
 package com.talesdev.core.arena;
 
 import com.talesdev.core.arena.event.ArenaCountdownEvent;
-import com.talesdev.core.arena.scoreboard.LobbyScoreboard;
-import com.talesdev.core.arena.team.GlobalScoreboard;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -48,7 +46,6 @@ public class Countdown extends BukkitRunnable {
             cancel();
             return;
         }
-        updateScoreboard();
         if (currentCountDown <= 10) {
             gameArena.systemMessage("The game will be started in " + currentCountDown + " seconds!");
         }
@@ -67,15 +64,7 @@ public class Countdown extends BukkitRunnable {
         return currentCountDown - 1;
     }
 
-    private void updateScoreboard() {
-        GlobalScoreboard globalScoreboard = gameArena.getGlobalScoreboard();
-        if (globalScoreboard.displaying(LobbyScoreboard.class)) {
-            LobbyScoreboard lobbyScoreboard = globalScoreboard.getDisplayScoreboard(LobbyScoreboard.class);
-            lobbyScoreboard.setCountdown(getCurrentCountDown());
-        }
-    }
-
     private ArenaCountdownEvent createEvent() {
-        return new ArenaCountdownEvent(gameArena, currentCountDown, currentCountDown - 1, currentCountDown - 1 < 1);
+        return new ArenaCountdownEvent(gameArena, currentCountDown, currentCountDown - 1, currentCountDown - 1 < 0);
     }
 }

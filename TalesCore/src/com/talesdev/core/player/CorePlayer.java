@@ -61,6 +61,8 @@ public class CorePlayer {
         this.playerScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         this.healthBar = new HealthBar(playerScoreboard);
         this.wrappedScoreboard = new WrappedScoreboard(playerScoreboard);
+        player.setScoreboard(playerScoreboard);
+        System.out.println("[Debug] scoreboard : " + playerScoreboard.toString());
         // load
         this.load();
     }

@@ -14,6 +14,7 @@ public class PlayerJoinArenaEvent extends PlayerArenaEvent implements Cancellabl
     private static final HandlerList handlers = new HandlerList();
     private boolean cancel = false;
     private int oldPlayerCount;
+    private Runnable afterRun;
 
     public PlayerJoinArenaEvent(GameArena gameArena, Player player, int oldPlayerCount) {
         super(gameArena, player);
@@ -43,5 +44,13 @@ public class PlayerJoinArenaEvent extends PlayerArenaEvent implements Cancellabl
 
     public int getNewPlayerCount() {
         return oldPlayerCount + 1;
+    }
+
+    public Runnable getAfterRun() {
+        return afterRun;
+    }
+
+    public void setAfterRun(Runnable afterRun) {
+        this.afterRun = afterRun;
     }
 }

@@ -5,7 +5,7 @@ import com.talesdev.copsandcrims.arena.CvCArena;
 import com.talesdev.copsandcrims.arena.data.PlayerArenaData;
 import com.talesdev.copsandcrims.arena.data.PlayerArenaStatus;
 import com.talesdev.copsandcrims.weapon.Weapon;
-import com.talesdev.core.scoreboard.BelowNameObjective;
+import com.talesdev.core.TalesCore;
 import com.talesdev.core.scoreboard.HealthBar;
 import com.talesdev.core.scoreboard.WrappedScoreboard;
 import org.bukkit.Material;
@@ -20,10 +20,6 @@ import org.bukkit.scoreboard.Scoreboard;
  */
 public class CvCPlayer {
     private PlayerArenaData playerArenaData;
-    private Scoreboard playerScoreboard;
-    private WrappedScoreboard sidebarObjective;
-    private BelowNameObjective belowNameObjective;
-    private HealthBar healthBar;
     private boolean debug = false;
     private boolean isWalking = false;
     private boolean isSneaking = false;
@@ -40,10 +36,6 @@ public class CvCPlayer {
         this.player = player;
         this.playerArenaData = new PlayerArenaData(this);
         this.playerArenaData.setStatus(PlayerArenaStatus.NOT_PLAYING);
-        playerScoreboard = CopsAndCrims.getPlugin().getServer().getScoreboardManager().getNewScoreboard();
-        sidebarObjective = new WrappedScoreboard(playerScoreboard);
-        healthBar = new HealthBar(playerScoreboard);
-        updateScoreboard();
         this.playerBullet = new PlayerBullet();
         this.playerRecoil = new PlayerRecoil(this);
         this.isWalking = false;
@@ -146,21 +138,15 @@ public class CvCPlayer {
     }
 
     public Scoreboard getPlayerScoreboard() {
-        return playerScoreboard;
+        return TalesCore.getPlugin().getCorePlayer(getPlayer()).getPlayerScoreboard();
     }
 
     public WrappedScoreboard getSidebarObjective() {
-        return sidebarObjective;
+        return TalesCore.getPlugin().getCorePlayer(getPlayer()).getWrappedScoreboard();
     }
 
     public void updateScoreboard() {
-        getSidebarObjective().update();
-        getPlayer().setScoreboard(getPlayerScoreboard());
-    }
 
-    public void clearScoreboard() {
-        getSidebarObjective().reset();
-        getPlayer().setScoreboard(getPlayerScoreboard());
     }
 
     public boolean isDebug() {
@@ -179,16 +165,8 @@ public class CvCPlayer {
         playerArenaData = new PlayerArenaData(this);
     }
 
-    public BelowNameObjective getBelowNameObjective() {
-        return belowNameObjective;
-    }
-
-    public void setBelowNameObjective(BelowNameObjective belowNameObjective) {
-        this.belowNameObjective = belowNameObjective;
-    }
-
     public HealthBar getHealthBar() {
-        return healthBar;
+        return TalesCore.getPlugin().getCorePlayer(getPlayer()).getHealthBar();
     }
 
     public boolean isResistWeapon() {
