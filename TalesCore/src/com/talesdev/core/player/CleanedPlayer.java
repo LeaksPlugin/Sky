@@ -1,5 +1,6 @@
 package com.talesdev.core.player;
 
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 /**
@@ -16,6 +17,7 @@ public class CleanedPlayer {
 
     public Player clean() {
         player.setHealth(player.getMaxHealth());
+        player.setGameMode(GameMode.SURVIVAL);
         player.getInventory().clear();
         player.getEquipment().clear();
         player.setFoodLevel(20);

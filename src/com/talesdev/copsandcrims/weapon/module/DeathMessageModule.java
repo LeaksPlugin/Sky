@@ -14,6 +14,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
  * @author MoKunz
  */
 public class DeathMessageModule extends WeaponModule {
+    private static final boolean disable = true;
     private String deathMessage = "";
     private String headShotMessage = "(Headshot)";
 
@@ -23,11 +24,12 @@ public class DeathMessageModule extends WeaponModule {
     }
 
     public DeathMessageModule() {
-        this("{entity} was killed by {killer} using {weapon} {headshot}");
+        this("{killer} {weapon}{headshot} {entity}");
     }
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
+        if (disable) return;
         LastPlayerDamage lastPlayerDamage = new LastPlayerDamage(event.getEntity(), getPlugin());
         LastDamageCause lastDamageCause = lastPlayerDamage.getLastDamage();
         if (lastDamageCause != null) {

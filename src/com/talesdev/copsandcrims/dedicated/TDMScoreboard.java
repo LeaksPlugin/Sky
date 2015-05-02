@@ -34,7 +34,7 @@ public class TDMScoreboard implements DisplayScoreboard {
         scoreboard.setLine(9, "Kills : " + ChatColor.RED + getGameArena().getPlayerKD(player).getKills());
         scoreboard.setLine(8, "Deaths : " + ChatColor.RED + getGameArena().getPlayerKD(player).getDeaths());
         scoreboard.setLine(7, "Assists : " + ChatColor.RED + getGameArena().getPlayerKD(player).getAssists());
-        scoreboard.setLine(5, "Team : " + (team.getName().equalsIgnoreCase("CT") ? (ChatColor.BLUE + "CT") : (ChatColor.RED + "TR")));
+        scoreboard.setLine(5, "Team : " + (team.getName().equalsIgnoreCase("CounterTerrorist") ? (ChatColor.BLUE + "CT") : (ChatColor.RED + "TR")));
         scoreboard.setBlankLine(15, 11, 6, 4, 3, 2, 1);
         scoreboard.update();
     }
@@ -49,7 +49,7 @@ public class TDMScoreboard implements DisplayScoreboard {
         scoreboard.setLine(9, "Kills : " + ChatColor.RED + getGameArena().getPlayerKD(player).getKills());
         scoreboard.setLine(8, "Deaths : " + ChatColor.RED + getGameArena().getPlayerKD(player).getDeaths());
         scoreboard.setLine(7, "Assists : " + ChatColor.RED + getGameArena().getPlayerKD(player).getAssists());
-        scoreboard.setLine(5, "Team : " + (team.getName().equalsIgnoreCase("CT") ? (ChatColor.BLUE + "CT") : (ChatColor.RED + "TR")));
+        scoreboard.setLine(5, "Team : " + (team.getName().equalsIgnoreCase("CounterTerrorist") ? (ChatColor.BLUE + "CT") : (ChatColor.RED + "TR")));
         scoreboard.update();
     }
 

@@ -38,6 +38,7 @@ public class TDMGameArena extends GameArena {
         setArenaWorld(arenaWorld);
         setGameArenaListener(new TDMArenaListener(this));
         teamGameSpawn = new TeamGameSpawn(this);
+        setArenaSpawn(teamGameSpawn);
         timer = new ArenaTimer(this, 300, false);
         tdmScoreboard = new TDMScoreboard(this);
         lobbyScoreboard = new LobbyScoreboard();
@@ -45,36 +46,54 @@ public class TDMGameArena extends GameArena {
 
     @Override
     protected void init() {
-        teamKills = new HashMap<>();
-        killDeathSet = new HashSet<>();
         getLogger().info("Dispatching initial phase");
         getTeam().newTeam(getTeam().createTeam("Terrorist"));
-        teamKills.put("Terrorist", 0);
         if (!getConfig().contains("spawn.Terrorist")) getConfig().set("spawn.Terrorist", new ArrayList<>());
         getTeam().newTeam(getTeam().createTeam("CounterTerrorist"));
-        teamKills.put("CounterTerrorist", 0);
         if (!getConfig().contains("spawn.CounterTerrorist"))
             getConfig().set("spawn.CounterTerrorist", new ArrayList<>());
+        initKills();
         dispatchPhase(new LobbyPhase());
         getLogger().info("Completed!");
     }
 
+    protected void initKills() {
+        teamKills = new HashMap<>();
+        teamKills.put("Terrorist", 0);
+        teamKills.put("CounterTerrorist", 0);
+        killDeathSet = new HashSet<>();
+    }
+
     @Override
     public void startGame() {
+        // select team
         TeamSelector selector = new DefaultTeamSelector();
         selector.select(getTeam());
+        // dispatch team update to client
         getGlobalScoreboard().updateLocalTeam();
-        getPlayerSet().forEach(this::createPlayerKD);
+        // k/d object
+        // scoreboard
+        killDeathSet.clear();
+        getPlayerSet().forEach((player) -> {
+            createPlayerKD(player);
+            initDisplay(player, tdmScoreboard);
+            CleanedPlayer cp = new CleanedPlayer(player);
+            cp.clean();
+        });
+        // spawn player
         teamGameSpawn.readFromConfig(getConfig());
         teamGameSpawn.spawn(this);
+        // kit
         for (Player player : getPlayerSet()) {
             String name = getTeam().getTeam(player).getName();
             TDMKitItem item = new TDMKitItem(player, name == null ? "" : name);
             item.give();
         }
+        // timer action
         systemMessage("Game has been started!");
         timer.setUpdate(() -> {
-            getPlayerSet().forEach(lobbyScoreboard::update);
+            getPlayerSet().forEach(tdmScoreboard::update);
+            getGlobalScoreboard().updateLocalTeam();
         });
         timer.onStop(() -> {
             dispatchPhase(new EndPhase(winner));
@@ -84,15 +103,19 @@ public class TDMGameArena extends GameArena {
 
     @Override
     public void stopGame() {
+        // check stats
+        checkStats();
+        // broadcast winner
         WinMessage winMessage = new WinMessage(this, "CopsAndCrims - TDM", winner);
         winMessage.send();
+        // stop everything
         timer.stop();
-        teamKills.clear();
         getPlayerSet().forEach(player -> {
             CleanedPlayer cp = new CleanedPlayer(player);
             cp.clean();
         });
-        killDeathSet.clear();
+        // initKills
+        initKills();
     }
 
     @Override
@@ -122,7 +145,15 @@ public class TDMGameArena extends GameArena {
             winner = (team.getName().equals("Terrorist") ? ChatColor.RED : ChatColor.BLUE) + team.getName();
             stopGame();
         });
+        if (getKills("Terrorist") > getKills("CounterTerrorist")) {
+            winner = ChatColor.RED + "Terrorist";
+        } else if (getKills("Terrorist") == getKills("CounterTerrorist")) {
+            winner = ChatColor.GREEN + "Draw";
+        } else {
+            winner = ChatColor.BLUE + "CounterTerrorist";
+        }
     }
+
 
     public KillDeath getPlayerKD(Player player) {
         for (KillDeath kd : killDeathSet) {

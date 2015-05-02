@@ -24,12 +24,12 @@ public class LobbyScoreboard implements DisplayScoreboard {
         if (getCorePlayer(player) != null) {
             WrappedScoreboard scoreboard = getCorePlayer(player).getWrappedScoreboard();
             scoreboard.setTitle(title);
-            scoreboard.setMaxLine(7);
-            scoreboard.setLine(6, "Map : " + ChatColor.GREEN + getMapName());
-            scoreboard.setLine(5, "Players : " + ChatColor.GREEN + getPlayers() + "/" + getMaxPlayers());
-            scoreboard.setLine(3, "Status : " + ChatColor.GREEN + generateStatus(scoreboard));
+            scoreboard.setMaxLine(8);
+            scoreboard.setLine(7, "Map : " + ChatColor.GREEN + getMapName());
+            scoreboard.setLine(6, "Players : " + ChatColor.GREEN + getPlayers() + "/" + getMaxPlayers());
+            scoreboard.setLine(4, "Status : " + ChatColor.GREEN + generateStatus(scoreboard));
             scoreboard.setLine(1, "mc.talesdev.com");
-            scoreboard.setBlankLine(7, 4, 2);
+            scoreboard.setBlankLine(8, 5, 2);
             scoreboard.update();
         }
     }
@@ -39,8 +39,8 @@ public class LobbyScoreboard implements DisplayScoreboard {
         if (getCorePlayer(player) != null) {
             WrappedScoreboard scoreboard = getCorePlayer(player).getWrappedScoreboard();
             scoreboard.setTitle(title);
-            scoreboard.setLine(5, "Players : " + ChatColor.GREEN + getPlayers() + "/" + getMaxPlayers());
-            scoreboard.setLine(3, "Status : " + ChatColor.GREEN + generateStatus(scoreboard));
+            scoreboard.setLine(6, "Players : " + ChatColor.GREEN + getPlayers() + "/" + getMaxPlayers());
+            scoreboard.setLine(4, "Status : " + ChatColor.GREEN + generateStatus(scoreboard));
             scoreboard.update();
         }
     }
@@ -57,7 +57,7 @@ public class LobbyScoreboard implements DisplayScoreboard {
 
     private String generateStatus(WrappedScoreboard scoreboard) {
         if (countdown > 0) {
-            scoreboard.setLine(2, "          " + ChatColor.GREEN + countdown + " " + (countdown == 1 ? "second" : "seconds"));
+            scoreboard.setLine(3, "          " + ChatColor.GREEN + countdown + " " + (countdown == 1 ? "second" : "seconds"));
             return "Starting in ";
         } else {
             return "Waiting...";

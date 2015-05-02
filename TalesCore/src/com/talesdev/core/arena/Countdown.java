@@ -1,6 +1,9 @@
 package com.talesdev.core.arena;
 
 import com.talesdev.core.arena.event.ArenaCountdownEvent;
+import com.talesdev.core.world.sound.Sound;
+import com.talesdev.core.world.sound.SoundEffect;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -22,6 +25,7 @@ public class Countdown extends BukkitRunnable {
 
     public void start() {
         gameArena.getTask().store("countdown", runTaskTimer(gameArena.getPlugin(), 0, 20));
+        gameArena.getPlayerSet().forEach(this::playTickSound);
         gameArena.systemMessage("The game will be started in " + currentCountDown + " seconds!");
     }
 
@@ -47,6 +51,7 @@ public class Countdown extends BukkitRunnable {
             return;
         }
         if (currentCountDown <= 10) {
+            gameArena.getPlayerSet().forEach(this::playTickSound);
             gameArena.systemMessage("The game will be started in " + currentCountDown + " seconds!");
         }
         currentCountDown--;
@@ -66,5 +71,10 @@ public class Countdown extends BukkitRunnable {
 
     private ArenaCountdownEvent createEvent() {
         return new ArenaCountdownEvent(gameArena, currentCountDown, currentCountDown - 1, currentCountDown - 1 < 0);
+    }
+
+    private void playTickSound(Player player) {
+        Sound sound = new Sound(SoundEffect.NOTE_HAT, 1.0F, 1.0F);
+        sound.playSound(player);
     }
 }

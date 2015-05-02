@@ -28,6 +28,21 @@ public class DefaultTeamSelector implements TeamSelector {
         return playerTeamMap;
     }
 
+    @Override
+    public boolean queue(Player player, String teamName) {
+        return false;
+    }
+
+    @Override
+    public void dequeue(Player player) {
+
+    }
+
+    @Override
+    public Optional<String> getQueue(Player player) {
+        return null;
+    }
+
     private Team getTeam(GlobalTeam globalTeam, Team team) {
         return globalTeam.getTeam(team.getName());
     }
