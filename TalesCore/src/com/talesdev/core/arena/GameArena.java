@@ -196,7 +196,7 @@ public class GameArena implements Joinable {
     }
 
     public void systemMessage(String message) {
-        playerSet.forEach(player -> player.sendMessage(headMessage + ChatColor.YELLOW + message));
+        playerSet.forEach(player -> player.sendMessage(headMessage + " " + ChatColor.YELLOW + message));
     }
 
     public void sendMessage(String message) {

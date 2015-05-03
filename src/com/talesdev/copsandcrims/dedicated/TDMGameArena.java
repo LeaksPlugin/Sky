@@ -94,6 +94,11 @@ public class TDMGameArena extends GameArena {
         timer.setUpdate(() -> {
             getPlayerSet().forEach(tdmScoreboard::update);
             getGlobalScoreboard().updateLocalTeam();
+            if (timer.getTime() == 30) {
+                systemMessage("The game will be ended in 30 seconds");
+            } else if (timer.getTime() <= 10) {
+                systemMessage("The game will be ended in " + timer.getTime() + "  seconds");
+            }
         });
         timer.onStop(() -> {
             dispatchPhase(new EndPhase(winner));
@@ -114,6 +119,8 @@ public class TDMGameArena extends GameArena {
             CleanedPlayer cp = new CleanedPlayer(player);
             cp.clean();
         });
+        // stop timer
+        timer = new ArenaTimer(this, 300, false);
         // initKills
         initKills();
     }

@@ -275,14 +275,16 @@ public class Bullet {
             action.bulletHitObject(result);
             if (action instanceof BulletParticle) ((BulletParticle) action).createHitParticle(result);
         } else {
-            Block relative = location.getBlock().getRelative(nmsRayTrace.getFace());
-            world.playEffect(relative.getLocation(), Effect.STEP_SOUND, relative.getType());
+            if (nmsRayTrace.getFace() != null) {
+                if (location.getBlock().getRelative(nmsRayTrace.getFace()) != null) {
+                    Block relative = location.getBlock().getRelative(nmsRayTrace.getFace());
+                    world.playEffect(relative.getLocation(), Effect.STEP_SOUND, relative.getType());
+                }
+            }
         }
         // break grass
         Block block = location.getBlock();
-        if (
-                block.getType().equals(Material.THIN_GLASS) ||
-                        block.getType().equals(Material.STAINED_GLASS_PANE)) {
+        if (block.getType().equals(Material.THIN_GLASS) || block.getType().equals(Material.STAINED_GLASS_PANE)) {
             getWorld().getBlockAt(location).setType(Material.AIR);
             return true;
         }
@@ -321,7 +323,7 @@ public class Bullet {
                 // begin body part detection
                 // leg : [0,0.4] x >= 0 , 0 <= 0.4
                 // upper leg : x > 0.4 , x <= 0.675
-                if ((deltaEH <= 0.4) && (eyeLocation.distanceSquared(currentLocation) <= 0.45)) {
+                if ((deltaEH <= 0.4) && (eyeLocation.distance(currentLocation) <= 0.45)) {
                     if (debug) player.sendMessage(ChatColor.RED + "HeadShot!");
                     damage = getHeadShotDamage();
                     part = ArmorPart.HELMET;

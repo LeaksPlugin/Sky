@@ -2,6 +2,7 @@ package com.talesdev.copsandcrims.dedicated;
 
 import com.talesdev.core.TalesCore;
 import com.talesdev.core.arena.GameArena;
+import com.talesdev.core.arena.GameState;
 import com.talesdev.core.player.CleanedPlayer;
 import com.talesdev.core.player.CorePlayer;
 import com.talesdev.core.player.message.ActionBar;
@@ -31,7 +32,7 @@ public class TDMRespawn extends TimedTask {
     protected void timePassed() {
         ActionBar actionBar = new ActionBar(ChatColor.GREEN + "Respawning in " + seconds + " " + (seconds == 1 ? "second" : "seconds"));
         actionBar.send(player.getPlayer());
-        if (seconds <= 1) {
+        if (seconds <= 1 || gameArena.getGameState().equals(GameState.END)) {
             player.getPlayer().setGameMode(GameMode.SURVIVAL);
             gameArena.getArenaSpawn().spawn(player);
             ActionBar bar = new ActionBar(ChatColor.GREEN + "You are now respawn");

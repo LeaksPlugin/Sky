@@ -4,6 +4,7 @@ import com.talesdev.copsandcrims.CopsAndCrims;
 import com.talesdev.copsandcrims.arena.CvCArena;
 import com.talesdev.copsandcrims.arena.data.PlayerArenaData;
 import com.talesdev.copsandcrims.arena.data.PlayerArenaStatus;
+import com.talesdev.copsandcrims.armor.ArmorContainer;
 import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.core.TalesCore;
 import com.talesdev.core.scoreboard.HealthBar;
@@ -31,6 +32,7 @@ public class CvCPlayer {
     private Player player;
     private PlayerRecoil playerRecoil;
     private PlayerBullet playerBullet;
+    private ArmorContainer armorContainer;
 
     public CvCPlayer(Player player) {
         this.player = player;
@@ -39,6 +41,7 @@ public class CvCPlayer {
         this.playerBullet = new PlayerBullet();
         this.playerRecoil = new PlayerRecoil(this);
         this.isWalking = false;
+        this.armorContainer = new ArmorContainer(player);
         this.lastWalkingTime = System.currentTimeMillis();
     }
 
@@ -175,5 +178,13 @@ public class CvCPlayer {
 
     public void setResistWeapon(boolean resistWeapon) {
         this.resistWeapon = resistWeapon;
+    }
+
+    public ArmorContainer getArmorContainer() {
+        return armorContainer;
+    }
+
+    public void setArmorContainer(ArmorContainer armorContainer) {
+        this.armorContainer = armorContainer;
     }
 }

@@ -1,5 +1,6 @@
 package com.talesdev.copsandcrims.weapon.module;
 
+import com.talesdev.copsandcrims.event.WeaponScopeEvent;
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -23,7 +24,7 @@ import java.util.Iterator;
  */
 public class ScopeModule extends WeaponModule {
 
-    private int zoomLevel = 5;
+    private int zoomLevel = 6;
     public ScopeModule() {
         super("Scope");
     }
@@ -91,6 +92,11 @@ public class ScopeModule extends WeaponModule {
     }
 
     public void zoom(CvCPlayer cPlayer) {
+        WeaponScopeEvent event = new WeaponScopeEvent(cPlayer.getPlayer(), weapon, true);
+        getPlugin().getServer().getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
         cPlayer.setScoping(true);
         cPlayer.setLastHelmet(cPlayer.getPlayer().getEquipment().getHelmet());
         cPlayer.getPlayer().getEquipment().setHelmet(new ItemStack(Material.PUMPKIN));
@@ -102,6 +108,11 @@ public class ScopeModule extends WeaponModule {
     }
 
     public void cancelZoom(CvCPlayer cPlayer) {
+        WeaponScopeEvent event = new WeaponScopeEvent(cPlayer.getPlayer(), weapon, false);
+        getPlugin().getServer().getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
         cPlayer.setScoping(false);
         cPlayer.getPlayer().getEquipment().setHelmet(cPlayer.getLastHelmet());
         cPlayer.getPlayer().updateInventory();

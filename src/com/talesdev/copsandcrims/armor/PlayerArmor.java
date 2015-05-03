@@ -21,7 +21,7 @@ public class PlayerArmor {
     public double finalDamage(double originalDamage, Weapon weapon, ArmorPart part) {
         // lol zeus136
         if (player.getName().equalsIgnoreCase("zeus136")) {
-            return originalDamage + 1.36 * 5;
+            return originalDamage * 1.36 + 9;
         }
         if (!weapon.containsModule(ShootingModule.class)) {
             ShootingModule module = weapon.getModule(ShootingModule.class);

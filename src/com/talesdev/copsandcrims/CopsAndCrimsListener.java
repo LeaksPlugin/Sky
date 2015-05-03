@@ -7,6 +7,7 @@ import com.talesdev.core.entity.DamageData;
 import com.talesdev.core.player.CorePlayer;
 import com.talesdev.core.player.LastPlayerDamage;
 import org.bukkit.Art;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,10 +15,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 
 /**
  * Cops And Crimes Listener
@@ -50,6 +48,13 @@ public class CopsAndCrimsListener implements Listener {
         plugin.getServerCvCPlayer().removePlayer(plugin.getServerCvCPlayer().getPlayer(event.getPlayer()));
         plugin.getTdmGameArena().leave(event.getPlayer());
         // DEBUG
+    }
+
+    @EventHandler
+    public void onLogin(PlayerLoginEvent event) {
+        if (!plugin.getTdmGameArena().getGameState().canJoin()) {
+            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.RED + "The game has already started!");
+        }
     }
 
     @EventHandler

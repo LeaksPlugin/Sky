@@ -25,7 +25,7 @@ public class EquipmentCache implements Savable {
         setChestplate(entityEquipment.getChestplate());
         setLegging(entityEquipment.getLeggings());
         setBoots(entityEquipment.getBoots());
-        lastAccessTime = System.currentTimeMillis();
+        lastAccessTime = 0;
     }
 
     private void access() {

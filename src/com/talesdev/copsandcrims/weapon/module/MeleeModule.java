@@ -2,12 +2,16 @@ package com.talesdev.copsandcrims.weapon.module;
 
 import com.talesdev.copsandcrims.CvCSound;
 import com.talesdev.copsandcrims.player.PlayerLastDamage;
+import com.talesdev.core.TalesCore;
 import com.talesdev.core.entity.BoundingBox;
+import com.talesdev.core.entity.DamageData;
+import com.talesdev.core.entity.FastDamage;
 import com.talesdev.core.item.MaterialComparator;
 import com.talesdev.core.item.RightClickable;
-import com.talesdev.core.player.message.ActionBar;
 import com.talesdev.core.player.ClickingAction;
+import com.talesdev.core.player.CorePlayer;
 import com.talesdev.core.player.LastPlayerDamage;
+import com.talesdev.core.player.message.ActionBar;
 import com.talesdev.core.system.NMSClass;
 import com.talesdev.core.system.ReflectionUtils;
 import com.talesdev.core.system.ReflectionUtils.RefClass;
@@ -23,6 +27,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
@@ -71,8 +78,22 @@ public class MeleeModule extends WeaponModule {
     }
 
     @EventHandler
+    public void onClick(InventoryClickEvent event) {
+        if (getWeapon().isWeapon(event.getCurrentItem()) || getWeapon().isWeapon(event.getCursor())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         if (getWeapon().isWeapon(event.getPlayer().getItemInHand())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onDrop(PlayerDropItemEvent event) {
+        if (getWeapon().isWeapon(event.getItemDrop().getItemStack())) {
             event.setCancelled(true);
         }
     }
@@ -126,12 +147,23 @@ public class MeleeModule extends WeaponModule {
                 ActionBar actionBar = new ActionBar(ChatColor.RED + message);
                 actionBar.send(player);
                 // updateLobby
-                event.setDamage(damage);
+                // event.setDamage(EntityDamageEvent.DamageModifier.ARMOR, damage);
+                FastDamage fastDamage = new FastDamage(entity, damage);
+                fastDamage.apply();
                 // last damage cause
                 LastPlayerDamage lastPlayerDamage = new LastPlayerDamage(event.getEntity(), getPlugin());
                 PlayerLastDamage cause = new PlayerLastDamage(player, getWeapon(), null, headShot);
                 cause.addAttachment("Knife", true);
                 lastPlayerDamage.setLastDamage(cause);
+                // new dmg system
+                if (entity instanceof Player) {
+                    CorePlayer corePlayer = TalesCore.getPlugin().getCorePlayer(((Player) entity));
+                    DamageData data = new DamageData(damage, EntityDamageEvent.DamageCause.ENTITY_ATTACK, player);
+                    data.addAttachment("Bullet", null);
+                    data.addAttachment("Weapon", getWeapon());
+                    data.addAttachment("HeadShot", headShot);
+                    corePlayer.getPlayerDamage().damage(data);
+                }
             }
         }
     }

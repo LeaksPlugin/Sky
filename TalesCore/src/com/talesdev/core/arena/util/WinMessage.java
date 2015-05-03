@@ -1,6 +1,7 @@
 package com.talesdev.core.arena.util;
 
 import com.talesdev.core.arena.GameArena;
+import com.talesdev.core.player.message.Title;
 import com.talesdev.core.text.AlignedMessage;
 import org.bukkit.ChatColor;
 
@@ -21,6 +22,10 @@ public class WinMessage {
     }
 
     public void send() {
+        // title
+        Title title = new Title(ChatColor.GREEN + "" + ChatColor.BOLD + "Winner", winner, 5, 100, 0);
+        title.send(gameArena.getPlayerSet());
+        // normal msg
         gameArena.sendMessage(new AlignedMessage("").center());
         gameArena.sendMessage(new AlignedMessage("").center());
         gameArena.sendMessage(new AlignedMessage(ChatColor.RED + ChatColor.BOLD.toString() + headMessage).center());

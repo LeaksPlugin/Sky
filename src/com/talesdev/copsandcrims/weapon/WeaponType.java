@@ -24,7 +24,7 @@ public enum WeaponType {
 
     public static String getSymbol(Weapon weapon) {
         if (weapon.getWeaponType().equals(WeaponType.PISTOL)) {
-            if (weapon.getClass().getName().equals(DesertEagle.class)) {
+            if (weapon.getClass().getName().equals(DesertEagle.class.getName())) {
                 return WeaponType.PISTOL.getAlternativeSymbol();
             } else {
                 return WeaponType.PISTOL.getSymbol();

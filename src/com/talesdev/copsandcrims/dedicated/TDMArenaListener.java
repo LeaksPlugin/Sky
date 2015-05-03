@@ -1,6 +1,7 @@
 package com.talesdev.copsandcrims.dedicated;
 
 import com.talesdev.copsandcrims.event.EntityDamageByWeaponEvent;
+import com.talesdev.copsandcrims.event.PlayerDropWeaponEvent;
 import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.WeaponType;
 import com.talesdev.core.TalesCore;
@@ -27,6 +28,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scoreboard.Team;
@@ -160,6 +162,13 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
                 if (!getGameArena().getGameState().equals(GameState.STARTED)) {
                     event.setCancelled(true);
                 }
+                if (player.getItemInHand() != null) {
+                    if (player.getItemInHand().getType().equals(Material.AIR)) {
+                        event.setCancelled(true);
+                    }
+                } else {
+                    event.setCancelled(true);
+                }
             }
         }
     }
@@ -210,7 +219,7 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
     private String getDeathMessage(Player victim, Entity killer) {
         String killerName = "";
         String victimName = "";
-        String weapon = "";
+        String weapon = ChatColor.BOLD + "";
         String headShot = "";
         if (killer instanceof Player) {
             killerName = getTeamColor(((Player) killer)) + killer.getName();
@@ -222,7 +231,7 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
         if (wp != null) {
             weapon = WeaponType.getSymbol(wp);
         }
-        boolean hs = damageData.getAttachment("HeadShot", Boolean.TYPE).booleanValue();
+        boolean hs = damageData.getAttachment("HeadShot", Boolean.class);
         if (hs) {
             headShot = "\u9270";
         }
@@ -264,6 +273,7 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
             Title title = new Title(ChatColor.RED + ChatColor.BOLD.toString() + "YOU DIED!", msg, 20, 100, 20);
             title.send(player);
             event.setDeathMessage(msg);
+            getGameArena().sendMessage(msg);
             // assist
             List<DamageData> damageDataList = corePlayer.getPlayerDamage().getEntityDamage();
             for (Iterator<DamageData> dmgIterator = damageDataList.iterator(); dmgIterator.hasNext(); ) {
@@ -298,8 +308,10 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onRespawn(PlayerRespawnEvent event) {
         if (getGameArena().containsPlayer(event.getPlayer())) {
-            LivingEntity killer = event.getPlayer().getKiller();
-            if (killer != null) {
+            CorePlayer corePlayer = TalesCore.getPlugin().getCorePlayer(event.getPlayer());
+            DamageData last = corePlayer.getPlayerDamage().getLastEntity();
+            if (last.getDamager() instanceof LivingEntity) {
+                LivingEntity killer = (LivingEntity) last.getDamager();
                 Location location = killer.getEyeLocation().add(killer.getEyeLocation().getDirection().multiply(2));
                 event.setRespawnLocation(location);
             }
@@ -316,6 +328,29 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
                 event.setCancelled(true);
             }
         }
+    }
+
+    @EventHandler
+    public void asyncChat(AsyncPlayerChatEvent event) {
+        if (getGameArena().containsPlayer(event.getPlayer())) {
+            Team team = getGameArena().getTeam().getTeam(event.getPlayer());
+            if (team != null) {
+                String teamName = ChatColor.BLUE.toString();
+                if (team.getName().equals("Terrorist")) {
+                    teamName = ChatColor.RED.toString() + "T";
+                } else {
+                    teamName += "CT";
+                }
+                event.setFormat(teamName + "[" + team.getName() + "]" + ChatColor.RESET + "%s : %s");
+            } else {
+                event.setFormat("%s : %s");
+            }
+        }
+    }
+
+    @EventHandler
+    public void dropItem(PlayerDropWeaponEvent event) {
+        event.setCancelled(true);
     }
 
 }
