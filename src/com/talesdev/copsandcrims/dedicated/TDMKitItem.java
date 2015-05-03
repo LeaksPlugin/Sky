@@ -1,6 +1,7 @@
 package com.talesdev.copsandcrims.dedicated;
 
 import com.talesdev.copsandcrims.CopsAndCrims;
+import com.talesdev.copsandcrims.armor.*;
 import com.talesdev.copsandcrims.guns.Glock18;
 import com.talesdev.copsandcrims.guns.Knife;
 import com.talesdev.copsandcrims.guns.USP;
@@ -59,6 +60,17 @@ public class TDMKitItem {
             fillBullet(cPlayer, secondWeapon);
         }
         player.getInventory().setItem(meleeSlot, getPlugin().getWeaponFactory().createWeaponItem(melee.getClass()));
+        // armor
+        Armor helmet = null, kevlar = null;
+        if (playerTeam.equalsIgnoreCase("Terrorist")) {
+            helmet = new TerroristHelmet();
+            kevlar = new TerroristKevlar();
+        } else {
+            helmet = new CounterTerroristHelmet();
+            kevlar = new CounterTerroristKevlar();
+        }
+        player.getInventory().setHelmet(helmet.asItem());
+        player.getInventory().setChestplate(kevlar.asItem());
     }
 
     public void fillBullet(CvCPlayer cPlayer, Weapon weapon) {

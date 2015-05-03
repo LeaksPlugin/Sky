@@ -1,7 +1,7 @@
 package com.talesdev.copsandcrims;
 
 import com.comphenix.protocol.ProtocolLibrary;
-import com.talesdev.copsandcrims.armor.ArmorFactory;
+import com.talesdev.copsandcrims.armor.*;
 import com.talesdev.copsandcrims.dedicated.TDMGameArena;
 import com.talesdev.copsandcrims.guns.*;
 import com.talesdev.copsandcrims.player.PlayerBulletTask;
@@ -33,7 +33,7 @@ public class CopsAndCrims extends JavaPlugin {
     @Override
     public void onEnable() {
         weaponFactory = new WeaponFactory(this);
-        armorFactory = new ArmorFactory();
+        armorFactory = new ArmorFactory(this);
         serverCvCPlayer = new ServerCvCPlayer(this);
         serverCvCArena = new ServerCvCArena(this);
         // save config
@@ -55,6 +55,10 @@ public class CopsAndCrims extends JavaPlugin {
         getWeaponFactory().addWeapon(new M4A1());
         getWeaponFactory().addWeapon(new P250());
         getWeaponFactory().addWeapon(new SSG08());
+        getArmorFactory().addArmor(new TerroristHelmet());
+        getArmorFactory().addArmor(new TerroristKevlar());
+        getArmorFactory().addArmor(new CounterTerroristHelmet());
+        getArmorFactory().addArmor(new CounterTerroristKevlar());
         // new Arena
         tdmGameArena = new TDMGameArena();
         getCommand("tdm").setExecutor(new DedicatedArenaCommand(tdmGameArena, "tdm"));

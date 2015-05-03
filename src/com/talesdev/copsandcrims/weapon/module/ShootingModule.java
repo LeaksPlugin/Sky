@@ -29,6 +29,7 @@ public class ShootingModule extends WeaponModule {
     private double headShotDamage = 8;
     private double lowerLegDamage = 3;
     private double upperLegDamage = 7;
+    private double armorPenetration = 80;
     private double recoil = 1.0D;
     private int bulletCount = 1;
     private int bulletDelay = 1;
@@ -334,5 +335,13 @@ public class ShootingModule extends WeaponModule {
 
     public void setUpperLegDamage(double upperLegDamage) {
         this.upperLegDamage = upperLegDamage;
+    }
+
+    public double getArmorPenetration() {
+        return armorPenetration;
+    }
+
+    public void setArmorPenetration(double armorPenetration) {
+        this.armorPenetration = armorPenetration;
     }
 }

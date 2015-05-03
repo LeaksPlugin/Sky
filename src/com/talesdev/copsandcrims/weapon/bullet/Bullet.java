@@ -4,6 +4,8 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.talesdev.copsandcrims.CopsAndCrims;
+import com.talesdev.copsandcrims.armor.ArmorPart;
+import com.talesdev.copsandcrims.armor.PlayerArmor;
 import com.talesdev.copsandcrims.event.EntityDamageByWeaponEvent;
 import com.talesdev.copsandcrims.player.PlayerLastDamage;
 import com.talesdev.copsandcrims.weapon.Weapon;
@@ -273,7 +275,8 @@ public class Bullet {
             action.bulletHitObject(result);
             if (action instanceof BulletParticle) ((BulletParticle) action).createHitParticle(result);
         } else {
-            world.playEffect(location.getBlock().getLocation(), Effect.STEP_SOUND, location.getBlock().getType());
+            Block relative = location.getBlock().getRelative(nmsRayTrace.getFace());
+            world.playEffect(relative.getLocation(), Effect.STEP_SOUND, relative.getType());
         }
         // break grass
         Block block = location.getBlock();
@@ -307,6 +310,7 @@ public class Bullet {
                         return false;
                     }
                 }
+                ArmorPart part = ArmorPart.BOOTS;
                 boolean isHeadShot = false;
                 Location baseLocation = livingEntity.getLocation(), eyeLocation = livingEntity.getEyeLocation();
                 double baseY = baseLocation.getY(),
@@ -320,6 +324,7 @@ public class Bullet {
                 if ((deltaEH <= 0.4) && (eyeLocation.distanceSquared(currentLocation) <= 0.45)) {
                     if (debug) player.sendMessage(ChatColor.RED + "HeadShot!");
                     damage = getHeadShotDamage();
+                    part = ArmorPart.HELMET;
                     isHeadShot = true;
                 } else if ((deltaBH >= 0) && (deltaBH <= 0.4)) {
                     if (debug) player.sendMessage(ChatColor.GREEN + "Lower leg!");
@@ -327,8 +332,14 @@ public class Bullet {
                 } else if ((deltaBH > 0.4) && (deltaBH <= 0.675)) {
                     if (debug) player.sendMessage(ChatColor.GREEN + "Upper leg!");
                     damage = getUpperLegDamage();
+                } else {
+                    part = ArmorPart.CHESTPLATE;
                 }
                 // end body part detection
+                // begin armor penetration
+                PlayerArmor armor = new PlayerArmor(player);
+                damage = armor.finalDamage(damage, weapon, part);
+                // end armor penetration
                 // event
                 EntityDamageByWeaponEvent damageByWeaponEvent = new EntityDamageByWeaponEvent(player, getWeapon(), livingEntity, damage, isHeadShot);
                 CopsAndCrims.getPlugin().getServer().getPluginManager().callEvent(damageByWeaponEvent);

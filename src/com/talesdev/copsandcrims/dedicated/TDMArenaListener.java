@@ -222,7 +222,7 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
         if (wp != null) {
             weapon = WeaponType.getSymbol(wp);
         }
-        boolean hs = damageData.getAttachment("HeadShot", Boolean.TYPE);
+        boolean hs = damageData.getAttachment("HeadShot", Boolean.TYPE).booleanValue();
         if (hs) {
             headShot = "\u9270";
         }
