@@ -31,6 +31,7 @@ public class FAMAS extends Weapon {
         shootingModule.setHeadShotDamage(22);
         shootingModule.setUpperLegDamage(5.2);
         shootingModule.setLowerLegDamage(3.9);
+        shootingModule.setArmorPenetration(70);
         shootingModule.setRecoil(4.75D);
         shootingModule.setMaxBullet(25);
         shootingModule.setBulletDelay(2);

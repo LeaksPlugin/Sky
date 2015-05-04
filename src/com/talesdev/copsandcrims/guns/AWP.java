@@ -28,6 +28,7 @@ public class AWP extends Weapon {
         shootingModule.setHeadShotDamage(82.1);
         shootingModule.setUpperLegDamage(20.3);
         shootingModule.setLowerLegDamage(16.6);
+        shootingModule.setArmorPenetration(97.5);
         shootingModule.setRecoil(15.0D);
         shootingModule.setMaxBullet(10);
         shootingModule.setBulletDelay(25);

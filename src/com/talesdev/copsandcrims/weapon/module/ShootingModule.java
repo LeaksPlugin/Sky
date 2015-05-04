@@ -29,7 +29,7 @@ public class ShootingModule extends WeaponModule {
     private double headShotDamage = 8;
     private double lowerLegDamage = 3;
     private double upperLegDamage = 7;
-    private double armorPenetration = 80;
+    private double armorPenetration = 0;
     private double recoil = 1.0D;
     private int bulletCount = 1;
     private int bulletDelay = 1;

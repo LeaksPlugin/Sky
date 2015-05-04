@@ -31,6 +31,7 @@ public class Glock18 extends Weapon {
         shootingModule.setHeadShotDamage(14.9);
         shootingModule.setUpperLegDamage(4.1);
         shootingModule.setLowerLegDamage(3.4);
+        shootingModule.setArmorPenetration(50);
         shootingModule.setRecoil(4.5D);
         shootingModule.setMaxBullet(20);
         shootingModule.setBulletDelay(4);
