@@ -25,9 +25,10 @@ public class AUG extends Weapon {
         ItemControlModule controlModule = new ItemControlModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
         shootingModule.setDamage(5.7);
-        shootingModule.setHeadShotDamage(21.);
+        shootingModule.setHeadShotDamage(21.0);
         shootingModule.setUpperLegDamage(5);
         shootingModule.setLowerLegDamage(4.6);
+        shootingModule.setArmorPenetration(90.0);
         shootingModule.setRecoil(3.95D);
         shootingModule.setMaxBullet(30);
         shootingModule.setBulletDelay(2);
