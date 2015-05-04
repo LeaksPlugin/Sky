@@ -29,6 +29,8 @@ public class TDMGameArena extends GameArena {
     private TDMScoreboard tdmScoreboard;
     private Map<String, Integer> teamKills;
     private Set<KillDeath> killDeathSet;
+    // HACK
+    private boolean fistBlood;
     private String winner = ChatColor.GREEN + "Draw";
     public TDMGameArena() {
         super(CopsAndCrims.getPlugin(), new ConfigFile("plugins/CopsAndCrims/config.yml"), null, null);
@@ -181,5 +183,13 @@ public class TDMGameArena extends GameArena {
 
     public TDMScoreboard getTdmScoreboard() {
         return tdmScoreboard;
+    }
+
+    public boolean isFistBlood() {
+        return fistBlood;
+    }
+
+    public void setFistBlood(boolean fistBlood) {
+        this.fistBlood = fistBlood;
     }
 }

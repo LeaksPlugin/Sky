@@ -1,5 +1,7 @@
 package com.talesdev.copsandcrims.dedicated;
 
+import com.talesdev.core.arena.MultiKill;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 /**
@@ -11,10 +13,13 @@ public class KillDeath {
     private int kills = 0;
     private int deaths = 0;
     private int assists = 0;
+    private long lastKills = 0;
+    private MultiKill multiKill;
     private Player player;
 
     public KillDeath(Player player) {
         this.player = player;
+        multiKill = MultiKill.SINGLE;
     }
 
     public Player getPlayer() {
@@ -47,6 +52,13 @@ public class KillDeath {
 
     public void addKill() {
         kills++;
+        lastKills = System.currentTimeMillis();
+        if (System.currentTimeMillis() - lastKills <= 1000 * 8) {
+            multiKill = MultiKill.get(multiKill.getRequired() + 1);
+            player.sendMessage(ChatColor.RED + multiKill.getWord());
+        } else {
+            multiKill = MultiKill.SINGLE;
+        }
     }
 
     public void addDeath() {
@@ -55,5 +67,9 @@ public class KillDeath {
 
     public void addAssists() {
         assists++;
+    }
+
+    public MultiKill getMultiKill() {
+        return multiKill;
     }
 }

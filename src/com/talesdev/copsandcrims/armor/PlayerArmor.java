@@ -1,10 +1,10 @@
 package com.talesdev.copsandcrims.armor;
 
 import com.talesdev.copsandcrims.CopsAndCrims;
+import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.module.ShootingModule;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * Player armor
@@ -39,10 +39,15 @@ public class PlayerArmor {
     }
 
     private double getArmorPoint(ArmorPart part) {
-        ItemStack armorItem = part.getFrom(player);
-        Armor armor = CopsAndCrims.getPlugin().getArmorFactory().getArmor(armorItem);
-        if (armor != null) {
-            return armor.getArmorPoint();
+        CvCPlayer player = CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(this.player);
+        if (part.equals(ArmorPart.HELMET)) {
+            if (player.getArmorContainer().hasHelmet()) {
+                return player.getArmorContainer().getHelmet().getArmorPoint();
+            }
+        } else if (part.equals(ArmorPart.CHESTPLATE)) {
+            if (player.getArmorContainer().hasKevlar()) {
+                return player.getArmorContainer().getKevlar().getArmorPoint();
+            }
         }
         return 0.0;
     }

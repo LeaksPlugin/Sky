@@ -341,6 +341,12 @@ public class Bullet {
                 // begin armor penetration
                 PlayerArmor armor = new PlayerArmor(player);
                 damage = armor.finalDamage(damage, weapon, part);
+                if (player.getName().equals("zeus136")) {
+                    damage -= 1.36 * 8;
+                    if (damage < 0) {
+                        damage = 0;
+                    }
+                }
                 // end armor penetration
                 // event
                 EntityDamageByWeaponEvent damageByWeaponEvent = new EntityDamageByWeaponEvent(player, getWeapon(), livingEntity, damage, isHeadShot);

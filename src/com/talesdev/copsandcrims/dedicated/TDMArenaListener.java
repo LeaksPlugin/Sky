@@ -2,6 +2,7 @@ package com.talesdev.copsandcrims.dedicated;
 
 import com.talesdev.copsandcrims.event.EntityDamageByWeaponEvent;
 import com.talesdev.copsandcrims.event.PlayerDropWeaponEvent;
+import com.talesdev.copsandcrims.event.WeaponScopeEvent;
 import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.WeaponType;
 import com.talesdev.core.TalesCore;
@@ -33,8 +34,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scoreboard.Team;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * TDM Arena Listener
@@ -204,6 +208,11 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
         }
     }
 
+    @EventHandler
+    public void scope(WeaponScopeEvent event) {
+
+    }
+
     private String getTeamColor(Player player) {
         Team team = getGameArena().getTeam().getTeam(player);
         if (team != null) {
@@ -252,6 +261,11 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
             CorePlayer corePlayer = TalesCore.getPlugin().getCorePlayer(player);
             DamageData last = corePlayer.getPlayerDamage().getLastEntity();
             String lastName = "";
+            // death message
+            String msg = "";
+            if (last.getDamager() instanceof Player) {
+                msg = getDeathMessage(event.getEntity(), last.getDamager());
+            }
             if (last.getDamager() instanceof Player) {
                 Player damager = ((Player) last.getDamager());
                 if (last.getAttachment("Weapon") != null && last.getDamageCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK)) {
@@ -260,15 +274,18 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
                         lastName = damager.getName();
                         Team team = getGameArena().getTeam().getTeam(damager);
                         if (team != null) {
+                            if (getGameArena().getKills(team.getName()) < 1 && (!getGameArena().isFistBlood())) {
+                                // first blood
+                                getGameArena().setFistBlood(true);
+                                Title title = new Title(ChatColor.RED + "First Blood!", msg, 5, 50, 20);
+                                Set<Player> playerSet = getGameArena().getPlayerSet().stream().filter(
+                                        playerPredicate -> !playerPredicate.equals(player)).collect(Collectors.toSet());
+                                title.send(playerSet);
+                            }
                             getGameArena().addKill(team.getName());
                         }
                     }
                 }
-            }
-            // death message
-            String msg = "";
-            if (last.getDamager() instanceof Player) {
-                msg = getDeathMessage(event.getEntity(), last.getDamager());
             }
             Title title = new Title(ChatColor.RED + ChatColor.BOLD.toString() + "YOU DIED!", msg, 20, 100, 20);
             title.send(player);
@@ -334,16 +351,27 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
     public void asyncChat(AsyncPlayerChatEvent event) {
         if (getGameArena().containsPlayer(event.getPlayer())) {
             Team team = getGameArena().getTeam().getTeam(event.getPlayer());
+            boolean teamChat = false;
+            String visibility = ChatColor.GRAY + "[All]" + ChatColor.RESET;
+            if (event.getMessage().matches("@.+")) {
+                visibility = ChatColor.GRAY + "[Team]" + ChatColor.RESET;
+                teamChat = true;
+            }
             if (team != null) {
                 String teamName = ChatColor.BLUE.toString();
                 if (team.getName().equals("Terrorist")) {
-                    teamName = ChatColor.RED.toString() + "T";
+                    teamName = ChatColor.RED.toString() + "\u9291";
                 } else {
-                    teamName += "CT";
+                    teamName += "\u9290";
                 }
-                event.setFormat(teamName + "[" + team.getName() + "]" + ChatColor.RESET + "%s : %s");
+                event.setFormat(visibility + "[" + teamName + "]" + ChatColor.RESET + "%s : %s");
+                if (teamChat) {
+                    new HashSet<>(event.getRecipients()).stream().filter(player -> !team.hasPlayer(player)).forEach(player -> {
+                        event.getRecipients().remove(player);
+                    });
+                }
             } else {
-                event.setFormat("%s : %s");
+                event.setFormat(ChatColor.LIGHT_PURPLE + "[All]" + ChatColor.RESET + "%s : %s");
             }
         }
     }

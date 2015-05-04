@@ -60,7 +60,8 @@ public class ScopeModule extends WeaponModule {
     @EventHandler
     public void onSlotChange(PlayerItemHeldEvent event) {
         CvCPlayer cPlayer = getPlugin().getServerCvCPlayer().getPlayer(event.getPlayer());
-        if (!getWeapon().isWeapon(event.getPlayer().getInventory().getItem(event.getNewSlot()))) {
+        if ((!getWeapon().isWeapon(event.getPlayer().getInventory().getItem(event.getNewSlot()))) &&
+                getWeapon().isWeapon(event.getPlayer().getInventory().getItem(event.getPreviousSlot()))) {
             cancelZoom(cPlayer);
         } else if (getWeapon().isWeapon(event.getPlayer().getInventory().getItem(event.getNewSlot()))) {
             if (cPlayer.getPlayer().isSneaking()) {

@@ -1,6 +1,9 @@
 package com.talesdev.copsandcrims.dedicated;
 
+import com.talesdev.copsandcrims.CopsAndCrims;
+import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.core.TalesCore;
+import com.talesdev.core.arena.GameState;
 import com.talesdev.core.arena.scoreboard.DisplayScoreboard;
 import com.talesdev.core.player.CorePlayer;
 import com.talesdev.core.scoreboard.WrappedScoreboard;
@@ -34,7 +37,8 @@ public class TDMScoreboard implements DisplayScoreboard {
         scoreboard.setLine(9, "Kills : " + ChatColor.RED + getGameArena().getPlayerKD(player).getKills());
         scoreboard.setLine(8, "Deaths : " + ChatColor.RED + getGameArena().getPlayerKD(player).getDeaths());
         scoreboard.setLine(7, "Assists : " + ChatColor.RED + getGameArena().getPlayerKD(player).getAssists());
-        scoreboard.setLine(5, "Team : " + (team.getName().equalsIgnoreCase("CounterTerrorist") ? (ChatColor.BLUE + "CT") : (ChatColor.RED + "TR")));
+        scoreboard.setLine(6, "Armor : " + ChatColor.GRAY + getArmorString(player));
+        scoreboard.setLine(4, "Team : " + (team.getName().equalsIgnoreCase("CounterTerrorist") ? (ChatColor.BLUE + "CT") : (ChatColor.RED + "TR")));
         scoreboard.setBlankLine(15, 11, 6, 4, 3, 2, 1);
         scoreboard.update();
     }
@@ -44,6 +48,13 @@ public class TDMScoreboard implements DisplayScoreboard {
         WrappedScoreboard scoreboard = getCorePlayer(player).getWrappedScoreboard();
         int ctkills = getGameArena().getKills("CounterTerrorist"), tkills = getGameArena().getKills("Terrorist");
         Team team = getGameArena().getTeam().getTeam(player);
+        // cancel if game end
+        if (getGameArena().getGameState().equals(GameState.END)) {
+            scoreboard.setTitle(ChatColor.RED + "TDM is now ended ");
+            scoreboard.setLine(12, "00:00");
+            scoreboard.update();
+            return;
+        }
         scoreboard.setTitle(" " + ChatColor.BLUE + "CT" + ctkills + ChatColor.GOLD + "  and  " + ChatColor.RED + tkills + "TR ");
         scoreboard.setLine(12, getGameArena().getTimer().formattedTime());
         if (getGameArena().getPlayerKD(player) != null) {
@@ -51,12 +62,18 @@ public class TDMScoreboard implements DisplayScoreboard {
             scoreboard.setLine(8, "Deaths : " + ChatColor.RED + getGameArena().getPlayerKD(player).getDeaths());
             scoreboard.setLine(7, "Assists : " + ChatColor.RED + getGameArena().getPlayerKD(player).getAssists());
         }
-        scoreboard.setLine(5, "Team : " + (team.getName().equalsIgnoreCase("CounterTerrorist") ? (ChatColor.BLUE + "CT") : (ChatColor.RED + "TR")));
+        scoreboard.setLine(6, "Armor : " + ChatColor.GRAY + getArmorString(player));
+        scoreboard.setLine(4, "Team : " + (team.getName().equalsIgnoreCase("CounterTerrorist") ? (ChatColor.BLUE + "\u9290 - CT") : (ChatColor.RED + "\u9291 - T")));
         scoreboard.update();
     }
 
     public CorePlayer getCorePlayer(Player player) {
         return TalesCore.getPlugin().getCorePlayer(player);
+    }
+
+    private String getArmorString(Player player) {
+        CvCPlayer cvCPlayer = CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(player);
+        return cvCPlayer.getArmorContainer().toString();
     }
     @Override
     public Class<? extends DisplayScoreboard> getType() {

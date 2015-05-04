@@ -71,6 +71,11 @@ public class TDMKitItem {
         }
         player.getInventory().setHelmet(helmet.asItem());
         player.getInventory().setChestplate(kevlar.asItem());
+        cPlayer.getArmorContainer().setHelmet(helmet);
+        cPlayer.getArmorContainer().setKevlar(kevlar);
+        getPlugin().getServer().getScheduler().runTaskLater(getPlugin(), () -> {
+            cPlayer.getArmorContainer().update();
+        }, 20);
     }
 
     public void fillBullet(CvCPlayer cPlayer, Weapon weapon) {

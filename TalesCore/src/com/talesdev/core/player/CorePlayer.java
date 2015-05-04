@@ -62,7 +62,6 @@ public class CorePlayer {
         this.healthBar = new HealthBar(playerScoreboard);
         this.wrappedScoreboard = new WrappedScoreboard(playerScoreboard);
         player.setScoreboard(playerScoreboard);
-        System.out.println("[Debug] scoreboard : " + playerScoreboard.toString());
         // load
         this.load();
     }

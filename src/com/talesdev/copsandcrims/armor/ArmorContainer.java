@@ -53,4 +53,8 @@ public class ArmorContainer {
         player.getEquipment().setHelmet(helmet.asItem());
         player.getEquipment().setChestplate(kevlar.asItem());
     }
+
+    public String toString() {
+        return (hasHelmet() ? "\u927f" : "") + (hasKevlar() ? "\u927e" : "");
+    }
 }

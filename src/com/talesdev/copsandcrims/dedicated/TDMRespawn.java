@@ -52,9 +52,4 @@ public class TDMRespawn extends TimedTask {
         }
         seconds--;
     }
-
-    private String getDeathMessage() {
-        // TODO : Fancy death message
-        return "";
-    }
 }
