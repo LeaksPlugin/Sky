@@ -30,6 +30,7 @@ import org.bukkit.inventory.meta.ItemMeta;
         shootingModule.setHeadShotDamage(19.6);
         shootingModule.setUpperLegDamage(6.7);
         shootingModule.setLowerLegDamage(4.2);
+        shootingModule.setArmorPenetration(57.5);
         shootingModule.setRecoil(5.0D);
         shootingModule.setMaxBullet(13);
         shootingModule.setBulletDelay(4);
