@@ -29,6 +29,7 @@ public class GalilAR extends Weapon {
         shootingModule.setHeadShotDamage(22);
         shootingModule.setUpperLegDamage(5.3);
         shootingModule.setLowerLegDamage(3.9);
+        shootingModule.setArmorPenetration(77.5);
         shootingModule.setRecoil(5.25D);
         shootingModule.setMaxBullet(35);
         shootingModule.setBulletDelay(2);
