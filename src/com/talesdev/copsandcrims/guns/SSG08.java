@@ -28,6 +28,7 @@ public class SSG08 extends Weapon {
         shootingModule.setHeadShotDamage(47.1);
         shootingModule.setUpperLegDamage(14.2);
         shootingModule.setLowerLegDamage(11.1);
+        shootingModule.setArmorPenetration(85);
         shootingModule.setRecoil(15.0D);
         shootingModule.setMaxBullet(10);
         shootingModule.setBulletDelay(16);
