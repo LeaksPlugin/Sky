@@ -27,6 +27,7 @@ public class M4A1 extends Weapon {
         shootingModule.setHeadShotDamage(20.2);
         shootingModule.setUpperLegDamage(5.9);
         shootingModule.setLowerLegDamage(4.3);
+        shootingModule.setArmorPenetration(70);
         shootingModule.setRecoil(3.75D);
         shootingModule.setMaxBullet(30);
         shootingModule.setBulletDelay(2);
