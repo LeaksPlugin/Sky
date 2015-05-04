@@ -28,6 +28,7 @@ public class SG553 extends Weapon {
         shootingModule.setHeadShotDamage(20);
         shootingModule.setUpperLegDamage(5);
         shootingModule.setLowerLegDamage(4);
+        shootingModule.setArmorPenetration(100);
         shootingModule.setRecoil(4.35D);
         shootingModule.setMaxBullet(30);
         shootingModule.setBulletDelay(2);
