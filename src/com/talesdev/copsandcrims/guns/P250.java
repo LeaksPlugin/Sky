@@ -27,6 +27,7 @@ public class P250 extends Weapon {
         shootingModule.setHeadShotDamage(24.2);
         shootingModule.setUpperLegDamage(6.2);
         shootingModule.setLowerLegDamage(5.1);
+        shootingModule.setArmorPenetration(77.5);
         shootingModule.setRecoil(5.5D);
         shootingModule.setMaxBullet(13);
         shootingModule.setBulletDelay(4);
