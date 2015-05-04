@@ -47,7 +47,7 @@ public class TDMRespawn extends TimedTask {
             corePlayer.getPlayerDamage().clearDamageData();
             gameArena.getScheduler().runTaskLater(gameArena.getPlugin(), () -> {
                 corePlayer.getPlayerDamage().setGod(false);
-            }, 70);
+            }, 85);
             cancel();
         }
         seconds--;

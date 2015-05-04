@@ -1,8 +1,10 @@
 package com.talesdev.core.arena;
 
+import com.talesdev.core.TalesCore;
 import com.talesdev.core.arena.phase.CountdownPhase;
 import com.talesdev.core.arena.phase.EndPhase;
 import com.talesdev.core.arena.team.GlobalTeam;
+import com.talesdev.core.player.CorePlayer;
 import com.talesdev.core.world.LocationString;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -135,6 +137,16 @@ public class DedicatedArenaCommand implements CommandExecutor {
                         }
                     } else {
                         noPerm(sender);
+                    }
+                } else if (args[0].equalsIgnoreCase("target")) {
+                    if (sender instanceof Player) {
+                        Player player = (Player) sender;
+                        Player target = Bukkit.getPlayer(args.length > 1 ? args[1] : "");
+                        if (target != null) {
+                            CorePlayer corePlayer = TalesCore.getPlugin().getCorePlayer(player);
+                            corePlayer.setCompassTarget(target);
+                            sender.sendMessage(ChatColor.GREEN + "Successfully set the compass target to" + ChatColor.BLUE + target.getName());
+                        }
                     }
                 } else if (args[0].equalsIgnoreCase("addspawn")) {
                     if (sender instanceof Player) {

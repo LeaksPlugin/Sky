@@ -1,6 +1,7 @@
 package com.talesdev.copsandcrims.dedicated;
 
 import com.talesdev.copsandcrims.CopsAndCrims;
+import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.core.arena.ArenaTimer;
 import com.talesdev.core.arena.GameArena;
 import com.talesdev.core.arena.TeamGameSpawn;
@@ -12,6 +13,8 @@ import com.talesdev.core.arena.team.TeamSelector;
 import com.talesdev.core.arena.util.WinMessage;
 import com.talesdev.core.config.ConfigFile;
 import com.talesdev.core.player.CleanedPlayer;
+import com.talesdev.core.world.sound.Sound;
+import com.talesdev.core.world.sound.SoundEffect;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -34,14 +37,19 @@ public class TDMGameArena extends GameArena {
     private String winner = ChatColor.GREEN + "Draw";
     public TDMGameArena() {
         super(CopsAndCrims.getPlugin(), new ConfigFile("plugins/CopsAndCrims/config.yml"), null, null);
-        setMaxPlayers(8);
+        if (getConfig().contains("max-players")) {
+            setMaxPlayers(getConfig().getInt("max-players"));
+        } else {
+            setMaxPlayers(8);
+            getConfig().set("max-players", 8);
+        }
         TDMArenaWorld arenaWorld = new TDMArenaWorld(this);
         arenaWorld.setName("NealTheFarmer");
         setArenaWorld(arenaWorld);
         setGameArenaListener(new TDMArenaListener(this));
         teamGameSpawn = new TeamGameSpawn(this);
         setArenaSpawn(teamGameSpawn);
-        timer = new ArenaTimer(this, 300, false);
+        timer = new ArenaTimer(this, 450, false);
         tdmScoreboard = new TDMScoreboard(this);
         lobbyScoreboard = new LobbyScoreboard();
     }
@@ -99,7 +107,7 @@ public class TDMGameArena extends GameArena {
             if (timer.getTime() == 30) {
                 systemMessage("The game will be ended in 30 seconds");
             } else if (timer.getTime() <= 10) {
-                systemMessage("The game will be ended in " + timer.getTime() + "  seconds");
+                getPlayerSet().forEach(this::playTickSound);
             }
         });
         timer.onStop(() -> {
@@ -120,9 +128,14 @@ public class TDMGameArena extends GameArena {
         getPlayerSet().forEach(player -> {
             CleanedPlayer cp = new CleanedPlayer(player);
             cp.clean();
+            CvCPlayer cvCPlayer = CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(player);
+            cvCPlayer.getArmorContainer().clearAll();
         });
         // stop timer
         timer = new ArenaTimer(this, 300, false);
+        // global scoreboard
+        getTeam().clearTeam();
+        getGlobalScoreboard().reset();
         // initKills
         initKills();
     }
@@ -191,5 +204,10 @@ public class TDMGameArena extends GameArena {
 
     public void setFistBlood(boolean fistBlood) {
         this.fistBlood = fistBlood;
+    }
+
+    private void playTickSound(Player player) {
+        Sound sound = new Sound(SoundEffect.NOTE_HAT, 1.0F, 1.0F);
+        sound.playSound(player);
     }
 }

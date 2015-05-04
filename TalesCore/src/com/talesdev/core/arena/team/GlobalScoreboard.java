@@ -27,6 +27,12 @@ public class GlobalScoreboard implements Joinable {
         this.localTeamSet = new HashSet<>();
     }
 
+    public void reset() {
+        this.globalScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        this.team = new GlobalTeam(gameArena);
+        this.localTeamSet = new HashSet<>();
+    }
+
     public GameArena getGameArena() {
         return gameArena;
     }

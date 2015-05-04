@@ -37,7 +37,7 @@ public class TDMScoreboard implements DisplayScoreboard {
         scoreboard.setLine(9, "Kills : " + ChatColor.RED + getGameArena().getPlayerKD(player).getKills());
         scoreboard.setLine(8, "Deaths : " + ChatColor.RED + getGameArena().getPlayerKD(player).getDeaths());
         scoreboard.setLine(7, "Assists : " + ChatColor.RED + getGameArena().getPlayerKD(player).getAssists());
-        scoreboard.setLine(6, "Armor : " + ChatColor.GRAY + getArmorString(player));
+        scoreboard.setLine(6, "Armor : " + getArmorString(player));
         scoreboard.setLine(4, "Team : " + (team.getName().equalsIgnoreCase("CounterTerrorist") ? (ChatColor.BLUE + "CT") : (ChatColor.RED + "TR")));
         scoreboard.setBlankLine(15, 11, 6, 4, 3, 2, 1);
         scoreboard.update();
@@ -56,7 +56,13 @@ public class TDMScoreboard implements DisplayScoreboard {
             return;
         }
         scoreboard.setTitle(" " + ChatColor.BLUE + "CT" + ctkills + ChatColor.GOLD + "  and  " + ChatColor.RED + tkills + "TR ");
-        scoreboard.setLine(12, getGameArena().getTimer().formattedTime());
+        String timeColor = "";
+        if (getGameArena().getTimer().getTime() <= 30) {
+            if (getGameArena().getTimer().getTime() % 2 == 0) {
+                timeColor = ChatColor.RED.toString();
+            }
+        }
+        scoreboard.setLine(12, timeColor + getGameArena().getTimer().formattedTime());
         if (getGameArena().getPlayerKD(player) != null) {
             scoreboard.setLine(9, "Kills : " + ChatColor.RED + getGameArena().getPlayerKD(player).getKills());
             scoreboard.setLine(8, "Deaths : " + ChatColor.RED + getGameArena().getPlayerKD(player).getDeaths());

@@ -18,20 +18,19 @@ import com.talesdev.core.player.CleanedPlayer;
 import com.talesdev.core.player.CorePlayer;
 import com.talesdev.core.player.message.Title;
 import org.bukkit.*;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Team;
 
 import java.util.HashSet;
@@ -65,6 +64,12 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
             getGameArena().initDisplay(event.getPlayer(), lobby);
             getGameArena().updateDisplay(lobby);
         });
+        getGameArena().getScheduler().runTaskLater(getGameArena().getPlugin(), () -> {
+            event.getPlayer().getEquipment().setHelmet(new ItemStack(Material.AIR));
+            event.getPlayer().getEquipment().setHelmet(new ItemStack(Material.AIR));
+            // HACK
+            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "minecraft:clear " + event.getPlayer().getName());
+        }, 60);
     }
 
     @EventHandler
@@ -148,6 +153,13 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         if (getGameArena().containsPlayer(event.getPlayer())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onInteractEntity(PlayerInteractEntityEvent event) {
+        if (event.getRightClicked() instanceof Hanging) {
             event.setCancelled(true);
         }
     }
@@ -258,15 +270,15 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
             player.setGameMode(GameMode.SPECTATOR);
             getGameArena().getPlayerKD(player).addDeath();
             // add kill to killer
+            // death message
+            String msg = "";
             CorePlayer corePlayer = TalesCore.getPlugin().getCorePlayer(player);
             DamageData last = corePlayer.getPlayerDamage().getLastEntity();
             String lastName = "";
-            // death message
-            String msg = "";
-            if (last.getDamager() instanceof Player) {
+            if (corePlayer.getPlayerDamage().getLast().getDamageCause().equals(EntityDamageEvent.DamageCause.FALL)) {
+                msg = getTeamColor(player) + player.getName() + ChatColor.RESET + " \u9271\u9272";
+            } else if (last.getDamager() instanceof Player) {
                 msg = getDeathMessage(event.getEntity(), last.getDamager());
-            }
-            if (last.getDamager() instanceof Player) {
                 Player damager = ((Player) last.getDamager());
                 if (last.getAttachment("Weapon") != null && last.getDamageCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK)) {
                     if (getGameArena().containsPlayer(damager)) {
@@ -277,7 +289,7 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
                             if (getGameArena().getKills(team.getName()) < 1 && (!getGameArena().isFistBlood())) {
                                 // first blood
                                 getGameArena().setFistBlood(true);
-                                Title title = new Title(ChatColor.RED + "First Blood!", msg, 5, 50, 20);
+                                Title title = new Title(ChatColor.RED + "First Blood!", msg, 5, 30, 15);
                                 Set<Player> playerSet = getGameArena().getPlayerSet().stream().filter(
                                         playerPredicate -> !playerPredicate.equals(player)).collect(Collectors.toSet());
                                 title.send(playerSet);
@@ -338,13 +350,8 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
     }
 
     @EventHandler
-    public void onHangingBreak(HangingBreakByEntityEvent event) {
-        if (event.getRemover() instanceof Player) {
-            Player remover = ((Player) event.getRemover());
-            if (getGameArena().containsPlayer(remover)) {
-                event.setCancelled(true);
-            }
-        }
+    public void onHangingBreak(HangingBreakEvent event) {
+        event.setCancelled(true);
     }
 
     @EventHandler
@@ -358,17 +365,18 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
                 teamChat = true;
             }
             if (team != null) {
-                String teamName = ChatColor.BLUE.toString();
+                String teamName = "";
                 if (team.getName().equals("Terrorist")) {
-                    teamName = ChatColor.RED.toString() + "\u9291";
+                    teamName = ChatColor.RED.toString() + "[\u9291]";
                 } else {
-                    teamName += "\u9290";
+                    teamName = ChatColor.BLUE.toString() + "[\u9290]";
                 }
-                event.setFormat(visibility + "[" + teamName + "]" + ChatColor.RESET + "%s : %s");
+                event.setFormat(visibility + teamName + ChatColor.RESET + "%s : %s");
                 if (teamChat) {
                     new HashSet<>(event.getRecipients()).stream().filter(player -> !team.hasPlayer(player)).forEach(player -> {
                         event.getRecipients().remove(player);
                     });
+                    event.setMessage(event.getMessage().replaceFirst("@", ""));
                 }
             } else {
                 event.setFormat(ChatColor.LIGHT_PURPLE + "[All]" + ChatColor.RESET + "%s : %s");

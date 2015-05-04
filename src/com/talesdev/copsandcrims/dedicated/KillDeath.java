@@ -1,7 +1,6 @@
 package com.talesdev.copsandcrims.dedicated;
 
 import com.talesdev.core.arena.MultiKill;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 /**
@@ -55,7 +54,7 @@ public class KillDeath {
         lastKills = System.currentTimeMillis();
         if (System.currentTimeMillis() - lastKills <= 1000 * 8) {
             multiKill = MultiKill.get(multiKill.getRequired() + 1);
-            player.sendMessage(ChatColor.RED + multiKill.getWord());
+            //player.sendMessage(ChatColor.RED + multiKill.getWord());
         } else {
             multiKill = MultiKill.SINGLE;
         }

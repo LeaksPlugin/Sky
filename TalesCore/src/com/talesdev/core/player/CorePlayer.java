@@ -15,6 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -41,6 +42,7 @@ public class CorePlayer {
     private EquipmentCache equipmentCache;
     private PlayerLocation playerLocation;
     private Scoreboard playerScoreboard;
+    private Entity compassTarget;
     private WrappedScoreboard wrappedScoreboard;
     private HealthBar healthBar;
     private PlayerDamage playerDamage;
@@ -58,12 +60,24 @@ public class CorePlayer {
         this.equipmentCache = new EquipmentCache(this);
         this.playerLocation = new PlayerLocation(this);
         this.playerDamage = new PlayerDamage(this);
+        this.compassTarget = null;
         this.playerScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         this.healthBar = new HealthBar(playerScoreboard);
         this.wrappedScoreboard = new WrappedScoreboard(playerScoreboard);
         player.setScoreboard(playerScoreboard);
         // load
         this.load();
+        initCompassTracker();
+    }
+
+    public void initCompassTracker() {
+        getPlayerTask().store("compass", getScheduler().runTaskTimer(getCore(), () -> {
+            if (getCompassTarget() != null) {
+                player.setCompassTarget(getCompassTarget().getLocation());
+            } else {
+                player.setCompassTarget(player.getBedSpawnLocation());
+            }
+        }, 0, 15));
     }
 
     public Player getPlayer() {
@@ -212,5 +226,13 @@ public class CorePlayer {
 
     public PlayerDamage getPlayerDamage() {
         return playerDamage;
+    }
+
+    public Entity getCompassTarget() {
+        return compassTarget;
+    }
+
+    public void setCompassTarget(Entity compassTarget) {
+        this.compassTarget = compassTarget;
     }
 }

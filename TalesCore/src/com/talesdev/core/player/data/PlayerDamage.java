@@ -7,6 +7,7 @@ import com.talesdev.core.player.CorePlayer;
 import com.talesdev.core.system.Destroyable;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -96,11 +97,17 @@ public class PlayerDamage implements Savable, Destroyable {
         List<DamageData> damageDatas = new ArrayList<>(damageDataList);
         for (Iterator<DamageData> it = damageDatas.iterator(); it.hasNext(); ) {
             DamageData damageData = it.next();
-            if (damageData.getDamager() == null) {
+            if (damageData.getDamager() == null || !isEntityCause(damageData)) {
                 it.remove();
             }
         }
         return damageDatas;
+    }
+
+    private boolean isEntityCause(DamageData damageData) {
+        EntityDamageEvent.DamageCause cause = damageData.getDamageCause();
+        return cause.equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK) ||
+                cause.equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION);
     }
 
     public List<Long> getDamageTimes(List<DamageData> damageDataList) {

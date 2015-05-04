@@ -4,8 +4,10 @@ import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.WeaponType;
 import com.talesdev.copsandcrims.weapon.module.DeathMessageModule;
 import com.talesdev.copsandcrims.weapon.module.MeleeModule;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  * Knife
@@ -23,7 +25,9 @@ public class Knife extends Weapon {
 
     @Override
     public ItemStack createItemStack() {
-        return new ItemStack(Material.IRON_AXE);
+        ItemStack itemStack = new ItemStack(Material.IRON_AXE);
+        ItemMeta meta = itemStack.getItemMeta();
+        return itemStack;
     }
 
     @Override
