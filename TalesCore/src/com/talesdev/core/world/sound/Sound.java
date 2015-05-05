@@ -57,6 +57,7 @@ public class Sound {
     }
 
     public void playSound(Player target, Location location) {
+        if (effect == null) return;
         ProtocolManager manager = ProtocolLibrary.getProtocolManager();
         double x = location.getBlockX() + 0.5D;
         double y = location.getBlockY() + 0.5D;

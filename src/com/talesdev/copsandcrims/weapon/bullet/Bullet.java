@@ -308,7 +308,8 @@ public class Bullet {
                 LivingEntity livingEntity = (LivingEntity) entity;
                 // skip creative gamemode
                 if (entity instanceof Player) {
-                    if (((Player) entity).getGameMode().equals(GameMode.CREATIVE)) {
+                    Player entityPlayer = ((Player) entity);
+                    if (entityPlayer.getGameMode().equals(GameMode.CREATIVE) || entityPlayer.getGameMode().equals(GameMode.SPECTATOR)) {
                         return false;
                     }
                 }

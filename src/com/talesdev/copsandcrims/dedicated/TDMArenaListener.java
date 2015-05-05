@@ -6,6 +6,8 @@ import com.talesdev.copsandcrims.event.WeaponScopeEvent;
 import com.talesdev.copsandcrims.weapon.Weapon;
 import com.talesdev.copsandcrims.weapon.WeaponType;
 import com.talesdev.core.TalesCore;
+import com.talesdev.core.arena.ArenaChatFilter;
+import com.talesdev.core.arena.FirstBlood;
 import com.talesdev.core.arena.GameState;
 import com.talesdev.core.arena.event.ArenaCountdownEvent;
 import com.talesdev.core.arena.event.GeneralArenaListener;
@@ -26,18 +28,12 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.hanging.HangingBreakEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.event.player.*;
+import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.scoreboard.Team;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * TDM Arena Listener
@@ -56,7 +52,6 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
         cp.clean();
         event.setAfterRun(() -> {
             LobbyScoreboard lobby = getGameArena().getLobbyScoreboard();
-            lobby.setMapName(ChatColor.GREEN + "NealTheFarmer");
             lobby.setTitle(ChatColor.RED + "CvC - TDM");
             lobby.setCountdown(-1);
             lobby.setMaxPlayers(getGameArena().getMaxPlayers());
@@ -64,12 +59,6 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
             getGameArena().initDisplay(event.getPlayer(), lobby);
             getGameArena().updateDisplay(lobby);
         });
-        getGameArena().getScheduler().runTaskLater(getGameArena().getPlugin(), () -> {
-            event.getPlayer().getEquipment().setHelmet(new ItemStack(Material.AIR));
-            event.getPlayer().getEquipment().setHelmet(new ItemStack(Material.AIR));
-            // HACK
-            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "minecraft:clear " + event.getPlayer().getName());
-        }, 60);
     }
 
     @EventHandler
@@ -115,6 +104,11 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
         if (getGameArena().containsPlayer(Bukkit.getPlayer(event.getEntity().getName()))) {
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void weatherChange(WeatherChangeEvent event) {
+        event.setCancelled(true);
     }
 
     @EventHandler
@@ -164,6 +158,13 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
         }
     }
 
+    @EventHandler
+    public void onInteractEntity(PlayerInteractAtEntityEvent event) {
+        if (event.getRightClicked() instanceof Hanging) {
+            event.setCancelled(true);
+        }
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDamage(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player) {
@@ -189,9 +190,13 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
+            if (!getGameArena().getGameState().equals(GameState.STARTED)) {
+                event.setCancelled(true);
+                return;
+            }
             CorePlayer corePlayer = TalesCore.getPlugin().getCorePlayer((Player) event.getEntity());
             if (corePlayer.getPlayerDamage().isGod()) {
                 event.setCancelled(true);
@@ -201,8 +206,9 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
 
     @EventHandler
     public void onTeamDamage(EntityDamageByWeaponEvent event) {
-        if (getGameArena().getGameState().equals(GameState.END)) {
+        if (!getGameArena().getGameState().equals(GameState.STARTED)) {
             event.setCancelled(true);
+            return;
         }
         if (event.getEntity() instanceof Player) {
             CorePlayer corePlayer = TalesCore.getPlugin().getCorePlayer((Player) event.getEntity());
@@ -263,6 +269,11 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
         if (getGameArena().containsPlayer(event.getEntity())) {
+            if (!getGameArena().getGameState().equals(GameState.STARTED)) {
+                AutoRespawn autoRespawn = new AutoRespawn(event.getEntity());
+                autoRespawn.perform();
+                return;
+            }
             // spectator
             Player player = event.getEntity();
             event.getDrops().clear();
@@ -274,13 +285,14 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
             String msg = "";
             CorePlayer corePlayer = TalesCore.getPlugin().getCorePlayer(player);
             DamageData last = corePlayer.getPlayerDamage().getLastEntity();
+            System.out.println("LastEntity damage : " + last.toString());
             String lastName = "";
             if (corePlayer.getPlayerDamage().getLast().getDamageCause().equals(EntityDamageEvent.DamageCause.FALL)) {
                 msg = getTeamColor(player) + player.getName() + ChatColor.RESET + " \u9271\u9272";
             } else if (last.getDamager() instanceof Player) {
-                msg = getDeathMessage(event.getEntity(), last.getDamager());
                 Player damager = ((Player) last.getDamager());
                 if (last.getAttachment("Weapon") != null && last.getDamageCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK)) {
+                    msg = getDeathMessage(event.getEntity(), last.getDamager());
                     if (getGameArena().containsPlayer(damager)) {
                         getGameArena().getPlayerKD(damager).addKill();
                         lastName = damager.getName();
@@ -288,20 +300,16 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
                         if (team != null) {
                             if (getGameArena().getKills(team.getName()) < 1 && (!getGameArena().isFistBlood())) {
                                 // first blood
-                                getGameArena().setFistBlood(true);
-                                Title title = new Title(ChatColor.RED + "First Blood!", msg, 5, 30, 15);
-                                Set<Player> playerSet = getGameArena().getPlayerSet().stream().filter(
-                                        playerPredicate -> !playerPredicate.equals(player)).collect(Collectors.toSet());
-                                title.send(playerSet);
+                                FirstBlood firstBlood = new FirstBlood(getGameArena(), player, msg);
+                                firstBlood.display();
                             }
                             getGameArena().addKill(team.getName());
                         }
                     }
                 }
             }
-            Title title = new Title(ChatColor.RED + ChatColor.BOLD.toString() + "YOU DIED!", msg, 20, 100, 20);
+            Title title = new Title(ChatColor.RED + ChatColor.BOLD.toString() + "YOU DIED!", msg, 20, 60, 20);
             title.send(player);
-            event.setDeathMessage(msg);
             getGameArena().sendMessage(msg);
             // assist
             List<DamageData> damageDataList = corePlayer.getPlayerDamage().getEntityDamage();
@@ -337,6 +345,10 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onRespawn(PlayerRespawnEvent event) {
         if (getGameArena().containsPlayer(event.getPlayer())) {
+            GameState state = getGameArena().getGameState();
+            if (state.equals(GameState.WAITING) || state.equals(GameState.COUNTDOWN)) {
+                return;
+            }
             CorePlayer corePlayer = TalesCore.getPlugin().getCorePlayer(event.getPlayer());
             DamageData last = corePlayer.getPlayerDamage().getLastEntity();
             if (last.getDamager() instanceof LivingEntity) {
@@ -357,30 +369,8 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
     @EventHandler
     public void asyncChat(AsyncPlayerChatEvent event) {
         if (getGameArena().containsPlayer(event.getPlayer())) {
-            Team team = getGameArena().getTeam().getTeam(event.getPlayer());
-            boolean teamChat = false;
-            String visibility = ChatColor.GRAY + "[All]" + ChatColor.RESET;
-            if (event.getMessage().matches("@.+")) {
-                visibility = ChatColor.GRAY + "[Team]" + ChatColor.RESET;
-                teamChat = true;
-            }
-            if (team != null) {
-                String teamName = "";
-                if (team.getName().equals("Terrorist")) {
-                    teamName = ChatColor.RED.toString() + "[\u9291]";
-                } else {
-                    teamName = ChatColor.BLUE.toString() + "[\u9290]";
-                }
-                event.setFormat(visibility + teamName + ChatColor.RESET + "%s : %s");
-                if (teamChat) {
-                    new HashSet<>(event.getRecipients()).stream().filter(player -> !team.hasPlayer(player)).forEach(player -> {
-                        event.getRecipients().remove(player);
-                    });
-                    event.setMessage(event.getMessage().replaceFirst("@", ""));
-                }
-            } else {
-                event.setFormat(ChatColor.LIGHT_PURPLE + "[All]" + ChatColor.RESET + "%s : %s");
-            }
+            ArenaChatFilter filter = new ArenaChatFilter(event, getGameArena());
+            filter.apply();
         }
     }
 

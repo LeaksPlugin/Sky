@@ -5,7 +5,6 @@ import com.talesdev.copsandcrims.player.PlayerLastDamage;
 import com.talesdev.core.TalesCore;
 import com.talesdev.core.entity.BoundingBox;
 import com.talesdev.core.entity.DamageData;
-import com.talesdev.core.entity.FastDamage;
 import com.talesdev.core.item.MaterialComparator;
 import com.talesdev.core.item.RightClickable;
 import com.talesdev.core.player.ClickingAction;
@@ -106,6 +105,7 @@ public class MeleeModule extends WeaponModule {
             Player player = (Player) event.getDamager();
             if (getWeapon().isWeapon(player.getItemInHand())) {
                 player.getItemInHand().setDurability((short) 0);
+                getPlugin().getServer().getScheduler().runTaskLater(getPlugin(), player::updateInventory, 1);
                 // check for distance first
                 if (entity.getLocation().distance(player.getLocation()) > getMeleeRange()) {
                     event.setCancelled(true);
@@ -118,7 +118,7 @@ public class MeleeModule extends WeaponModule {
                 if (isBackStab(Math.abs(getNMSYaw(entity)), Math.abs(getNMSYaw(player)))) {
                     backStab = true;
                 }
-                String message = ChatColor.RED + "";
+                String message = ChatColor.RED.toString() + ChatColor.BOLD + "";
                 if (rayTrace(player)) {
                     headShot = true;
                     if (backStab) {
@@ -148,18 +148,25 @@ public class MeleeModule extends WeaponModule {
                 actionBar.send(player);
                 // updateLobby
                 // event.setDamage(EntityDamageEvent.DamageModifier.ARMOR, damage);
-                FastDamage fastDamage = new FastDamage(entity, damage);
-                fastDamage.apply();
+                boolean god = false;
+                if (entity instanceof Player) {
+                    CorePlayer cp = TalesCore.getPlugin().getCorePlayer(((Player) entity));
+                    if (cp.getPlayerDamage().isGod()) god = true;
+                }
+                if (!god) {
+                    event.setDamage(EntityDamageEvent.DamageModifier.ARMOR, damage);
+                }
                 // last damage cause
                 LastPlayerDamage lastPlayerDamage = new LastPlayerDamage(event.getEntity(), getPlugin());
                 PlayerLastDamage cause = new PlayerLastDamage(player, getWeapon(), null, headShot);
                 cause.addAttachment("Knife", true);
                 lastPlayerDamage.setLastDamage(cause);
                 // new dmg system
-                if (entity instanceof Player) {
+                if (entity instanceof Player && (!god)) {
                     CorePlayer corePlayer = TalesCore.getPlugin().getCorePlayer(((Player) entity));
                     DamageData data = new DamageData(damage, EntityDamageEvent.DamageCause.ENTITY_ATTACK, player);
                     data.addAttachment("Bullet", null);
+                    data.addAttachment("Knife", true);
                     data.addAttachment("Weapon", getWeapon());
                     data.addAttachment("HeadShot", headShot);
                     corePlayer.getPlayerDamage().damage(data);
@@ -214,7 +221,7 @@ public class MeleeModule extends WeaponModule {
                 // hit
                 if (box.isInside(vector)) {
                     if ((Math.abs(entity.getEyeLocation().toVector().getY() - vector.getY()) <= 0.3) &&
-                            (entity.getEyeLocation().toVector().distanceSquared(vector) <= getHeadBias())
+                            (entity.getEyeLocation().toVector().distance(vector) <= getHeadBias())
                             ) {
                         return true;
                     } else {

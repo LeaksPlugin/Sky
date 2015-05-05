@@ -8,12 +8,11 @@ import com.talesdev.core.player.data.EquipmentCache;
 import com.talesdev.core.player.data.ItemDataSet;
 import com.talesdev.core.player.data.PlayerDamage;
 import com.talesdev.core.player.data.PlayerLocation;
+import com.talesdev.core.player.message.ActionBar;
 import com.talesdev.core.scoreboard.HealthBar;
 import com.talesdev.core.scoreboard.WrappedScoreboard;
 import com.talesdev.core.system.Destroyable;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Server;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -22,6 +21,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.Scoreboard;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -71,13 +71,32 @@ public class CorePlayer {
     }
 
     public void initCompassTracker() {
-        getPlayerTask().store("compass", getScheduler().runTaskTimer(getCore(), () -> {
-            if (getCompassTarget() != null) {
-                player.setCompassTarget(getCompassTarget().getLocation());
-            } else {
-                player.setCompassTarget(player.getBedSpawnLocation());
+        getPlayerTask().store("compass", getScheduler().runTaskTimer(getCore(), new Runnable() {
+            @Override
+            public void run() {
+                if (getCompassTarget() != null) {
+                    player.setCompassTarget(getCompassTarget().getLocation());
+                } else {
+                    if (player.getBedSpawnLocation() != null) {
+                        player.setCompassTarget(player.getBedSpawnLocation());
+                    } else {
+                        player.setCompassTarget(getPlayer().getWorld().getSpawnLocation());
+                    }
+                }
+                if (player.getItemInHand() != null) {
+                    if (player.getItemInHand().getType().equals(Material.COMPASS)) {
+                        String target = "target";
+                        if (getCompassTarget() != null) {
+                            target = ChatColor.RED + getCompassTarget().getName() + ChatColor.RESET;
+                        }
+                        double loc = player.getCompassTarget().distance(player.getLocation());
+                        DecimalFormat format = new DecimalFormat("###0.00");
+                        ActionBar bar = new ActionBar("Distance from " + target + " : " + ChatColor.GREEN + format.format(loc));
+                        bar.send(player);
+                    }
+                }
             }
-        }, 0, 15));
+        }, 0, 10));
     }
 
     public Player getPlayer() {

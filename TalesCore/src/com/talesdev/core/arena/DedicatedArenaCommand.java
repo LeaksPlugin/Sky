@@ -130,7 +130,7 @@ public class DedicatedArenaCommand implements CommandExecutor {
                 } else if (args[0].equalsIgnoreCase("end")) {
                     if (sender.hasPermission(perm("command.end"))) {
                         if (gameArena.getGameState().equals(GameState.STARTED)) {
-                            gameArena.dispatchPhase(new EndPhase("Draw"));
+                            gameArena.dispatchPhase(new EndPhase());
                             sender.sendMessage(ChatColor.GREEN + "Force ending arena!");
                         } else {
                             sender.sendMessage(ChatColor.RED + "Invalid arena state!");
@@ -141,12 +141,15 @@ public class DedicatedArenaCommand implements CommandExecutor {
                 } else if (args[0].equalsIgnoreCase("target")) {
                     if (sender instanceof Player) {
                         Player player = (Player) sender;
-                        Player target = Bukkit.getPlayer(args.length > 1 ? args[1] : "");
-                        if (target != null) {
-                            CorePlayer corePlayer = TalesCore.getPlugin().getCorePlayer(player);
-                            corePlayer.setCompassTarget(target);
-                            sender.sendMessage(ChatColor.GREEN + "Successfully set the compass target to" + ChatColor.BLUE + target.getName());
+                        if (args.length > 1) {
+                            Player target = Bukkit.getPlayer(args[1]);
+                            if (target != null) {
+                                CorePlayer corePlayer = TalesCore.getPlugin().getCorePlayer(player);
+                                corePlayer.setCompassTarget(target);
+                                sender.sendMessage(ChatColor.GREEN + "Successfully set the compass target to" + ChatColor.BLUE + target.getName());
+                            }
                         }
+                        return true;
                     }
                 } else if (args[0].equalsIgnoreCase("addspawn")) {
                     if (sender instanceof Player) {
@@ -158,6 +161,7 @@ public class DedicatedArenaCommand implements CommandExecutor {
                                 List<String> locationList = config.getStringList("spawn." + args[1]);
                                 locationList.add(new LocationString(location).toString());
                                 config.set("spawn." + args[1], locationList);
+                                getGameArena().save();
                                 sender.sendMessage(ChatColor.GREEN + "Added spawn location of " + args[1]);
                             } else {
                                 sender.sendMessage(ChatColor.RED + "Team " + args[1] + " not found!");
@@ -173,6 +177,7 @@ public class DedicatedArenaCommand implements CommandExecutor {
                         if (containsTeam(args[1])) {
                             FileConfiguration config = getGameArena().getConfig();
                             config.set("spawn." + args[1], new ArrayList<>());
+                            getGameArena().save();
                             sender.sendMessage(ChatColor.GREEN + "Cleared spawn location of " + args[1]);
                         } else {
                             sender.sendMessage(ChatColor.RED + "Team " + args[1] + " not found!");

@@ -19,6 +19,8 @@ public class CleanedPlayer {
         player.setHealth(player.getMaxHealth());
         player.setGameMode(GameMode.SURVIVAL);
         player.getInventory().clear();
+        // inv.clear() not remove armor!
+        player.getInventory().setArmorContents(null);
         player.getEquipment().clear();
         player.setFoodLevel(20);
         player.setSaturation(20.0F);

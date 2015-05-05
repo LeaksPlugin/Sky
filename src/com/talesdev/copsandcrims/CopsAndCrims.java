@@ -35,7 +35,7 @@ public class CopsAndCrims extends JavaPlugin {
         weaponFactory = new WeaponFactory(this);
         armorFactory = new ArmorFactory(this);
         serverCvCPlayer = new ServerCvCPlayer(this);
-        serverCvCArena = new ServerCvCArena(this);
+        // serverCvCArena = new ServerCvCArena(this);
         // save config
         saveDefaultConfig();
         // event

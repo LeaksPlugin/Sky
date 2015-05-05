@@ -172,7 +172,9 @@ public class ShootingModule extends WeaponModule {
                 runBulletTask(createBulletTask(bullet));
             }
             // play sound
-            (new Sound(getShootingSoundEffect(), 1.0F, 1.0F)).playSound(event.getPlayer().getLocation());
+            for (int i = 0; i < bulletCount; i++) {
+                (new Sound(getShootingSoundEffect(), 1.0F, 1.0F)).playSound(event.getPlayer().getLocation());
+            }
             // check if player is not null
             // add recoil
             player.getPlayerRecoil().addRecoil(getWeapon(), getRecoil());

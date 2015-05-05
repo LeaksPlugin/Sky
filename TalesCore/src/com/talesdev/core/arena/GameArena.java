@@ -72,7 +72,7 @@ public class GameArena implements Joinable {
         getLogger().info("Preparing completed!");
     }
 
-    protected void init() {
+    public void init() {
 
     }
 
@@ -81,7 +81,9 @@ public class GameArena implements Joinable {
     }
 
     public void stopGame() {
-
+        // global scoreboard
+        getTeam().clearTeam();
+        getGlobalScoreboard().reset();
     }
 
     public void updateDisplay(DisplayScoreboard displayScoreboard) {
@@ -131,6 +133,7 @@ public class GameArena implements Joinable {
 
     public void save() {
         autoSave.forEach(savable -> savable.saveTo(getConfig()));
+        configFile.save();
     }
 
     public FileConfiguration getConfig() {

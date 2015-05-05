@@ -27,6 +27,8 @@ public class Knife extends Weapon {
     public ItemStack createItemStack() {
         ItemStack itemStack = new ItemStack(Material.IRON_AXE);
         ItemMeta meta = itemStack.getItemMeta();
+        meta.setDisplayName(getDisplayName());
+        itemStack.setItemMeta(meta);
         return itemStack;
     }
 

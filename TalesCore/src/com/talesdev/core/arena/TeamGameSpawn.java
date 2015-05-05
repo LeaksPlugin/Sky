@@ -92,9 +92,8 @@ public class TeamGameSpawn implements ArenaSpawn {
             if (spawnList.size() > 0) {
                 Collections.shuffle(spawnList);
                 Location location = spawnList.get(new Random().nextInt(spawnList.size()));
-                player.teleport(location, PlayerTeleportEvent.TeleportCause.PLUGIN);
-                player.getLocation().setPitch(location.getPitch());
-                player.getLocation().setYaw(location.getYaw());
+                Location newLoc = new Location(location.getWorld(), location.getX(), location.getY(), location.getZ());
+                player.teleport(newLoc, PlayerTeleportEvent.TeleportCause.PLUGIN);
             }
         }
     }

@@ -115,6 +115,17 @@ public class DamageData {
         }
     }
 
+    @Override
+    public String toString() {
+        return "DamageData{" +
+                "damageCause=" + damageCause +
+                ", damager=" + damager +
+                ", attachment=" + attachment +
+                ", damageAmount=" + damageAmount +
+                ", time=" + time +
+                '}';
+    }
+
     public double getDamageAmount() {
         return damageAmount;
     }

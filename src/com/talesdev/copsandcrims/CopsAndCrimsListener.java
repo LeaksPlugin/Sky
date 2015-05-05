@@ -47,13 +47,14 @@ public class CopsAndCrimsListener implements Listener {
         plugin.getServerCvCPlayer().saveUserData(plugin.getServerCvCPlayer().getPlayer(event.getPlayer()));
         plugin.getServerCvCPlayer().removePlayer(plugin.getServerCvCPlayer().getPlayer(event.getPlayer()));
         plugin.getTdmGameArena().leave(event.getPlayer());
-        // DEBUG
     }
 
     @EventHandler
-    public void onLogin(PlayerLoginEvent event) {
+    public void onLogin(AsyncPlayerPreLoginEvent event) {
         if (!plugin.getTdmGameArena().getGameState().canJoin()) {
-            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.RED + "The game has already started!");
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, ChatColor.RED + "The game has already started!");
+        } else if (plugin.getTdmGameArena().playing() >= plugin.getTdmGameArena().getMaxPlayers()) {
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_FULL, ChatColor.RED + "Server is full!");
         }
     }
 
@@ -84,14 +85,12 @@ public class CopsAndCrimsListener implements Listener {
         lastDamage.addAttachment("Bullet", null);
         lastDamage.addAttachment("HeadShot", false);
         damage.setLastDamage(lastDamage);
-        if (event.getEntity() instanceof Player) {
-            CorePlayer player = TalesCore.getPlugin().getCorePlayer((Player) event.getEntity());
-            DamageData damageData = new DamageData(event);
-            damageData.addAttachment("Weapon", null);
-            damageData.addAttachment("Bullet", null);
-            damageData.addAttachment("HeadShot", null);
-            player.getPlayerDamage().damage(damageData);
-        }
+        CorePlayer player = TalesCore.getPlugin().getCorePlayer((Player) event.getEntity());
+        DamageData damageData = new DamageData(event);
+        damageData.addAttachment("Weapon", null);
+        damageData.addAttachment("Bullet", null);
+        damageData.addAttachment("HeadShot", null);
+        player.getPlayerDamage().damage(damageData);
     }
 
     @EventHandler

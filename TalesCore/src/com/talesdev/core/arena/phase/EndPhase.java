@@ -4,6 +4,7 @@ import com.talesdev.core.arena.GameArena;
 import com.talesdev.core.arena.GameState;
 import com.talesdev.core.network.BungeeServer;
 import com.talesdev.core.player.CleanedPlayer;
+import org.bukkit.event.HandlerList;
 
 /**
  * End phase
@@ -11,11 +12,6 @@ import com.talesdev.core.player.CleanedPlayer;
  * @author MoKunz
  */
 public class EndPhase implements GamePhase {
-    private String winner;
-
-    public EndPhase(String winner) {
-        this.winner = winner;
-    }
 
     @Override
     public void dispatch(GameArena arena) {
@@ -33,15 +29,11 @@ public class EndPhase implements GamePhase {
             arena.getPlayerSet().forEach(server::send);
             arena.setGameState(GameState.RESET);
             // perform regeneration
-            arena.setGameState(GameState.WAITING);
+
+            // end regen
+            // unregister listener
+            HandlerList.unregisterAll(arena.getListener());
+            arena.init();
         }, 120L);
-    }
-
-    public String getWinner() {
-        return winner;
-    }
-
-    public void setWinner(String winner) {
-        this.winner = winner;
     }
 }

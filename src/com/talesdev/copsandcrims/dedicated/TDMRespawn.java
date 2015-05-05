@@ -10,6 +10,7 @@ import com.talesdev.core.server.TimedTask;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Team;
 
 /**
  * TDM Respawn message
@@ -39,7 +40,11 @@ public class TDMRespawn extends TimedTask {
             bar.send(player);
             CleanedPlayer cleanedPlayer = new CleanedPlayer(player);
             cleanedPlayer.clean();
-            String name = gameArena.getTeam().getTeam(player).getName();
+            Team team = gameArena.getTeam().getTeam(player);
+            String name = "";
+            if (team != null) {
+                name = team.getName();
+            }
             TDMKitItem item = new TDMKitItem(player, name == null ? "" : name);
             item.give();
             CorePlayer corePlayer = TalesCore.getPlugin().getCorePlayer(player);

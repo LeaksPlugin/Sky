@@ -37,14 +37,14 @@ public class TDMGameArena extends GameArena {
     private String winner = ChatColor.GREEN + "Draw";
     public TDMGameArena() {
         super(CopsAndCrims.getPlugin(), new ConfigFile("plugins/CopsAndCrims/config.yml"), null, null);
-        if (getConfig().contains("max-players")) {
-            setMaxPlayers(getConfig().getInt("max-players"));
-        } else {
-            setMaxPlayers(8);
-            getConfig().set("max-players", 8);
-        }
+    }
+
+    @Override
+    public void init() {
+        getLogger().info("Dispatching initial phase");
+        setMaxPlayers(getConfig().getInt("max-players", 8));
         TDMArenaWorld arenaWorld = new TDMArenaWorld(this);
-        arenaWorld.setName("NealTheFarmer");
+        arenaWorld.setName(getConfig().getString("map-name", "Unknown"));
         setArenaWorld(arenaWorld);
         setGameArenaListener(new TDMArenaListener(this));
         teamGameSpawn = new TeamGameSpawn(this);
@@ -52,11 +52,7 @@ public class TDMGameArena extends GameArena {
         timer = new ArenaTimer(this, 450, false);
         tdmScoreboard = new TDMScoreboard(this);
         lobbyScoreboard = new LobbyScoreboard();
-    }
-
-    @Override
-    protected void init() {
-        getLogger().info("Dispatching initial phase");
+        lobbyScoreboard.setMapName(arenaWorld.getName());
         getTeam().newTeam(getTeam().createTeam("Terrorist"));
         if (!getConfig().contains("spawn.Terrorist")) getConfig().set("spawn.Terrorist", new ArrayList<>());
         getTeam().newTeam(getTeam().createTeam("CounterTerrorist"));
@@ -111,19 +107,18 @@ public class TDMGameArena extends GameArena {
             }
         });
         timer.onStop(() -> {
-            dispatchPhase(new EndPhase(winner));
+            dispatchPhase(new EndPhase());
         });
         timer.start();
     }
 
     @Override
     public void stopGame() {
-        // check stats
-        checkStats();
         // broadcast winner
         WinMessage winMessage = new WinMessage(this, "CopsAndCrims - TDM", winner);
         winMessage.send();
         // stop everything
+        getLogger().info("Arena " + getArenaName() + " has been ended!");
         timer.stop();
         getPlayerSet().forEach(player -> {
             CleanedPlayer cp = new CleanedPlayer(player);
@@ -131,18 +126,15 @@ public class TDMGameArena extends GameArena {
             CvCPlayer cvCPlayer = CopsAndCrims.getPlugin().getServerCvCPlayer().getPlayer(player);
             cvCPlayer.getArmorContainer().clearAll();
         });
-        // stop timer
-        timer = new ArenaTimer(this, 300, false);
-        // global scoreboard
-        getTeam().clearTeam();
-        getGlobalScoreboard().reset();
-        // initKills
-        initKills();
+        super.stopGame();
     }
 
     @Override
     public void destroy() {
         if (!getConfig().contains("arena-locked")) getConfig().set("arena-locked", true);
+        if (!getConfig().contains("max-players")) getConfig().set("max-players", getMaxPlayers());
+        if (!getConfig().contains("map-name")) getConfig().set("map-name", getArenaName());
+        if (!getConfig().contains("map-author")) getConfig().set("map-author", "Unknown");
         super.destroy();
     }
 
@@ -163,10 +155,6 @@ public class TDMGameArena extends GameArena {
     }
 
     public void checkStats() {
-        getTeam().getTeamList().stream().filter(team -> getKills(team.getName()) > 50).forEach(team -> {
-            winner = (team.getName().equals("Terrorist") ? ChatColor.RED : ChatColor.BLUE) + team.getName();
-            stopGame();
-        });
         if (getKills("Terrorist") > getKills("CounterTerrorist")) {
             winner = ChatColor.RED + "Terrorist";
         } else if (getKills("Terrorist") == getKills("CounterTerrorist")) {
@@ -174,8 +162,11 @@ public class TDMGameArena extends GameArena {
         } else {
             winner = ChatColor.BLUE + "CounterTerrorist";
         }
+        getTeam().getTeamList().stream().filter(team -> getKills(team.getName()) > 50).forEach(team -> {
+            winner = (team.getName().equals("Terrorist") ? ChatColor.RED : ChatColor.BLUE) + team.getName();
+            dispatchPhase(new EndPhase());
+        });
     }
-
 
     public KillDeath getPlayerKD(Player player) {
         for (KillDeath kd : killDeathSet) {
@@ -209,5 +200,9 @@ public class TDMGameArena extends GameArena {
     private void playTickSound(Player player) {
         Sound sound = new Sound(SoundEffect.NOTE_HAT, 1.0F, 1.0F);
         sound.playSound(player);
+    }
+
+    public String getWinner() {
+        return winner;
     }
 }

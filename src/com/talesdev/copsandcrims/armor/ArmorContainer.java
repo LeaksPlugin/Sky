@@ -50,8 +50,12 @@ public class ArmorContainer {
     }
 
     public void update() {
-        player.getEquipment().setHelmet(helmet.asItem());
-        player.getEquipment().setChestplate(kevlar.asItem());
+        if (hasHelmet()) {
+            player.getEquipment().setHelmet(helmet.asItem());
+        }
+        if (hasKevlar()) {
+            player.getEquipment().setChestplate(kevlar.asItem());
+        }
     }
 
     public String toString() {

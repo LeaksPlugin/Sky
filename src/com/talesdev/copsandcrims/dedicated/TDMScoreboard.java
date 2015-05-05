@@ -68,7 +68,7 @@ public class TDMScoreboard implements DisplayScoreboard {
             scoreboard.setLine(8, "Deaths : " + ChatColor.RED + getGameArena().getPlayerKD(player).getDeaths());
             scoreboard.setLine(7, "Assists : " + ChatColor.RED + getGameArena().getPlayerKD(player).getAssists());
         }
-        scoreboard.setLine(6, "Armor : " + ChatColor.GRAY + getArmorString(player));
+        scoreboard.setLine(6, "Armor : " + getArmorString(player));
         scoreboard.setLine(4, "Team : " + (team.getName().equalsIgnoreCase("CounterTerrorist") ? (ChatColor.BLUE + "\u9290 - CT") : (ChatColor.RED + "\u9291 - T")));
         scoreboard.update();
     }
