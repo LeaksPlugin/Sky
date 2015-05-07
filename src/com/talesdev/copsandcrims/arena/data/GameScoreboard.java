@@ -76,16 +76,15 @@ public class GameScoreboard {
             }
         }
         objective.reset();
-        objective.setTitle(" " + ChatColor.BLUE + "CT" + ctkills + ChatColor.GOLD + "  and  " + ChatColor.RED + tkills + "TR ");
-        objective.setTitle(" " + ChatColor.BLUE + "CT" + ctkills + ChatColor.GRAY + "  and  " + ChatColor.RED + tkills + "TR ");
-        objective.setLine(14, ChatColor.GREEN + "[Objective]");
+        objective.setTitle("  " + ChatColor.BLUE + ctkills + "   \u9290" + ChatColor.GRAY + " and " + ChatColor.RED + "\u9291   "+ tkills + "  ");
+        objective.setLine(14, ChatColor.DARK_GREEN + "[\u927bObjective]");
         objective.setLine(13, "Get 50 team kills");
         objective.setLine(12, "5:00");
-        objective.setLine(10, ChatColor.YELLOW + "[Stats]");
+        objective.setLine(10, ChatColor.GOLD + "[\u9280Stats]");
         objective.setLine(9, "Kills : " + ChatColor.RED + player.getArenaData().getKills());
         objective.setLine(8, "Deaths : " + ChatColor.RED + player.getArenaData().getDeaths());
         objective.setLine(7, "Assists : " + ChatColor.RED + player.getArenaData().getAssist());
-        objective.setLine(5, "Team : " + (team.equalsIgnoreCase("CT") ? (ChatColor.BLUE + "CT") : (ChatColor.RED + "TR")));
+        objective.setLine(5, "Team : " + (team.equalsIgnoreCase("CT") ? (ChatColor.BLUE + "CT-\u9290") : (ChatColor.RED + "TR-\u9291")));
         objective.setBlankLine(15, 11, 6, 4, 3, 2, 1);
         objective.update();
     }
