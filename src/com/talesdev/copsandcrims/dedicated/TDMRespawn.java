@@ -34,8 +34,8 @@ public class TDMRespawn extends TimedTask {
         ActionBar actionBar = new ActionBar(ChatColor.GREEN + "Respawning in " + seconds + " " + (seconds == 1 ? "second" : "seconds"));
         actionBar.send(player.getPlayer());
         if (seconds <= 1 || gameArena.getGameState().equals(GameState.END)) {
-            player.getPlayer().setGameMode(GameMode.SURVIVAL);
             gameArena.getArenaSpawn().spawn(player);
+            player.getPlayer().setGameMode(GameMode.SURVIVAL);
             ActionBar bar = new ActionBar(ChatColor.GREEN + "You are now respawn");
             bar.send(player);
             CleanedPlayer cleanedPlayer = new CleanedPlayer(player);

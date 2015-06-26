@@ -29,16 +29,16 @@ public class TDMScoreboard implements DisplayScoreboard {
         Team team = getGameArena().getTeam().getTeam(player);
         int ctkills = 0, tkills = 0;
         scoreboard.setMaxLine(15);
-        scoreboard.setTitle(" " + ChatColor.BLUE + "CT" + ctkills + ChatColor.GOLD + "  and  " + ChatColor.RED + tkills + "TR ");
-        scoreboard.setLine(14, ChatColor.GREEN + "[Objective]");
+        scoreboard.setTitle("  " + ChatColor.BLUE + ctkills + "   \u9290" + ChatColor.GRAY + " and " + ChatColor.RED + "\u9291   "+ tkills + "  ");
+        scoreboard.setLine(14, ChatColor.DARK_GREEN + "[\u927bObjective]");
         scoreboard.setLine(13, "Get 50 team kills");
         scoreboard.setLine(12, "5:00");
-        scoreboard.setLine(10, ChatColor.YELLOW + "[Stats]");
+        scoreboard.setLine(10, ChatColor.GOLD + "[\u9280Stats]");
         scoreboard.setLine(9, "Kills : " + ChatColor.RED + getGameArena().getPlayerKD(player).getKills());
         scoreboard.setLine(8, "Deaths : " + ChatColor.RED + getGameArena().getPlayerKD(player).getDeaths());
         scoreboard.setLine(7, "Assists : " + ChatColor.RED + getGameArena().getPlayerKD(player).getAssists());
         scoreboard.setLine(6, "Armor : " + getArmorString(player));
-        scoreboard.setLine(4, "Team : " + (team.getName().equalsIgnoreCase("CounterTerrorist") ? (ChatColor.BLUE + "CT") : (ChatColor.RED + "TR")));
+        scoreboard.setLine(4, "Team : " + (team.getName().equalsIgnoreCase("CounterTerrorist") ? (ChatColor.BLUE + "\u9290-CT") : (ChatColor.RED + "\u9290-TR")));
         scoreboard.setBlankLine(15, 11, 6, 4, 3, 2, 1);
         scoreboard.update();
     }
@@ -50,12 +50,12 @@ public class TDMScoreboard implements DisplayScoreboard {
         Team team = getGameArena().getTeam().getTeam(player);
         // cancel if game end
         if (getGameArena().getGameState().equals(GameState.END)) {
-            scoreboard.setTitle(ChatColor.RED + "TDM is now ended ");
+            scoreboard.setTitle(ChatColor.YELLOW + "     GAME OVER");
             scoreboard.setLine(12, "00:00");
             scoreboard.update();
             return;
         }
-        scoreboard.setTitle(" " + ChatColor.BLUE + "CT" + ctkills + ChatColor.GOLD + "  and  " + ChatColor.RED + tkills + "TR ");
+        scoreboard.setTitle("  " + ChatColor.BLUE + ctkills + "   \u9290" + ChatColor.GRAY + " and " + ChatColor.RED + "\u9291   "+ tkills + "  ");
         String timeColor = "";
         if (getGameArena().getTimer().getTime() <= 30) {
             if (getGameArena().getTimer().getTime() % 2 == 0) {
