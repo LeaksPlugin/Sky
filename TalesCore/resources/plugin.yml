@@ -1,6 +1,7 @@
 name: TalesCore
 version: 1.0
 author: MoKunz
+depend: [ProtocolLib]
 main: com.talesdev.core.TalesCore
 commands:
     unicode:
@@ -9,3 +10,9 @@ commands:
     uuid:
       description: Get Mojang UUID of player, if player is not premium then offline uuid will be used.
       usage: /uuid <get|update> [player]
+    dev:
+      description: "For developer commands"
+      permission: plugin.dev
+    account:
+      description: "Account command (test)"
+      permission: core.economy.command.account

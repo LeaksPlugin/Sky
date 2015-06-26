@@ -262,8 +262,16 @@ public class Bullet {
 
     protected boolean foundBlock(Location location) {
         // check if block is passable
-        NMSRayTrace nmsRayTrace = NMSRayTrace.rayTrace(getWorld(), location.toVector(), normalizedDirection);
-        if (nmsRayTrace.getBlockVector() != null) {
+        NMSRayTrace nmsRayTrace = NMSRayTrace.rayTrace(getWorld(), origin, normalizedDirection);
+        if (nmsRayTrace.isHit()) {
+            Block block = nmsRayTrace.getBlock();
+            if (block != null) {
+                if (!block.getLocation().equals(location.getBlock().getLocation())) {
+                    return true;
+                }
+            }
+        }
+        if (nmsRayTrace.getBlock() != null) {
             if (!location.getBlock().getLocation().equals(nmsRayTrace.getBlock().getLocation())) {
                 return true;
             }

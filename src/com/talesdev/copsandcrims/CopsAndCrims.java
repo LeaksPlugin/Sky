@@ -75,7 +75,7 @@ public class CopsAndCrims extends JavaPlugin {
         recoilTask.cancel();
         // shutdown system
         getServerCvCPlayer().shutdown();
-        getServerCvCArena().shutDown();
+        //getServerCvCArena().shutDown();
         tdmGameArena.destroy();
         saveConfig();
         getLogger().info("Plugin has been disabled!");

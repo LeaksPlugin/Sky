@@ -1,6 +1,11 @@
 package com.talesdev.core;
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.talesdev.core.economy.AccountCommandExecutor;
+import com.talesdev.core.economy.Bank;
+import com.talesdev.core.economy.TestBank;
 import com.talesdev.core.event.PlayerListener;
+import com.talesdev.core.game.skill.QuickCastSystem;
 import com.talesdev.core.player.CorePlayer;
 import com.talesdev.core.player.uuid.UUIDMap;
 import com.talesdev.core.player.uuid.UUIDSystem;
@@ -19,6 +24,7 @@ import java.io.IOException;
 public class TalesCore extends JavaPlugin {
     private UUIDMap uuidMap;
     private ServerCorePlayer corePlayer;
+    private Bank bank = new TestBank(this);
 
     public static TalesCore getPlugin() {
         return getPlugin(TalesCore.class);
@@ -35,10 +41,15 @@ public class TalesCore extends JavaPlugin {
         corePlayer = new ServerCorePlayer(this);
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         getCommand("unicode").setExecutor(new UnicodeCommandExecutor());
+        getCommand("dev").setExecutor(new DevCommandExecutor());
         UUIDSystem uuidSystem = new UUIDSystem(this);
         getCommand("uuid").setExecutor(uuidSystem);
+        getCommand("account").setExecutor(new AccountCommandExecutor(this));
         getServer().getPluginManager().registerEvents(uuidSystem, this);
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+        QuickCastSystem quickCast = new QuickCastSystem(this);
+        getServer().getPluginManager().registerEvents(quickCast, this);
+        ProtocolLibrary.getProtocolManager().addPacketListener(quickCast);
         getLogger().info("TalesCore has been enabled!");
     }
 
@@ -79,5 +90,9 @@ public class TalesCore extends JavaPlugin {
 
     public CorePlayer getCorePlayer(Player player) {
         return getCorePlayer().getCorePlayer(player);
+    }
+
+    public Bank getBank() {
+        return bank;
     }
 }

@@ -85,12 +85,14 @@ public class CopsAndCrimsListener implements Listener {
         lastDamage.addAttachment("Bullet", null);
         lastDamage.addAttachment("HeadShot", false);
         damage.setLastDamage(lastDamage);
-        CorePlayer player = TalesCore.getPlugin().getCorePlayer((Player) event.getEntity());
-        DamageData damageData = new DamageData(event);
-        damageData.addAttachment("Weapon", null);
-        damageData.addAttachment("Bullet", null);
-        damageData.addAttachment("HeadShot", null);
-        player.getPlayerDamage().damage(damageData);
+        if (event.getEntity() instanceof Player) {
+            CorePlayer player = TalesCore.getPlugin().getCorePlayer((Player) event.getEntity());
+            DamageData damageData = new DamageData(event);
+            damageData.addAttachment("Weapon", null);
+            damageData.addAttachment("Bullet", null);
+            damageData.addAttachment("HeadShot", null);
+            player.getPlayerDamage().damage(damageData);
+        }
     }
 
     @EventHandler
