@@ -1,6 +1,5 @@
 package com.talesdev.core;
 
-import com.comphenix.protocol.ProtocolLibrary;
 import com.talesdev.core.economy.AccountCommandExecutor;
 import com.talesdev.core.economy.Bank;
 import com.talesdev.core.economy.TestBank;
@@ -49,7 +48,7 @@ public class TalesCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         QuickCastSystem quickCast = new QuickCastSystem(this);
         getServer().getPluginManager().registerEvents(quickCast, this);
-        ProtocolLibrary.getProtocolManager().addPacketListener(quickCast);
+        //ProtocolLibrary.getProtocolManager().addPacketListener(quickCast);
         getLogger().info("TalesCore has been enabled!");
     }
 

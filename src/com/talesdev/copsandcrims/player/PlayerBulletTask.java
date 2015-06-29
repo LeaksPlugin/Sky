@@ -2,6 +2,7 @@ package com.talesdev.copsandcrims.player;
 
 import com.talesdev.copsandcrims.CopsAndCrims;
 import com.talesdev.copsandcrims.ServerCvCPlayer;
+import com.talesdev.copsandcrims.weapon.WeaponRecoil;
 
 /**
  * Player recoil processing task
@@ -21,7 +22,10 @@ public class PlayerBulletTask implements Runnable {
                 plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
                     @Override
                     public void run() {
-                        player.getPlayerRecoil().removeRecoil(weaponName, player.getPlayerRecoil().getWeaponRecoil(weaponName).getRegen());
+                        WeaponRecoil recoil = player.getPlayerRecoil().getWeaponRecoil(weaponName);
+                        if (recoil != null) {
+                            player.getPlayerRecoil().removeRecoil(weaponName, recoil.getRegen());
+                        }
                     }
                 });
             }

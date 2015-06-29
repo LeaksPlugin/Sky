@@ -2,7 +2,7 @@ package com.talesdev.copsandcrims.arena.data;
 
 import com.talesdev.copsandcrims.arena.game.TDMArenaController;
 import com.talesdev.copsandcrims.player.CvCPlayer;
-import com.talesdev.core.math.DigitalTimer;
+import com.talesdev.core.math.DigitalTime;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -12,11 +12,11 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class GameTicking extends BukkitRunnable {
     private TDMArenaController controller;
-    private DigitalTimer timer;
+    private DigitalTime timer;
 
     public GameTicking(TDMArenaController controller) {
         this.controller = controller;
-        this.timer = new DigitalTimer(300);
+        this.timer = new DigitalTime(300);
     }
 
     @Override

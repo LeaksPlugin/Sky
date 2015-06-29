@@ -31,6 +31,7 @@ public class ShootingModule extends WeaponModule {
     private double upperLegDamage = 7;
     private double armorPenetration = 0;
     private double recoil = 1.0D;
+    private double maxRecoil = 30.0D;
     private int bulletCount = 1;
     private int bulletDelay = 1;
     private int speed = 500;
@@ -345,5 +346,13 @@ public class ShootingModule extends WeaponModule {
 
     public void setArmorPenetration(double armorPenetration) {
         this.armorPenetration = armorPenetration;
+    }
+
+    public double getMaxRecoil() {
+        return maxRecoil;
+    }
+
+    public void setMaxRecoil(double maxRecoil) {
+        this.maxRecoil = maxRecoil;
     }
 }

@@ -2,7 +2,9 @@ package com.talesdev.copsandcrims.player;
 
 import com.talesdev.copsandcrims.CopsAndCrims;
 import com.talesdev.copsandcrims.weapon.Weapon;
+import com.talesdev.copsandcrims.weapon.WeaponFactory;
 import com.talesdev.copsandcrims.weapon.WeaponRecoil;
+import com.talesdev.copsandcrims.weapon.module.ShootingModule;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -26,9 +28,25 @@ public class PlayerRecoil {
     }
 
     private void init() {
-        for (String weaponName : CopsAndCrims.getPlugin().getWeaponFactory().getAllWeaponName()) {
-            getRecoilMap().put(weaponName, new WeaponRecoil(getPlayer(), weaponName));
+        WeaponFactory weaponFactory = CopsAndCrims.getPlugin().getWeaponFactory();
+        for (Weapon weapon : weaponFactory.getAllWeapon()) {
+            if (weapon.containsModule(ShootingModule.class)) {
+                ShootingModule shooting = weapon.getModule(ShootingModule.class);
+                getRecoilMap().put(weapon.getName(), new WeaponRecoil(getPlayer(), weapon.getName(), shooting.getMaxRecoil()));
+            }
         }
+    }
+
+    public void createWeaponRecoil(Weapon weapon) {
+        if (weapon.containsModule(ShootingModule.class)) {
+            ShootingModule shooting = weapon.getModule(ShootingModule.class);
+            getRecoilMap().put(weapon.getName(), new WeaponRecoil(getPlayer(), weapon.getName(), shooting.getMaxRecoil()));
+        }
+    }
+
+    public void createWeaponRecoil(String weapon) {
+        WeaponFactory weaponFactory = CopsAndCrims.getPlugin().getWeaponFactory();
+        createWeaponRecoil(weaponFactory.getWeapon(weapon));
     }
 
     public void clearRecoil() {
@@ -66,7 +84,7 @@ public class PlayerRecoil {
 
     public WeaponRecoil getWeaponRecoil(String weaponName) {
         if (!getRecoilMap().containsKey(weaponName)) {
-            setRecoil(weaponName, 0.0D);
+            createWeaponRecoil(weaponName);
         }
         return getRecoilMap().get(weaponName);
     }

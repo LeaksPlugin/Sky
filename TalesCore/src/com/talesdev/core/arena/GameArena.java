@@ -94,6 +94,10 @@ public class GameArena implements Joinable {
         displayScoreboard.start(player);
     }
 
+    public void allInitDisplay(DisplayScoreboard displayScoreboard) {
+        getPlayerSet().forEach(displayScoreboard::start);
+    }
+
     protected void setArenaWorld(ArenaWorld arenaWorld) {
         this.arenaWorld = arenaWorld;
     }

@@ -1,6 +1,6 @@
 package com.talesdev.core.arena;
 
-import com.talesdev.core.math.DigitalTimer;
+import com.talesdev.core.math.DigitalTime;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -80,7 +80,7 @@ public class ArenaTimer extends BukkitRunnable {
     }
 
     public String formattedTime() {
-        return new DigitalTimer(getTime()).digitalTime();
+        return new DigitalTime(getTime()).digitalTime();
     }
 
     public boolean isIncrement() {

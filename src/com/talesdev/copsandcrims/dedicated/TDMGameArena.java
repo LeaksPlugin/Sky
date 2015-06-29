@@ -53,6 +53,7 @@ public class TDMGameArena extends GameArena {
         tdmScoreboard = new TDMScoreboard(this);
         lobbyScoreboard = new LobbyScoreboard();
         lobbyScoreboard.setMapName(arenaWorld.getName());
+        allInitDisplay(lobbyScoreboard);
         getTeam().newTeam(getTeam().createTeam("Terrorist"));
         if (!getConfig().contains("spawn.Terrorist")) getConfig().set("spawn.Terrorist", new ArrayList<>());
         getTeam().newTeam(getTeam().createTeam("CounterTerrorist"));

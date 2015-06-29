@@ -262,18 +262,13 @@ public class Bullet {
 
     protected boolean foundBlock(Location location) {
         // check if block is passable
-        NMSRayTrace nmsRayTrace = NMSRayTrace.rayTrace(getWorld(), origin, normalizedDirection);
+        NMSRayTrace nmsRayTrace = NMSRayTrace.rayTrace(getWorld(), origin, direction);
         if (nmsRayTrace.isHit()) {
             Block block = nmsRayTrace.getBlock();
             if (block != null) {
                 if (!block.getLocation().equals(location.getBlock().getLocation())) {
                     return true;
                 }
-            }
-        }
-        if (nmsRayTrace.getBlock() != null) {
-            if (!location.getBlock().getLocation().equals(nmsRayTrace.getBlock().getLocation())) {
-                return true;
             }
         }
         BulletHitResult result = new BulletHitResult(this, location, location.getBlock());
@@ -283,12 +278,7 @@ public class Bullet {
             action.bulletHitObject(result);
             if (action instanceof BulletParticle) ((BulletParticle) action).createHitParticle(result);
         } else {
-            if (nmsRayTrace.getFace() != null) {
-                if (location.getBlock().getRelative(nmsRayTrace.getFace()) != null) {
-                    Block relative = location.getBlock().getRelative(nmsRayTrace.getFace());
-                    world.playEffect(relative.getLocation(), Effect.STEP_SOUND, relative.getType());
-                }
-            }
+            world.playEffect(location, Effect.STEP_SOUND, location.getBlock().getType());
         }
         // break grass
         Block block = location.getBlock();

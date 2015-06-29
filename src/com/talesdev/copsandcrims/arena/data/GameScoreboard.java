@@ -4,7 +4,7 @@ import com.talesdev.copsandcrims.arena.CvCArena;
 import com.talesdev.copsandcrims.arena.game.TDMArenaController;
 import com.talesdev.copsandcrims.arena.system.ArenaJoinLeave;
 import com.talesdev.copsandcrims.player.CvCPlayer;
-import com.talesdev.core.math.DigitalTimer;
+import com.talesdev.core.math.DigitalTime;
 import com.talesdev.core.scoreboard.WrappedScoreboard;
 import org.bukkit.ChatColor;
 
@@ -89,7 +89,7 @@ public class GameScoreboard {
         objective.update();
     }
 
-    public void updateGame(CvCPlayer player, DigitalTimer timer) {
+    public void updateGame(CvCPlayer player, DigitalTime timer) {
         WrappedScoreboard objective = player.getSidebarObjective();
         objective.setLine(12, timer.digitalTime());
         objective.update();

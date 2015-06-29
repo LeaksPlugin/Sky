@@ -5,11 +5,11 @@ package com.talesdev.core.math;
  *
  * @author MoKunz
  */
-public class DigitalTimer {
+public class DigitalTime {
     private int time;
     private boolean timesUp = false;
 
-    public DigitalTimer(int time) {
+    public DigitalTime(int time) {
         this.time = time;
     }
 
