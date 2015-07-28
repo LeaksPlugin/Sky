@@ -1,6 +1,7 @@
 package com.talesdev.core;
 
 import com.talesdev.core.entity.PlayerView;
+import com.talesdev.core.gui.ChestGUI;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -28,6 +29,12 @@ public class DevCommandExecutor implements CommandExecutor {
                         }
                     } else {
                         sender.sendMessage(errorMessage("Only player can use this command!"));
+                    }
+                } else if (args[0].equalsIgnoreCase("testgui")) {
+                    if (sender instanceof Player) {
+                        TalesCore core = TalesCore.getPlugin();
+                        ChestGUI gui = core.getGUISystem().getGUI("Foobar").newState(((Player) sender));
+                        gui.open(((Player) sender));
                     }
                 } else {
                     sender.sendMessage(errorMessage("Sub command not found!"));
