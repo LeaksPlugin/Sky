@@ -56,7 +56,7 @@ public class GameArena implements Joinable {
         this.destroyableSet = new HashSet<>();
         this.configFile = configFile;
         load();
-        headMessage = ChatColor.RED + "[CVC]";
+        headMessage = ChatColor.RED + "[Game]";
         this.globalScoreboard = new GlobalScoreboard(this);
         this.task = new ArenaTask(this);
         this.arenaWorld = arenaWorld;
@@ -96,10 +96,6 @@ public class GameArena implements Joinable {
 
     public void allInitDisplay(DisplayScoreboard displayScoreboard) {
         getPlayerSet().forEach(displayScoreboard::start);
-    }
-
-    protected void setArenaWorld(ArenaWorld arenaWorld) {
-        this.arenaWorld = arenaWorld;
     }
 
     protected void setGameArenaListener(GameArenaListener listener) {
@@ -166,6 +162,22 @@ public class GameArena implements Joinable {
 
     public String getArenaName() {
         return arenaWorld.getName();
+    }
+
+    public String getHeadMessage() {
+        return headMessage;
+    }
+
+    public void setHeadMessage(String headMessage) {
+        this.headMessage = headMessage;
+    }
+
+    public ArenaWorld getArenaWorld() {
+        return arenaWorld;
+    }
+
+    protected void setArenaWorld(ArenaWorld arenaWorld) {
+        this.arenaWorld = arenaWorld;
     }
 
     public GameState getGameState() {

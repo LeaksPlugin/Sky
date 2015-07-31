@@ -16,8 +16,12 @@ public class CleanedPlayer {
     }
 
     public Player clean() {
+        return clean(GameMode.SURVIVAL);
+    }
+
+    public Player clean(GameMode gameMode) {
         player.setHealth(player.getMaxHealth());
-        player.setGameMode(GameMode.SURVIVAL);
+        player.setGameMode(gameMode);
         player.getInventory().clear();
         // inv.clear() not remove armor!
         player.getInventory().setArmorContents(null);

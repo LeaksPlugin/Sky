@@ -1,0 +1,11 @@
+name: TNTRun
+version: 1.0
+author: MoKunz
+main: com.talesdev.tntrun.TNTRun
+depend: [TalesCore,ProtocolLib]
+commands:
+    tntrun:
+      description: Command for managing a TNTRun game
+      usage: "§e/tntrun help"
+      permission: tntrun.command.tntrun
+      permission-message: "§cYou don't have permission"

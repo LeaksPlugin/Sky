@@ -1,21 +1,32 @@
-package com.talesdev.copsandcrims.dedicated;
+package com.talesdev.core.arena;
 
 import com.talesdev.core.arena.world.ArenaWorld;
 import org.bukkit.util.Vector;
 
 /**
- * TDM Arena World
- *
  * @author MoKunz
  */
-public class TDMArenaWorld implements ArenaWorld<TDMGameArena> {
-    private String mapName = "";
+public class GeneralArenaWorld implements ArenaWorld {
+    private String mapName = "Untitled";
+    private String mapAuthor = "Unknown";
     private Vector minBound;
     private Vector maxBound;
-    private TDMGameArena gameArena;
+    private GameArena gameArena;
 
-    public TDMArenaWorld(TDMGameArena gameArena) {
+    public GeneralArenaWorld(GameArena gameArena, String mapName, String mapAuthor, Vector minBound, Vector maxBound) {
+        if (mapName != null) this.mapName = mapName;
+        if (mapAuthor != null) this.mapAuthor = mapAuthor;
         this.gameArena = gameArena;
+        this.minBound = minBound;
+        this.maxBound = maxBound;
+    }
+
+    public GeneralArenaWorld(GameArena gameArena) {
+        this(gameArena, "Untitled", "Unknown", new Vector(0, 0, 0), new Vector(0, 0, 0));
+    }
+
+    public GeneralArenaWorld(GameArena gameArena, String mapName, String mapAuthor) {
+        this(gameArena, mapName, mapAuthor, new Vector(0, 0, 0), new Vector(0, 0, 0));
     }
 
     @Override
@@ -29,7 +40,7 @@ public class TDMArenaWorld implements ArenaWorld<TDMGameArena> {
 
     @Override
     public String getAuthor() {
-        return "Unknown";
+        return mapAuthor;
     }
 
     @Override
@@ -48,7 +59,7 @@ public class TDMArenaWorld implements ArenaWorld<TDMGameArena> {
     }
 
     @Override
-    public TDMGameArena getArena() {
+    public GameArena getArena() {
         return gameArena;
     }
 

@@ -17,6 +17,12 @@ public interface ArenaWorld<T extends GameArena> {
     String getName();
 
     /**
+     * Return an author name of this map of this arena
+     * @return an author name
+     */
+    String getAuthor();
+
+    /**
      * Get minimum bound of this arena
      *
      * @return minimum bound of this arena

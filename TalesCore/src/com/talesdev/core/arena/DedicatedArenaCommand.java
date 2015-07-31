@@ -24,7 +24,7 @@ import java.util.List;
  * @author MoKunz
  */
 public class DedicatedArenaCommand implements CommandExecutor {
-    private GameArena gameArena;
+    protected GameArena gameArena;
     private String prefix;
 
     public DedicatedArenaCommand(GameArena gameArena, String cmd) {
@@ -186,7 +186,9 @@ public class DedicatedArenaCommand implements CommandExecutor {
                         sender.sendMessage(ChatColor.RED + "Usage : /" + prefix + " clearspawn <team>");
                     }
                 } else {
-                    sender.sendMessage(ChatColor.RED + "Usage : /" + prefix + " <subcommand>");
+                    if (!customCommands(sender, command, label, args)) {
+                        sender.sendMessage(ChatColor.RED + "Usage : /" + prefix + " <subcommand>");
+                    }
                 }
             } else {
                 sender.sendMessage(ChatColor.BLUE + "TalesCore Arena system");
@@ -194,6 +196,10 @@ public class DedicatedArenaCommand implements CommandExecutor {
             }
         }
         return true;
+    }
+
+    protected boolean customCommands(CommandSender sender, Command command, String label, String[] args) {
+        return false;
     }
 
     public GameArena getGameArena() {

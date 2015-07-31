@@ -46,6 +46,7 @@ public class TDMGameArena extends GameArena {
         TDMArenaWorld arenaWorld = new TDMArenaWorld(this);
         arenaWorld.setName(getConfig().getString("map-name", "Unknown"));
         setArenaWorld(arenaWorld);
+        setHeadMessage(ChatColor.RED + "[CVC]");
         setGameArenaListener(new TDMArenaListener(this));
         teamGameSpawn = new TeamGameSpawn(this);
         setArenaSpawn(teamGameSpawn);
@@ -107,9 +108,7 @@ public class TDMGameArena extends GameArena {
                 getPlayerSet().forEach(this::playTickSound);
             }
         });
-        timer.onStop(() -> {
-            dispatchPhase(new EndPhase());
-        });
+        timer.onStop(() -> dispatchPhase(new EndPhase()));
         timer.start();
     }
 

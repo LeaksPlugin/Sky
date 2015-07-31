@@ -5,16 +5,12 @@ import com.talesdev.core.economy.Bank;
 import com.talesdev.core.economy.TestBank;
 import com.talesdev.core.event.PlayerListener;
 import com.talesdev.core.game.skill.QuickCastSystem;
-import com.talesdev.core.gui.ChestGUI;
 import com.talesdev.core.gui.ChestGUISystem;
 import com.talesdev.core.player.CorePlayer;
 import com.talesdev.core.player.uuid.UUIDMap;
 import com.talesdev.core.player.uuid.UUIDSystem;
 import com.talesdev.core.system.UnicodeCommandExecutor;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -57,7 +53,6 @@ public class TalesCore extends JavaPlugin {
         getServer().getPluginManager().registerEvents(guiSystem, this);
         getServer().getPluginManager().registerEvents(quickCast, this);
         //ProtocolLibrary.getProtocolManager().addPacketListener(quickCast);
-        initGUI();
         getLogger().info("TalesCore has been enabled!");
     }
 
@@ -86,23 +81,6 @@ public class TalesCore extends JavaPlugin {
                 e.printStackTrace();
             }
         }
-    }
-
-    public void initGUI() {
-        ChestGUI first = new ChestGUI(27, ChatColor.BLUE + "Foobar");
-        first.addNode(0, 0, new ItemStack(Material.DIAMOND), ((player, node, action) -> {
-            player.sendMessage(ChatColor.BLUE + "Hello!");
-            first.close(player);
-            getServer().getScheduler().runTask(this, () -> {
-                ChestGUI gui = first.newState(player);
-                gui.setNode(0, 1, new ItemStack(Material.EMERALD));
-                gui.setNode(1, 1, new ItemStack(Material.IRON_INGOT));
-                gui.open(player);
-            });
-        }));
-        first.addNode(0, 1, new ItemStack(Material.DIAMOND));
-        first.addNode(1, 1, new ItemStack(Material.DIAMOND));
-        guiSystem.addGUI(first);
     }
 
     public UUIDMap getUuidMap() {

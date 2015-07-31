@@ -285,7 +285,6 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
             String msg = "";
             CorePlayer corePlayer = TalesCore.getPlugin().getCorePlayer(player);
             DamageData last = corePlayer.getPlayerDamage().getLastEntity();
-            System.out.println("LastEntity damage : " + last.toString());
             String lastName = "";
             if (corePlayer.getPlayerDamage().getLast().getDamageCause().equals(EntityDamageEvent.DamageCause.FALL)) {
                 msg = getTeamColor(player) + player.getName() + ChatColor.RESET + " \u9271\u9272";
