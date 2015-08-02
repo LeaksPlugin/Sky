@@ -1,5 +1,6 @@
 package com.talesdev.tntrun;
 
+import com.talesdev.core.arena.GameState;
 import com.talesdev.core.arena.event.ArenaCountdownEvent;
 import com.talesdev.core.arena.event.GeneralArenaListener;
 import com.talesdev.core.arena.event.PlayerJoinArenaEvent;
@@ -8,7 +9,15 @@ import com.talesdev.core.arena.scoreboard.LobbyScoreboard;
 import com.talesdev.core.player.CleanedPlayer;
 import com.talesdev.core.player.message.Title;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 /**
  * Main listener
@@ -26,7 +35,6 @@ public class TNTRunGameArenaListener extends GeneralArenaListener<TNTRunGameAren
         cp.clean();
         event.setAfterRun(() -> {
             LobbyScoreboard lobby = getGameArena().getLobbyScoreboard();
-            lobby.setTitle(ChatColor.RED + "TNTGame - TNTRun");
             lobby.setCountdown(-1);
             lobby.setMaxPlayers(getGameArena().getMaxPlayers());
             lobby.setPlayers(getGameArena().playing());
@@ -70,5 +78,43 @@ public class TNTRunGameArenaListener extends GeneralArenaListener<TNTRunGameAren
             lobby.setPlayers(getGameArena().playing());
             getGameArena().updateDisplay(lobby);
         }
+    }
+
+    @EventHandler
+    public void onMove(PlayerMoveEvent event) {
+        TNTFloorSystem floorSystem = getGameArena().getFloorSystem();
+        if (getGameArena().getGameState().equals(GameState.STARTED)) {
+            Location moveTo = event.getTo();
+            if (moveTo.getY() < 0) {
+                floorSystem.fallToVoid(event.getPlayer());
+                return;
+            }
+            int x = (int) Math.round(moveTo.getX()), y = (int) Math.round(moveTo.getY()), z = (int) Math.round(moveTo.getZ());
+            Location newLoc = new Location(moveTo.getWorld(), x, y, z);
+            Block block = newLoc.getBlock().getRelative(BlockFace.DOWN);
+            if (block != null) {
+                floorSystem.walk(block.getLocation());
+            }
+        }
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageEvent event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onTNTExplode(ExplosionPrimeEvent explodeEvent) {
+        explodeEvent.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onBlockFalling(BlockPhysicsEvent event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onBlockChange(EntityChangeBlockEvent event) {
+        event.setCancelled(true);
     }
 }

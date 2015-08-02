@@ -1,14 +1,14 @@
 package com.talesdev.core.world;
 
-import net.minecraft.server.v1_8_R1.MovingObjectPosition;
-import net.minecraft.server.v1_8_R1.Vec3D;
-import net.minecraft.server.v1_8_R1.WorldServer;
+import net.minecraft.server.v1_8_R3.MovingObjectPosition;
+import net.minecraft.server.v1_8_R3.Vec3D;
+import net.minecraft.server.v1_8_R3.WorldServer;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R1.block.CraftBlock;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.block.CraftBlock;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.BlockVector;
@@ -21,6 +21,22 @@ import org.bukkit.util.Vector;
  */
 public class NMSRayTrace {
     public static final double RAY_LENGTH_LIMIT = 200;
+    private boolean isHit = false;
+    private World hitWorld;
+    private BlockVector hitBlock;
+    private BlockFace hitFace;
+    private Vector hitPos;
+    private Entity entity;
+
+    protected NMSRayTrace(World inWorld, MovingObjectPosition traceRes) {
+        this.isHit = traceRes != null;
+        this.hitWorld = inWorld;
+        if (isHit) {
+            this.hitBlock = new BlockVector(traceRes.a().getX(), traceRes.a().getY(), traceRes.a().getZ());
+            this.hitFace = CraftBlock.notchToBlockFace(traceRes.direction);
+            this.hitPos = new Vector(traceRes.pos.a, traceRes.pos.b, traceRes.pos.c);
+        }
+    }
 
     private static Vec3D toVec3D(Vector vec) {
         return new Vec3D(vec.getX(), vec.getY(), vec.getZ());
@@ -54,24 +70,6 @@ public class NMSRayTrace {
         Vector end = loc.toVector().add(loc.getDirection().multiply(length));
 
         return new NMSRayTrace(world, getHandle(world).rayTrace(toVec3D(loc.toVector()), toVec3D(end), false));
-    }
-
-    private boolean isHit = false;
-
-    private World hitWorld;
-    private BlockVector hitBlock;
-    private BlockFace hitFace;
-    private Vector hitPos;
-    private Entity entity;
-
-    protected NMSRayTrace(World inWorld, MovingObjectPosition traceRes) {
-        this.isHit = traceRes != null;
-        this.hitWorld = inWorld;
-        if (isHit) {
-            this.hitBlock = new BlockVector(traceRes.a().getX(), traceRes.a().getY(), traceRes.a().getZ());
-            this.hitFace = CraftBlock.notchToBlockFace(traceRes.direction);
-            this.hitPos = new Vector(traceRes.pos.a, traceRes.pos.b, traceRes.pos.c);
-        }
     }
 
     public boolean isHit() {

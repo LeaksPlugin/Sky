@@ -232,6 +232,11 @@ public class MyWorld implements World {
     }
 
     @Override
+    public Collection<Entity> getNearbyEntities(Location location, double x, double y, double z) {
+        return null;
+    }
+
+    @Override
     public String getName() {
         return "world";
     }

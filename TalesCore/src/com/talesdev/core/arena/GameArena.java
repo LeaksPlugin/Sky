@@ -19,6 +19,7 @@ import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -45,12 +46,13 @@ public class GameArena implements Joinable {
     private Set<Destroyable> destroyableSet;
     private Set<Player> playerSet;
     private ArenaSpawn arenaSpawn;
+    private BlockRegen blockRegen;
     private GameArenaListener listener;
     private String headMessage;
 
     public GameArena(Plugin plugin, ConfigFile configFile, ArenaWorld arenaWorld, GameArenaListener listener) {
         this.plugin = plugin;
-        getLogger().info("Preparing " + getClass().getSimpleName() + "...");
+        plugin.getLogger().info("Preparing " + getClass().getSimpleName() + "...");
         this.playerSet = new HashSet<>();
         this.autoSave = new HashSet<>();
         this.destroyableSet = new HashSet<>();
@@ -61,15 +63,21 @@ public class GameArena implements Joinable {
         this.task = new ArenaTask(this);
         this.arenaWorld = arenaWorld;
         this.arenaSpawn = new TeamGameSpawn(this);
+        this.blockRegen = new BlockRegen(this);
+        this.blockRegen.onFinished(() -> {
+            HandlerList.unregisterAll(getListener());
+            getLogger().info("Arena regeneration completed!");
+            init();
+        });
         this.gameState = GameState.WAITING;
         this.listener = listener;
         locked = getConfig().getBoolean("arena-locked", true);
         if (locked) {
-            getLogger().info("Arena is locked!");
-            getLogger().info("Set arena-locked to false if you want to open arena for joining!");
+            plugin.getLogger().info("Arena is locked!");
+            plugin.getLogger().info("Set arena-locked to false if you want to open arena for joining!");
         }
         init();
-        getLogger().info("Preparing completed!");
+        plugin.getLogger().info("Preparing completed!");
     }
 
     public void init() {
@@ -289,5 +297,9 @@ public class GameArena implements Joinable {
 
     public boolean isLocked() {
         return locked;
+    }
+
+    public BlockRegen getBlockRegen() {
+        return blockRegen;
     }
 }

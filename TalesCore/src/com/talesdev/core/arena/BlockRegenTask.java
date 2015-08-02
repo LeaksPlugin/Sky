@@ -41,11 +41,16 @@ public class BlockRegenTask extends BukkitRunnable {
             stop();
             return;
         }
+        // stop early
+        if (regenList.size() == 0) {
+            stop();
+            return;
+        }
         // processing
         for (int i = processed; i < processed + speed; i++) {
             if (i < regenList.size()) {
                 BlockState blockState = regenList.get(i);
-                blockState.getBlock().setType(blockState.getType());
+                blockState.getBlock().setType(blockState.getType(), false);
                 blockState.getBlock().setData(blockState.getRawData());
             } else {
                 stop();

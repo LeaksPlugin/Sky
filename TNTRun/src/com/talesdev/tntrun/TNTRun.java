@@ -1,5 +1,6 @@
 package com.talesdev.tntrun;
 
+import com.talesdev.core.arena.DedicatedArenaCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -12,6 +13,8 @@ public class TNTRun extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
         game = new TNTRunGameArena(this);
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        getCommand("tntrun").setExecutor(new DedicatedArenaCommand(game, "tntrun"));
         getLogger().info("TNTRun has been enabled!");
     }
 

@@ -15,6 +15,10 @@ public class BlockRegen {
     private Set<BlockState> blockStateSet;
     private GameArena gameArena;
     private boolean running;
+    private BlockRegenTask regenTask;
+    private Runnable onFinished = () -> {
+    };
+    private int defaultSpeed = 2;
 
     public BlockRegen(GameArena gameArena) {
         this.gameArena = gameArena;
@@ -43,13 +47,23 @@ public class BlockRegen {
     }
 
     public void startRegen(int blockPerTick) {
-        BlockRegenTask regenTask = new BlockRegenTask(this, blockPerTick);
-        regenTask.onFinished(() -> running = false);
+        if (running) return;
+        regenTask = new BlockRegenTask(this, blockPerTick);
+        regenTask.onFinished(() -> {
+            running = false;
+            onFinished.run();
+        });
         running = true;
         regenTask.start();
     }
 
+    public void startRegen() {
+        startRegen(defaultSpeed);
+    }
+
     public void reset() {
+        stopRegen();
+        running = false;
         blockStateSet.clear();
     }
 
@@ -59,5 +73,17 @@ public class BlockRegen {
 
     public boolean isRunning() {
         return running;
+    }
+
+    public void stopRegen() {
+        regenTask.stop();
+    }
+
+    public void setSpeed(int defaultSpeed) {
+        this.defaultSpeed = defaultSpeed;
+    }
+
+    public void onFinished(Runnable onFinished) {
+        this.onFinished = onFinished;
     }
 }
