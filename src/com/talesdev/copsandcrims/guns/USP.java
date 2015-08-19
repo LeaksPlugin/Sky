@@ -26,22 +26,23 @@ import org.bukkit.inventory.meta.ItemMeta;
         ShootingModule shootingModule = new ShootingModule();
         ItemControlModule controlModule = new ItemControlModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
-        shootingModule.setDamage(7.6);
-        shootingModule.setHeadShotDamage(19.6);
-        shootingModule.setUpperLegDamage(6.7);
-        shootingModule.setLowerLegDamage(4.2);
-        shootingModule.setArmorPenetration(57.5);
+        shootingModule.setDamage(4.6);
+        shootingModule.setHeadShotDamage(8.9);
+        shootingModule.setUpperLegDamage(3.9);
+        shootingModule.setLowerLegDamage(3.1);
+        shootingModule.setArmorPenetration(60.0);
         shootingModule.setRecoil(5.0D);
+        shootingModule.setMaxRecoil(22.0D);
         shootingModule.setMaxBullet(13);
         shootingModule.setBulletDelay(4);
         shootingModule.setCooldownTime(4);
         shootingModule.setReloadTime(54);
         shootingModule.setAccuracy(new BulletAccuracy(
-                new Accuracy(new Range(-11, 11), new Range(-11, 11), new Range(-11, 11)), // default
-                new Accuracy(new Range(5, 5), new Range(5, 5), new Range(5, 5)), // sneaking
+                new Accuracy(new Range(-13, 13), new Range(-13, 13), new Range(-13, 13)), // default
+                new Accuracy(new Range(-6, 6), new Range(-6, 6), new Range(-6, 6)), // sneaking
                 new Accuracy(new Range(-23, 23), new Range(-23, 23), new Range(-23, 23)), // walking
-                new Accuracy(new Range(-80, 80), new Range(-80, 80), new Range(-80, 80)), // sprinting
-                new Accuracy(new Range(-100, 100), new Range(-100, 100), new Range(-100, 100)) // jumping
+                new Accuracy(new Range(-40, 40), new Range(-40, 40), new Range(-40, 40)), // sprinting
+                new Accuracy(new Range(-65, 65), new Range(-65, 65), new Range(-65, 65)) // jumping
         ));
         addModule(shootingModule);
         addModule(controlModule);
