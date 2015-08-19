@@ -42,7 +42,7 @@ public class SSG08 extends Weapon {
                 new Accuracy(new Range(-100, 100), new Range(-200, 200), new Range(-100, 100)) // jumping
         ));
         shootingModule.setFiringMode(FiringMode.BOLT);
-        scopeModule.setZoomLevel(5);
+        scopeModule.setZoomLevel(3);
         addModule(shootingModule);
         addModule(controlModule);
         addModule(deathMessageModule);
