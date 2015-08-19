@@ -37,7 +37,7 @@ public class AK47 extends Weapon {
         shootingModule.setReloadTime(50);
         shootingModule.setAccuracy(new BulletAccuracy(
                 new Accuracy(new Range(-12, 12), new Range(-12, 12), new Range(-12, 12)), // default
-                new Accuracy(new Range(6, 6), new Range(6, 6), new Range(6, 6)), // sneaking
+                new Accuracy(new Range(-6, 6), new Range(-6, 6), new Range(-6, 6)), // sneaking
                 new Accuracy(new Range(-20, 20), new Range(-20, 20), new Range(-20, 20)), // walking
                 new Accuracy(new Range(-35, 35), new Range(-35, 35), new Range(-35, 35)), // sprinting
                 new Accuracy(new Range(-50, 50), new Range(-50, 50), new Range(-50, 50)) // jumping
