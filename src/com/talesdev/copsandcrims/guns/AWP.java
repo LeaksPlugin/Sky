@@ -24,25 +24,25 @@ public class AWP extends Weapon {
         ScopeModule scopeModule = new ScopeModule();
         ItemControlModule controlModule = new ItemControlModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
-        shootingModule.setDamage(23);
-        shootingModule.setHeadShotDamage(82.1);
-        shootingModule.setUpperLegDamage(20.3);
-        shootingModule.setLowerLegDamage(16.6);
-        shootingModule.setArmorPenetration(97.5);
-        shootingModule.setRecoil(15.0D);
+        shootingModule.setDamage(17.4);
+        shootingModule.setHeadShotDamage(62.3);
+        shootingModule.setUpperLegDamage(13.9);
+        shootingModule.setLowerLegDamage(8.6);
+        shootingModule.setArmorPenetration(92.5);
+        shootingModule.setRecoil(0.0D);
         shootingModule.setMaxBullet(10);
-        shootingModule.setBulletDelay(25);
-        shootingModule.setCooldownTime(25);
+        shootingModule.setBulletDelay(30);
+        shootingModule.setCooldownTime(30);
         shootingModule.setReloadTime(72);
         shootingModule.setAccuracy(new BulletAccuracy(
-                new Accuracy(new Range(-300, 300), new Range(-300, 200), new Range(-300, 300)), // default
+                new Accuracy(new Range(-75, 75), new Range(-75, 75), new Range(-75, 75)), // default
                 new Accuracy(new Range(0, 0), new Range(0, 0), new Range(0, 0)), // sneaking
-                new Accuracy(new Range(-500, 500), new Range(-500, 500), new Range(-500, 500)), // walking
-                new Accuracy(new Range(-700, 700), new Range(-700, 700), new Range(-700, 700)), // sprinting
-                new Accuracy(new Range(-700, 700), new Range(-700, 700), new Range(-700, 700)) // jumping
+                new Accuracy(new Range(-110, 110), new Range(-110, 110), new Range(-110, 110)), // walking
+                new Accuracy(new Range(-140, 140), new Range(-140, 140), new Range(-140, 140)), // sprinting
+                new Accuracy(new Range(-140, 140), new Range(-140, 140), new Range(-140, 140)) // jumping
         ));
         shootingModule.setFiringMode(FiringMode.BOLT);
-        scopeModule.setZoomLevel(5);
+        scopeModule.setZoomLevel(3);
         addModule(shootingModule);
         addModule(controlModule);
         addModule(deathMessageModule);
