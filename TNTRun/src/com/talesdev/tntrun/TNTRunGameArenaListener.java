@@ -9,14 +9,15 @@ import com.talesdev.core.arena.scoreboard.LobbyScoreboard;
 import com.talesdev.core.player.CleanedPlayer;
 import com.talesdev.core.player.message.Title;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 /**
@@ -89,17 +90,22 @@ public class TNTRunGameArenaListener extends GeneralArenaListener<TNTRunGameAren
                 floorSystem.fallToVoid(event.getPlayer());
                 return;
             }
-            int x = (int) Math.round(moveTo.getX()), y = (int) Math.round(moveTo.getY()), z = (int) Math.round(moveTo.getZ());
-            Location newLoc = new Location(moveTo.getWorld(), x, y, z);
-            Block block = newLoc.getBlock().getRelative(BlockFace.DOWN);
-            if (block != null) {
-                floorSystem.walk(block.getLocation());
-            }
+            StandingBlock block = new StandingBlock(event.getPlayer());
+            block.find().forEach((b) -> floorSystem.walk(b.getLocation()));
         }
+    }
+
+    private boolean hasDelta(int p1, int p2) {
+        return Math.abs(p1 - p2) == 1;
     }
 
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onHunger(FoodLevelChangeEvent event) {
         event.setCancelled(true);
     }
 
@@ -116,5 +122,12 @@ public class TNTRunGameArenaListener extends GeneralArenaListener<TNTRunGameAren
     @EventHandler
     public void onBlockChange(EntityChangeBlockEvent event) {
         event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (!event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+            event.setCancelled(true);
+        }
     }
 }

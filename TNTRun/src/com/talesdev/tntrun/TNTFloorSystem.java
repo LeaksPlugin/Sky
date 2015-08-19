@@ -6,7 +6,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -22,18 +21,19 @@ public class TNTFloorSystem {
     private Set<Player> playing;
     private Set<Player> spectators;
     private String winner = null;
+    private boolean systemActivated = false;
 
     public TNTFloorSystem(TNTRunGameArena game) {
         this.game = game;
         playing = new HashSet<>();
         spectators = new HashSet<>();
         floorMaterial = new HashSet<>();
-        floorMaterial.add(Material.SAND);
-        floorMaterial.add(Material.GRAVEL);
+        floorMaterial.add(Material.TNT);
     }
 
     public void startGame() {
         playing.addAll(game.getPlayerSet());
+        game.getScheduler().runTaskLater(game.getPlugin(), () -> systemActivated = true, 60);
     }
 
     public Set<Material> allMaterials() {
@@ -49,25 +49,14 @@ public class TNTFloorSystem {
     }
 
     public void walk(Location location) {
+        if (!systemActivated) return;
         Block block = location.getBlock();
         if (block != null) {
-            if (block.getType().equals(Material.AIR)) {
-                return;
-            }
             if (floorMaterial.contains(block.getType())) {
-                Block tnt = block.getRelative(BlockFace.DOWN);
-                if (tnt != null) {
-                    final Location locSand = block.getLocation();
-                    final Location locTNT = tnt.getLocation();
-                    game.getScheduler().runTaskLater(game.getPlugin(), () -> {
-                        Block locSandBlock = locSand.getBlock();
-                        Block locTNTBlock = locTNT.getBlock();
-                        game.getBlockRegen().breakBlock(locSandBlock);
-                        game.getBlockRegen().breakBlock(locTNTBlock);
-                        locSandBlock.setType(Material.AIR);
-                        locTNTBlock.setType(Material.AIR);
-                    }, 12);
-                }
+                game.getScheduler().runTaskLater(game.getPlugin(), () -> {
+                    game.getBlockRegen().breakBlock(block);
+                    block.setType(Material.AIR);
+                }, 10);
             }
         }
     }
@@ -111,8 +100,9 @@ public class TNTFloorSystem {
         return new HashSet<>(spectators);
     }
 
-    public void clearPlayers() {
+    public void reset() {
         playing.clear();
         spectators.clear();
+        systemActivated = false;
     }
 }

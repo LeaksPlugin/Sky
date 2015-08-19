@@ -14,5 +14,8 @@ public class StartGamePhase implements GamePhase {
         if (arena.isLocked()) return;
         arena.startGame();
         arena.setGameState(GameState.STARTED);
+        if (arena.playing() <= 0) {
+            arena.dispatchPhase(new EndPhase());
+        }
     }
 }

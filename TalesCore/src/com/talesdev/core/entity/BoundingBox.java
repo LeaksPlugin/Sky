@@ -1,10 +1,13 @@
 package com.talesdev.core.entity;
 
-import com.talesdev.core.system.ReflectionUtils.*;
 import com.talesdev.core.system.NMSClass;
-import static com.talesdev.core.system.ReflectionUtils.*;
+import com.talesdev.core.system.ReflectionUtils.RefClass;
+import com.talesdev.core.system.ReflectionUtils.RefField;
+import com.talesdev.core.system.ReflectionUtils.RefMethod;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
+
+import static com.talesdev.core.system.ReflectionUtils.getRefClass;
 
 /**
  * Bounding box for check collision
@@ -46,22 +49,15 @@ public class BoundingBox {
         return new Vector[]{v1,v2};
     }
 
-    public boolean isInside(Vector v){
-        if(v1.getX() < v.getX() && v.getX() < v2.getX()){
-            if(v1.getY() < v.getY() && v.getY() < v2.getY()){
-                if(v1.getZ() < v.getZ() && v.getZ() < v2.getZ()){
-                    return true;
-                }
-                else{
-                    return false;
-                }
-            }
-            else{
-                return false;
-            }
-        }
-        else{
-            return false;
-        }
+    public Vector getMin() {
+        return v1;
+    }
+
+    public Vector getMax() {
+        return v2;
+    }
+
+    public boolean isInside(Vector v) {
+        return v1.getX() < v.getX() && v.getX() < v2.getX() && v1.getY() < v.getY() && v.getY() < v2.getY() && v1.getZ() < v.getZ() && v.getZ() < v2.getZ();
     }
 }

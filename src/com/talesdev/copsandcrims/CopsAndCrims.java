@@ -46,6 +46,7 @@ public class CopsAndCrims extends JavaPlugin {
         // item
         getWeaponFactory().addWeapon(new AK47());
         getWeaponFactory().addWeapon(new AWP());
+        getWeaponFactory().addWeapon(new AUG());
         getWeaponFactory().addWeapon(new DesertEagle());
         getWeaponFactory().addWeapon(new FAMAS());
         getWeaponFactory().addWeapon(new GalilAR());
@@ -55,6 +56,7 @@ public class CopsAndCrims extends JavaPlugin {
         getWeaponFactory().addWeapon(new M4A1());
         getWeaponFactory().addWeapon(new P250());
         getWeaponFactory().addWeapon(new SSG08());
+        getWeaponFactory().addWeapon(new SG553());
         getArmorFactory().addArmor(new TerroristHelmet());
         getArmorFactory().addArmor(new TerroristKevlar());
         getArmorFactory().addArmor(new CounterTerroristHelmet());

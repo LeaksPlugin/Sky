@@ -14,6 +14,7 @@ import com.talesdev.core.config.Savable;
 import com.talesdev.core.player.CorePlayer;
 import com.talesdev.core.server.ManagedTask;
 import com.talesdev.core.system.Destroyable;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -67,6 +68,9 @@ public class GameArena implements Joinable {
         this.blockRegen.onFinished(() -> {
             HandlerList.unregisterAll(getListener());
             getLogger().info("Arena regeneration completed!");
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.getWorld().refreshChunk(player.getLocation().getChunk().getX(), player.getLocation().getChunk().getZ());
+            }
             init();
         });
         this.gameState = GameState.WAITING;

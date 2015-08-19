@@ -1,10 +1,13 @@
 package com.talesdev.core.arena;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Block regen
@@ -12,17 +15,31 @@ import java.util.Set;
  * @author MoKunz
  */
 public class BlockRegen {
-    private Set<BlockState> blockStateSet;
+    private List<BlockState> blockStateSet;
+    private Map<Material, Integer> priority;
     private GameArena gameArena;
     private boolean running;
     private BlockRegenTask regenTask;
     private Runnable onFinished = () -> {
     };
-    private int defaultSpeed = 2;
+    private int defaultSpeed = 100;
 
     public BlockRegen(GameArena gameArena) {
         this.gameArena = gameArena;
-        blockStateSet = new HashSet<>();
+        blockStateSet = new ArrayList<>();
+        priority = new HashMap<>();
+    }
+
+    public void setPriority(Material material, int priority) {
+        this.priority.put(material, priority);
+    }
+
+    public int getPriority(Material material) {
+        return priority.get(material);
+    }
+
+    public Map<Material, Integer> getPriorities() {
+        return new HashMap<>(priority);
     }
 
     public void breakBlock(Block block) {
@@ -37,13 +54,16 @@ public class BlockRegen {
         }
         for (BlockState state : blockStateSet) {
             Block block = state.getBlock();
+            if (state.getType() == Material.AIR) {
+                continue;
+            }
             block.setType(state.getType());
             block.setData(state.getRawData());
         }
     }
 
-    public Set<BlockState> getBlockStateSet() {
-        return new HashSet<>(blockStateSet);
+    public List<BlockState> getBlockStateSet() {
+        return new ArrayList<>(blockStateSet);
     }
 
     public void startRegen(int blockPerTick) {
@@ -65,6 +85,7 @@ public class BlockRegen {
         stopRegen();
         running = false;
         blockStateSet.clear();
+        priority.clear();
     }
 
     public GameArena getGameArena() {

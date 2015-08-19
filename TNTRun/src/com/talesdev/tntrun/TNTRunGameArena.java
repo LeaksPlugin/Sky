@@ -8,10 +8,7 @@ import com.talesdev.core.arena.scoreboard.LobbyScoreboard;
 import com.talesdev.core.arena.util.WinMessage;
 import com.talesdev.core.config.ConfigFile;
 import com.talesdev.core.player.CleanedPlayer;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
+import org.bukkit.*;
 
 /**
  * @author MoKunz
@@ -19,6 +16,7 @@ import org.bukkit.Location;
 public class TNTRunGameArena extends GameArena {
     private TNTFloorSystem floorSystem;
     private LobbyScoreboard lobbyScoreboard;
+
     private Location spawn = Bukkit.getWorlds().get(0).getSpawnLocation();
     private ArenaMapConfig arenaMapConfig;
 
@@ -37,9 +35,12 @@ public class TNTRunGameArena extends GameArena {
         // lobby scoreboard
         lobbyScoreboard = new LobbyScoreboard();
         lobbyScoreboard.setMapName(getArenaWorld().getName());
-        lobbyScoreboard.setTitle("TNTGame - TNTRun");
+        lobbyScoreboard.setTitle(ChatColor.RED + "TNTGame - TNTRun");
         // floor
         floorSystem = new TNTFloorSystem(this);
+        getBlockRegen().setPriority(Material.TNT, 10);
+        getBlockRegen().setPriority(Material.SAND, -10);
+        getBlockRegen().setPriority(Material.GRAVEL, -20);
         // max players
         setMaxPlayers(16);
         // head msg
@@ -57,6 +58,7 @@ public class TNTRunGameArena extends GameArena {
     public void startGame() {
         floorSystem.startGame();
         getPlayerSet().forEach((player) -> {
+            getCorePlayer(player).getWrappedScoreboard().reset();
             new CleanedPlayer(player).clean(GameMode.ADVENTURE);
             player.teleport(spawn);
         });
@@ -67,8 +69,9 @@ public class TNTRunGameArena extends GameArena {
     public void stopGame() {
         String s = floorSystem.getWinner();
         if (s == null) s = ChatColor.YELLOW + "Draw";
-        WinMessage winner = new WinMessage(this, getHeadMessage(), ChatColor.GREEN + s);
+        WinMessage winner = new WinMessage(this, ChatColor.RED + "TNTGame - TNTRun", ChatColor.GREEN + s);
         winner.send();
+        floorSystem.reset();
         super.stopGame();
     }
 

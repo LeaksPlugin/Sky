@@ -56,7 +56,7 @@ public class LobbyScoreboard implements DisplayScoreboard {
     }
 
     private String generateStatus(WrappedScoreboard scoreboard) {
-        if (countdown > 0) {
+        if (countdown >= 0) {
             scoreboard.setLine(3, "          " + ChatColor.GREEN + countdown + " " + (countdown == 1 ? "second" : "seconds"));
             return "Starting in ";
         } else {
