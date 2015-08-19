@@ -29,7 +29,8 @@ public class AUG extends Weapon {
         shootingModule.setUpperLegDamage(3.9);
         shootingModule.setLowerLegDamage(3.2);
         shootingModule.setArmorPenetration(83.5);
-        shootingModule.setRecoil(3.95D);
+        shootingModule.setRecoil(4.0D);
+        shootingModule.setMaxRecoil(17.0D);
         shootingModule.setMaxBullet(30);
         shootingModule.setBulletDelay(2);
         shootingModule.setBulletCount(2);
