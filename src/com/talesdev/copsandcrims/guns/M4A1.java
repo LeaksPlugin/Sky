@@ -23,12 +23,13 @@ public class M4A1 extends Weapon {
         ShootingModule shootingModule = new ShootingModule();
         ItemControlModule controlModule = new ItemControlModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
-        shootingModule.setDamage(6.6);
-        shootingModule.setHeadShotDamage(20.2);
-        shootingModule.setUpperLegDamage(5.9);
-        shootingModule.setLowerLegDamage(4.3);
+        shootingModule.setDamage(4.8);
+        shootingModule.setHeadShotDamage(13.2);
+        shootingModule.setUpperLegDamage(4.1);
+        shootingModule.setLowerLegDamage(3.5);
         shootingModule.setArmorPenetration(70);
         shootingModule.setRecoil(3.75D);
+        shootingModule.setMaxRecoil(17.5D);
         shootingModule.setMaxBullet(30);
         shootingModule.setBulletDelay(2);
         shootingModule.setBulletCount(2);
@@ -36,10 +37,10 @@ public class M4A1 extends Weapon {
         shootingModule.setReloadTime(61);
         shootingModule.setAccuracy(new BulletAccuracy(
                 new Accuracy(new Range(-10, 10), new Range(-10, 10), new Range(-10, 10)), // default
-                new Accuracy(new Range(3, 3), new Range(3, 3), new Range(3, 3)), // sneaking
-                new Accuracy(new Range(-20, 20), new Range(-20, 20), new Range(-20, 20)), // walking
-                new Accuracy(new Range(-80, 80), new Range(-80, 80), new Range(-80, 80)), // sprinting
-                new Accuracy(new Range(-100, 100), new Range(-100, 100), new Range(-100, 100)) // jumping
+                new Accuracy(new Range(-5, 5), new Range(-5, 5), new Range(-5, 5)), // sneaking
+                new Accuracy(new Range(-17, 17), new Range(-17, 17), new Range(-17, 17)), // walking
+                new Accuracy(new Range(-27, 27), new Range(-27, 27), new Range(-27, 27)), // sprinting
+                new Accuracy(new Range(-40, 40), new Range(-40, 40), new Range(-40, 40)) // jumping
         ));
         addModule(shootingModule);
         addModule(controlModule);
