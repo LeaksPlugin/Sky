@@ -23,22 +23,23 @@ public class P250 extends Weapon {
         ShootingModule shootingModule = new ShootingModule();
         ItemControlModule controlModule = new ItemControlModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
-        shootingModule.setDamage(7.8);
-        shootingModule.setHeadShotDamage(24.2);
-        shootingModule.setUpperLegDamage(6.2);
-        shootingModule.setLowerLegDamage(5.1);
-        shootingModule.setArmorPenetration(77.5);
-        shootingModule.setRecoil(5.5D);
+        shootingModule.setDamage(4.4);
+        shootingModule.setHeadShotDamage(8.8);
+        shootingModule.setUpperLegDamage(3.8);
+        shootingModule.setLowerLegDamage(3.1);
+        shootingModule.setArmorPenetration(71.5);
+        shootingModule.setRecoil(4.0D);
+        shootingModule.setMaxRecoil(19.5D);
         shootingModule.setMaxBullet(13);
         shootingModule.setBulletDelay(4);
         shootingModule.setCooldownTime(4);
         shootingModule.setReloadTime(44);
         shootingModule.setAccuracy(new BulletAccuracy(
                 new Accuracy(new Range(-12, 12), new Range(-12, 12), new Range(-12, 12)), // default
-                new Accuracy(new Range(4, 4), new Range(4, 4), new Range(4, 4)), // sneaking
+                new Accuracy(new Range(-5, 5), new Range(-5, -5), new Range(-5, -5)), // sneaking
                 new Accuracy(new Range(-20, 20), new Range(-20, 20), new Range(-20, 20)), // walking
-                new Accuracy(new Range(-80, 80), new Range(-80, 80), new Range(-80, 80)), // sprinting
-                new Accuracy(new Range(-100, 100), new Range(-100, 100), new Range(-100, 100)) // jumping
+                new Accuracy(new Range(-40, 40), new Range(-40, 40), new Range(-40, 40)), // sprinting
+                new Accuracy(new Range(-55, 55), new Range(-55, 55), new Range(-55, 55)) // jumping
         ));
         addModule(shootingModule);
         addModule(controlModule);

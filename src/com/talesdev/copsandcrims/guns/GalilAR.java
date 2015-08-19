@@ -25,23 +25,24 @@ public class GalilAR extends Weapon {
         ShootingModule shootingModule = new ShootingModule();
         ItemControlModule controlModule = new ItemControlModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
-        shootingModule.setDamage(6);
-        shootingModule.setHeadShotDamage(22);
-        shootingModule.setUpperLegDamage(5.3);
-        shootingModule.setLowerLegDamage(3.9);
-        shootingModule.setArmorPenetration(77.5);
+        shootingModule.setDamage(4.6);
+        shootingModule.setHeadShotDamage(12.9);
+        shootingModule.setUpperLegDamage(4.0);
+        shootingModule.setLowerLegDamage(3.1);
+        shootingModule.setArmorPenetration(70.0);
         shootingModule.setRecoil(5.25D);
+        shootingModule.setMaxRecoil(22.0D);
         shootingModule.setMaxBullet(35);
         shootingModule.setBulletDelay(2);
         shootingModule.setBulletCount(2);
         shootingModule.setCooldownTime(2);
         shootingModule.setReloadTime(60);
         shootingModule.setAccuracy(new BulletAccuracy(
-                new Accuracy(new Range(-14, 14), new Range(-14, 14), new Range(-14, 14)), // default
-                new Accuracy(new Range(4, 4), new Range(4, 4), new Range(4, 4)), // sneaking
-                new Accuracy(new Range(-20, 20), new Range(-20, 20), new Range(-20, 20)), // walking
-                new Accuracy(new Range(-80, 80), new Range(-80, 80), new Range(-80, 80)), // sprinting
-                new Accuracy(new Range(-100, 100), new Range(-100, 100), new Range(-100, 100)) // jumping
+                new Accuracy(new Range(-20, 20), new Range(-20, 20), new Range(-20, 20)), // default
+                new Accuracy(new Range(-12, 12), new Range(-12, 12), new Range(-12, 12)), // sneaking
+                new Accuracy(new Range(-40, 40), new Range(-40, 40), new Range(-40, 40)), // walking
+                new Accuracy(new Range(-60, 60), new Range(-60, 60), new Range(-60, 60)), // sprinting
+                new Accuracy(new Range(-75, 75), new Range(-75, 75), new Range(-75, 75)) // jumping
         ));
         addModule(shootingModule);
         addModule(controlModule);

@@ -23,22 +23,23 @@ public class DesertEagle extends Weapon {
         ShootingModule shootingModule = new ShootingModule();
         ItemControlModule controlModule = new ItemControlModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
-        shootingModule.setDamage(13.6);
-        shootingModule.setHeadShotDamage(40.8);
-        shootingModule.setUpperLegDamage(11.3);
-        shootingModule.setLowerLegDamage(7.2);
-        shootingModule.setArmorPenetration(93.2);
-        shootingModule.setRecoil(10.0D);
+        shootingModule.setDamage(7.7);
+        shootingModule.setHeadShotDamage(18.4);
+        shootingModule.setUpperLegDamage(6.2);
+        shootingModule.setLowerLegDamage(4.5);
+        shootingModule.setArmorPenetration(85.0);
+        shootingModule.setRecoil(9.0D);
+        shootingModule.setMaxRecoil(27.5D);
         shootingModule.setMaxBullet(7);
         shootingModule.setBulletDelay(6);
         shootingModule.setCooldownTime(6);
         shootingModule.setReloadTime(44);
         shootingModule.setAccuracy(new BulletAccuracy(
-                new Accuracy(new Range(-10, 10), new Range(-10, 10), new Range(-10, 10)), // default
-                new Accuracy(new Range(3, 3), new Range(3, 3), new Range(3, 3)), // sneaking
-                new Accuracy(new Range(-20, 20), new Range(-20, 20), new Range(-20, 20)), // walking
-                new Accuracy(new Range(-80, 80), new Range(-80, 80), new Range(-80, 80)), // sprinting
-                new Accuracy(new Range(-100, 100), new Range(-100, 100), new Range(-100, 100)) // jumping
+                new Accuracy(new Range(-15, 15), new Range(-15, 15), new Range(-15, 15)), // default
+                new Accuracy(new Range(-5, 5), new Range(-5, 5), new Range(-5, 5)), // sneaking
+                new Accuracy(new Range(-25, 25), new Range(-25, 25), new Range(-25, 25)), // walking
+                new Accuracy(new Range(-45, 45), new Range(-45, 45), new Range(-45, 45)), // sprinting
+                new Accuracy(new Range(-70, 70), new Range(-70, 70), new Range(-70, 70)) // jumping
         ));
         addModule(shootingModule);
         addModule(controlModule);
