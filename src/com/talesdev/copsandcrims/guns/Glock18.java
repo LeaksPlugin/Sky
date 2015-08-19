@@ -27,22 +27,23 @@ public class Glock18 extends Weapon {
         ItemControlModule controlModule = new ItemControlModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
         AlternativeFireModule alternativeFireModule = new AlternativeFireModule(true);
-        shootingModule.setDamage(5);
-        shootingModule.setHeadShotDamage(14.9);
-        shootingModule.setUpperLegDamage(4.1);
-        shootingModule.setLowerLegDamage(3.4);
-        shootingModule.setArmorPenetration(50);
-        shootingModule.setRecoil(4.5D);
+        shootingModule.setDamage(3.1);
+        shootingModule.setHeadShotDamage(6.5);
+        shootingModule.setUpperLegDamage(2.8);
+        shootingModule.setLowerLegDamage(2.0);
+        shootingModule.setArmorPenetration(55);
+        shootingModule.setRecoil(2.75D);
+        shootingModule.setMaxRecoil(13.0D);
         shootingModule.setMaxBullet(20);
         shootingModule.setBulletDelay(4);
         shootingModule.setCooldownTime(4);
         shootingModule.setReloadTime(44);
         shootingModule.setAccuracy(new BulletAccuracy(
-                new Accuracy(new Range(-13, 13), new Range(-13, 13), new Range(-13, 13)), // default
-                new Accuracy(new Range(5, 5), new Range(5, 5), new Range(5, 5)), // sneaking
-                new Accuracy(new Range(-25, 25), new Range(-25, 25), new Range(-25, 25)), // walking
-                new Accuracy(new Range(-80, 80), new Range(-80, 80), new Range(-80, 80)), // sprinting
-                new Accuracy(new Range(-100, 100), new Range(-100, 100), new Range(-100, 100)) // jumping
+                new Accuracy(new Range(-15, 15), new Range(-15, 15), new Range(-15, 15)), // default
+                new Accuracy(new Range(-7, 7), new Range(-7, 7), new Range(-7, 7)), // sneaking
+                new Accuracy(new Range(-27, 27), new Range(-27, 27), new Range(-27, 27)), // walking
+                new Accuracy(new Range(-35, 35), new Range(-35, 35), new Range(-35, 35)), // sprinting
+                new Accuracy(new Range(-40, 40), new Range(-40, 40), new Range(-40, 40)) // jumping
         ));
         alternativeFireModule.setAlternativeFireBullet(3);
         alternativeFireModule.setAlternativeFireDelay(1);
