@@ -44,7 +44,7 @@ public class MeleeModule extends WeaponModule {
     private double backStabRange = 20;
     private double backStabDamage = 8;
     private double backStabHeadDamage = 12;
-    private double meleeRange = 1.8D;
+    private double meleeRange = 2.5D;
 
     public MeleeModule(double damage, double headDamage, double backStabDamage, double backStabHeadDamage) {
         super("Melee");
