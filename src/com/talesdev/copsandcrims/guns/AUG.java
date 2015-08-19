@@ -38,7 +38,7 @@ public class AUG extends Weapon {
         shootingModule.setReloadTime(76);
         shootingModule.setAccuracy(new BulletAccuracy(
                 new Accuracy(new Range(-15, 15), new Range(-15, 15), new Range(-15, 15)), // default
-                new Accuracy(new Range(1, 1), new Range(1, 1), new Range(1, 1)), // sneaking
+                new Accuracy(new Range(-1, 1), new Range(-1, 1), new Range(-1, 1)), // sneaking
                 new Accuracy(new Range(-22, 22), new Range(-22, 22), new Range(-22, 22)), // walking
                 new Accuracy(new Range(-40, 40), new Range(-40, 40), new Range(-40, 40)), // sprinting
                 new Accuracy(new Range(-65, 65), new Range(-65, 65), new Range(-65, 65)) // jumping
