@@ -27,23 +27,24 @@ public class FAMAS extends Weapon {
         ItemControlModule controlModule = new ItemControlModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
         AlternativeFireModule alternativeFireModule = new AlternativeFireModule();
-        shootingModule.setDamage(6);
-        shootingModule.setHeadShotDamage(22);
-        shootingModule.setUpperLegDamage(5.2);
-        shootingModule.setLowerLegDamage(3.9);
-        shootingModule.setArmorPenetration(70);
+        shootingModule.setDamage(4.1);
+        shootingModule.setHeadShotDamage(11.9);
+        shootingModule.setUpperLegDamage(3.7);
+        shootingModule.setLowerLegDamage(2.9);
+        shootingModule.setArmorPenetration(66.5);
         shootingModule.setRecoil(4.75D);
+        shootingModule.setMaxRecoil(24.0D);
         shootingModule.setMaxBullet(25);
         shootingModule.setBulletDelay(2);
         shootingModule.setBulletCount(2);
         shootingModule.setCooldownTime(2);
         shootingModule.setReloadTime(66);
         shootingModule.setAccuracy(new BulletAccuracy(
-                new Accuracy(new Range(-12, 12), new Range(-12, 12), new Range(-12, 12)), // default
-                new Accuracy(new Range(5, 5), new Range(5, 5), new Range(5, 5)), // sneaking
-                new Accuracy(new Range(-20, 20), new Range(-20, 20), new Range(-20, 20)), // walking
-                new Accuracy(new Range(-80, 80), new Range(-80, 80), new Range(-80, 80)), // sprinting
-                new Accuracy(new Range(-100, 100), new Range(-100, 100), new Range(-100, 100)) // jumping
+                new Accuracy(new Range(-16, 16), new Range(-16, 16), new Range(-16, 16)), // default
+                new Accuracy(new Range(-5, 5), new Range(-5, 5), new Range(-5, 5)), // sneaking
+                new Accuracy(new Range(-30, 30), new Range(-30, 30), new Range(-30, 30)), // walking
+                new Accuracy(new Range(-50, 50), new Range(-50, 50), new Range(-50, 50)), // sprinting
+                new Accuracy(new Range(-70, 70), new Range(-70, 70), new Range(-70, 70)) // jumping
         ));
         alternativeFireModule.setAlternativeFireBullet(3);
         alternativeFireModule.setAlternativeFireDelay(1);
