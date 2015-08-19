@@ -24,11 +24,11 @@ public class AUG extends Weapon {
         ScopeModule scopeModule = new ScopeModule();
         ItemControlModule controlModule = new ItemControlModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
-        shootingModule.setDamage(5.7);
-        shootingModule.setHeadShotDamage(21.0);
-        shootingModule.setUpperLegDamage(5);
-        shootingModule.setLowerLegDamage(4.6);
-        shootingModule.setArmorPenetration(90.0);
+        shootingModule.setDamage(4.4);
+        shootingModule.setHeadShotDamage(13.0);
+        shootingModule.setUpperLegDamage(3.9);
+        shootingModule.setLowerLegDamage(3.2);
+        shootingModule.setArmorPenetration(83.5);
         shootingModule.setRecoil(3.95D);
         shootingModule.setMaxBullet(30);
         shootingModule.setBulletDelay(2);
@@ -38,11 +38,11 @@ public class AUG extends Weapon {
         shootingModule.setAccuracy(new BulletAccuracy(
                 new Accuracy(new Range(-15, 15), new Range(-15, 15), new Range(-15, 15)), // default
                 new Accuracy(new Range(1, 1), new Range(1, 1), new Range(1, 1)), // sneaking
-                new Accuracy(new Range(-20, 20), new Range(-20, 20), new Range(-20, 20)), // walking
-                new Accuracy(new Range(-80, 80), new Range(-80, 80), new Range(-80, 80)), // sprinting
-                new Accuracy(new Range(-100, 100), new Range(-100, 100), new Range(-100, 100)) // jumping
+                new Accuracy(new Range(-22, 22), new Range(-22, 22), new Range(-22, 22)), // walking
+                new Accuracy(new Range(-40, 40), new Range(-40, 40), new Range(-40, 40)), // sprinting
+                new Accuracy(new Range(-65, 65), new Range(-65, 65), new Range(-65, 65)) // jumping
         ));
-        scopeModule.setZoomLevel(3);
+        scopeModule.setZoomLevel(1);
         addModule(shootingModule);
         addModule(controlModule);
         addModule(deathMessageModule);
