@@ -24,7 +24,7 @@ public class AWP extends Weapon {
         ScopeModule scopeModule = new ScopeModule();
         ItemControlModule controlModule = new ItemControlModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
-        shootingModule.setDamage(17.4);
+        shootingModule.setDamage(18.4);
         shootingModule.setHeadShotDamage(62.3);
         shootingModule.setUpperLegDamage(13.9);
         shootingModule.setLowerLegDamage(8.6);
