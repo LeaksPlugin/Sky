@@ -29,7 +29,7 @@ public class AK47 extends Weapon {
         shootingModule.setLowerLegDamage(3.5);
         shootingModule.setArmorPenetration(73.5);
         shootingModule.setRecoil(5.0D);
-        shootingModule.setMaxRecoil(24.0D)
+        shootingModule.setMaxRecoil(24.0D);
         shootingModule.setMaxBullet(30);
         shootingModule.setBulletDelay(2);
         shootingModule.setBulletCount(2);
