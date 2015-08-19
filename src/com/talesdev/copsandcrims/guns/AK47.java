@@ -23,12 +23,13 @@ public class AK47 extends Weapon {
         ShootingModule shootingModule = new ShootingModule();
         ItemControlModule controlModule = new ItemControlModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
-        shootingModule.setDamage(7.2);
-        shootingModule.setHeadShotDamage(27.4);
-        shootingModule.setUpperLegDamage(6.8);
+        shootingModule.setDamage(5.3);
+        shootingModule.setHeadShotDamage(17.4);
+        shootingModule.setUpperLegDamage(4.8);
         shootingModule.setLowerLegDamage(4.5);
-        shootingModule.setArmorPenetration(77.5);
-        shootingModule.setRecoil(6.0D);
+        shootingModule.setArmorPenetration(73.5);
+        shootingModule.setRecoil(5.0D);
+        shootingModule.setMaxRecoil(24.0D)
         shootingModule.setMaxBullet(30);
         shootingModule.setBulletDelay(2);
         shootingModule.setBulletCount(2);
@@ -36,10 +37,10 @@ public class AK47 extends Weapon {
         shootingModule.setReloadTime(50);
         shootingModule.setAccuracy(new BulletAccuracy(
                 new Accuracy(new Range(-12, 12), new Range(-12, 12), new Range(-12, 12)), // default
-                new Accuracy(new Range(3, 3), new Range(3, 3), new Range(3, 3)), // sneaking
+                new Accuracy(new Range(6, 6), new Range(6, 6), new Range(6, 6)), // sneaking
                 new Accuracy(new Range(-20, 20), new Range(-20, 20), new Range(-20, 20)), // walking
-                new Accuracy(new Range(-80, 80), new Range(-80, 80), new Range(-80, 80)), // sprinting
-                new Accuracy(new Range(-100, 100), new Range(-100, 100), new Range(-100, 100)) // jumping
+                new Accuracy(new Range(-35, 35), new Range(-35, 35), new Range(-35, 35)), // sprinting
+                new Accuracy(new Range(-50, 50), new Range(-50, 50), new Range(-50, 50)) // jumping
         ));
         addModule(shootingModule);
         addModule(controlModule);
