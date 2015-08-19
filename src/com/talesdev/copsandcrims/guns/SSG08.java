@@ -24,12 +24,12 @@ public class SSG08 extends Weapon {
         ScopeModule scopeModule = new ScopeModule();
         ItemControlModule controlModule = new ItemControlModule();
         DeathMessageModule deathMessageModule = new DeathMessageModule();
-        shootingModule.setDamage(17.6);
-        shootingModule.setHeadShotDamage(47.1);
-        shootingModule.setUpperLegDamage(14.2);
-        shootingModule.setLowerLegDamage(11.1);
-        shootingModule.setArmorPenetration(85);
-        shootingModule.setRecoil(15.0D);
+        shootingModule.setDamage(10.6);
+        shootingModule.setHeadShotDamage(19.7);
+        shootingModule.setUpperLegDamage(8.0);
+        shootingModule.setLowerLegDamage(6.5);
+        shootingModule.setArmorPenetration(83.5);
+        shootingModule.setRecoil(0.0D);
         shootingModule.setMaxBullet(10);
         shootingModule.setBulletDelay(16);
         shootingModule.setCooldownTime(16);
