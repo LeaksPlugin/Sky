@@ -120,6 +120,8 @@ public class ShootingModule extends WeaponModule {
         updateBulletCount(player);
         WeaponCooldownTag tag = new WeaponCooldownTag(getCooldownTime(), event.getPlayer());
         if (!tag.isCooldown()) {
+            long time = System.currentTimeMillis();
+            System.out.println("Init shooting");
             // start shooting (no cooldown now!)
             // check if player is reloading bullet
             if (player.getPlayerBullet().getBullet(getWeapon().getName()).isReloading()) {
@@ -187,6 +189,7 @@ public class ShootingModule extends WeaponModule {
             }*/
             // add cooldown
             tag.attach();
+            System.out.println("Time used (init) : " + (System.currentTimeMillis() - time));
         }
     }
 

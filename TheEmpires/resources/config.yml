@@ -1,0 +1,15 @@
+debug: false
+arena-locked: true
+map-name: Hell
+map-author: null
+max-players: 24
+team:
+    Red:
+      spawn:
+      min:
+      max:
+    Blue:
+      spawn:
+      min:
+      max:
+config-revision: 1

@@ -8,6 +8,7 @@ import com.talesdev.copsandcrims.guns.USP;
 import com.talesdev.copsandcrims.player.CvCPlayer;
 import com.talesdev.copsandcrims.weapon.RandomWeapon;
 import com.talesdev.copsandcrims.weapon.Weapon;
+import com.talesdev.copsandcrims.weapon.WeaponBullet;
 import com.talesdev.copsandcrims.weapon.WeaponSlot;
 import com.talesdev.copsandcrims.weapon.module.ShootingModule;
 import com.talesdev.core.arena.GameState;
@@ -86,7 +87,8 @@ public class TDMKitItem {
 
     public void fillBullet(CvCPlayer cPlayer, Weapon weapon) {
         if (weapon.containsModule(ShootingModule.class)) {
-            cPlayer.getPlayerBullet().getBullet(weapon.getName()).setBulletCount(
+            WeaponBullet bullet = cPlayer.getPlayerBullet().getBullet(weapon.getName());
+            bullet.setBulletCount(
                     weapon.getModule(ShootingModule.class).getMaxBullet()
             );
         }

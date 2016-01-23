@@ -2,6 +2,7 @@ package com.talesdev.core.player;
 
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
 
 /**
  * Cleaned player
@@ -29,6 +30,10 @@ public class CleanedPlayer {
         player.setFoodLevel(20);
         player.setSaturation(20.0F);
         player.setFlying(false);
+        // status effect
+        for (PotionEffect effect : player.getActivePotionEffects()) {
+            player.removePotionEffect(effect.getType());
+        }
         return player;
     }
 }

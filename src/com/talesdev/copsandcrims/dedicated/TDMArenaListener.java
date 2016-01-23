@@ -301,6 +301,7 @@ public class TDMArenaListener extends GeneralArenaListener<TDMGameArena> {
                                 // first blood
                                 FirstBlood firstBlood = new FirstBlood(getGameArena(), player, msg);
                                 firstBlood.display();
+                                getGameArena().setFistBlood(true);
                             }
                             getGameArena().addKill(team.getName());
                         }

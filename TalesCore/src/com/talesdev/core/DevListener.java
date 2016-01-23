@@ -4,10 +4,15 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
+import com.talesdev.core.player.ClickingAction;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Dev listener
@@ -38,6 +43,19 @@ public class DevListener extends PacketAdapter implements Listener {
                 }
             }
         }*/
+    }
+
+    @EventHandler
+    public void onClick(PlayerInteractEvent event) {
+        if (ClickingAction.isRightClick(event.getAction())) {
+            ItemStack item = event.getPlayer().getItemInHand();
+            if ((item != null) && (item.getType() != Material.AIR)) {
+                if (item.getType().equals(Material.BLAZE_ROD)) {
+                    event.getPlayer().performCommand("dev newtrace");
+                }
+            }
+            event.setCancelled(true);
+        }
     }
 
     private void thunder(final Player player) {

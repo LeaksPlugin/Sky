@@ -17,6 +17,7 @@ import org.bukkit.util.Vector;
  * @author MoKunz
  */
 public class DelayedBullet extends Bullet {
+    long time = System.currentTimeMillis();
     private int tickCounter = 1;
     private Location delayedLocation;
     private Vector delayedVector;
@@ -81,6 +82,7 @@ public class DelayedBullet extends Bullet {
 
     public void startProcessing() {
         // action hook
+        time = System.currentTimeMillis();
         if (action != null) action.prepareFiring(this);
     }
 
@@ -92,6 +94,9 @@ public class DelayedBullet extends Bullet {
             cancel();
             return;
         }
+        // acceleration
+        boolean skipChecking = false;
+        long time2 = System.currentTimeMillis();
         for (int i = getProcessed(); i < getProcessed() + iterationPerTick; i++) {
             // shoot
             delayedVector = rayTrace.iterate(distance);
@@ -110,8 +115,20 @@ public class DelayedBullet extends Bullet {
                     return;
                 }
             }
+            System.out.println("Time used ( " + i + ") : " + (System.currentTimeMillis() - time2));
+            time2 = System.currentTimeMillis();
             // set location of scanner
             nearbyEntity.setLocation(delayedLocation);
+            if (skipChecking) continue;
+            // acceleration
+            LivingEntity livingEntity = nearbyEntity.findNearestInRadius(25, true);
+            if (livingEntity != null) {
+                if (livingEntity.getEntityId() == getPlayer().getEntityId()) {
+                    skipChecking = true;
+                }
+            } else {
+                skipChecking = true;
+            }
             // find
             LivingEntity entity = nearbyEntity.findNearestInRadius(bias, true);
             if (entity != null) {
@@ -137,6 +154,7 @@ public class DelayedBullet extends Bullet {
     public void finished() {
         // finish
         if (action != null) action.finishFiring(this);
+        System.out.println("Time used on " + this.toString() + " : " + (System.currentTimeMillis() - time));
         // clean up
         rayTrace.reset();
     }

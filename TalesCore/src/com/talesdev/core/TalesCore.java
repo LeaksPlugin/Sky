@@ -25,6 +25,7 @@ public class TalesCore extends JavaPlugin {
     private UUIDMap uuidMap;
     private ServerCorePlayer corePlayer;
     private ChestGUISystem guiSystem;
+    private DevListener devListener;
     private Bank bank = new TestBank(this);
 
     public static TalesCore getPlugin() {
@@ -41,6 +42,7 @@ public class TalesCore extends JavaPlugin {
         uuidMap = new UUIDMap(this);
         corePlayer = new ServerCorePlayer(this);
         guiSystem = new ChestGUISystem(this);
+        devListener = new DevListener(this);
         UUIDSystem uuidSystem = new UUIDSystem(this);
         QuickCastSystem quickCast = new QuickCastSystem(this);
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -49,6 +51,7 @@ public class TalesCore extends JavaPlugin {
         getCommand("uuid").setExecutor(uuidSystem);
         getCommand("account").setExecutor(new AccountCommandExecutor(this));
         getServer().getPluginManager().registerEvents(uuidSystem, this);
+        getServer().getPluginManager().registerEvents(devListener, this);
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         getServer().getPluginManager().registerEvents(guiSystem, this);
         getServer().getPluginManager().registerEvents(quickCast, this);

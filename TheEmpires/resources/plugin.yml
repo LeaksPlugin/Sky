@@ -1,0 +1,11 @@
+name: TheEmpires
+version: 1.0
+author: MoKunz
+main: com.talesdev.the_empires.TheEmpires
+depend: [TalesCore,ProtocolLib]
+commands:
+    te:
+      description: Command for managing TheEmpires game
+      usage: "§e/te help"
+      permission: te.command.te
+      permission-message: "§cYou don't have permission"

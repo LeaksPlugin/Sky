@@ -35,6 +35,7 @@ public class NMSRayTrace {
             this.hitBlock = new BlockVector(traceRes.a().getX(), traceRes.a().getY(), traceRes.a().getZ());
             this.hitFace = CraftBlock.notchToBlockFace(traceRes.direction);
             this.hitPos = new Vector(traceRes.pos.a, traceRes.pos.b, traceRes.pos.c);
+            this.entity = traceRes.entity == null ? null : traceRes.entity.getBukkitEntity();
         }
     }
 
@@ -86,6 +87,10 @@ public class NMSRayTrace {
 
     public BlockFace getFace() {
         return hitFace;
+    }
+
+    public Entity getEntity() {
+        return entity;
     }
 
     public Vector getHitPos() {

@@ -33,7 +33,7 @@ public class TDMGameArena extends GameArena {
     private Map<String, Integer> teamKills;
     private Set<KillDeath> killDeathSet;
     // HACK
-    private boolean fistBlood;
+    private boolean fistBlood = false;
     private String winner = ChatColor.GREEN + "Draw";
     public TDMGameArena() {
         super(CopsAndCrims.getPlugin(), new ConfigFile("plugins/CopsAndCrims/config.yml"), null, null);

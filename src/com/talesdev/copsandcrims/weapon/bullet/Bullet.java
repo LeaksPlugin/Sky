@@ -270,6 +270,9 @@ public class Bullet {
                     return true;
                 }
             }
+        } else {
+            cancel();
+            return false;
         }
         BulletHitResult result = new BulletHitResult(this, location, location.getBlock());
         if (location.getBlock().getType().equals(Material.BARRIER) || location.getBlock().getType().equals(Material.IRON_FENCE))
@@ -322,7 +325,7 @@ public class Bullet {
                 // begin body part detection
                 // leg : [0,0.4] x >= 0 , 0 <= 0.4
                 // upper leg : x > 0.4 , x <= 0.675
-                if ((deltaEH <= 0.4) && (eyeLocation.distance(currentLocation) <= 0.45)) {
+                if ((deltaEH <= 0.4) && (eyeLocation.distanceSquared(currentLocation) <= 0.2025)) {
                     if (debug) player.sendMessage(ChatColor.RED + "HeadShot!");
                     damage = getHeadShotDamage();
                     part = ArmorPart.HELMET;
